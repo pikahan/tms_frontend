@@ -54,11 +54,14 @@
           name: '出库操作',
           router: '/putOutOperation'
         }, {
-          name: '报修申请',
-          router: '/repairApplication'
+          name: '报修',
+          router: '/repair'
         }, {
-          name: '采购入库申请',
-          router: '/purchaseApplication'
+          name: '采购入库',
+          router: '/purchase'
+        }, {
+          name: '工夹具信息',
+          router: '/apparatusData'
         }]
         this.menuItemList = data
         console.log(this.getSelectedKey(this.$route.path))
