@@ -1,26 +1,28 @@
 <template>
   <div id="components-form-demo-advanced-search">
     <a-form class="ant-advanced-search-form" :form="form" @submit="handleSearch">
-      <a-row :gutter="24">
-        <a-col
-          v-for="(searchDatum, i) in searchData"
-          :key="searchDatum.name"
-          :span="8"
-          :style="{ display: i < count ? 'block' : 'none' }"
-        >
-          <a-form-item :label="searchDatum.name">
-            <a-input
-              v-decorator="[
-                searchDatum.name,
-                searchDatum.option,
-              ]"
-              :placeholder="searchDatum.placeholder"
-            />
-          </a-form-item>
-        </a-col>
-      </a-row>
       <a-row>
-        <a-col :span="24" :style="{ textAlign: 'right' }">
+        <a-col :span="18">
+          <a-row :gutter="24">
+            <a-col
+              v-for="(searchDatum, i) in searchData"
+              :key="searchDatum.name"
+              :span="12"
+              :style="{ display: i < count ? 'block' : 'none' }"
+            >
+              <a-form-item :label="searchDatum.name">
+                <a-input
+                  v-decorator="[
+                    searchDatum.name,
+                    searchDatum.option,
+                  ]"
+                  :placeholder="searchDatum.placeholder"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-col>
+        <a-col :span="6" :style="{ textAlign: 'right' , marginTop: '4px'}">
           <a-button type="primary" html-type="submit">
             Search
           </a-button>
@@ -39,7 +41,9 @@
   </div>
 </template>
 <script>
+  import ACol from 'ant-design-vue/es/grid/Col'
   export default {
+    components: {ACol},
     data() {
       return {
         expand: false,
@@ -82,9 +86,9 @@
 <style scoped>
   .ant-advanced-search-form {
     padding: 24px;
-    background: #fbfbfb;
-    border: 1px solid #d9d9d9;
-    border-radius: 6px;
+    /*background: #fbfbfb;*/
+    /*border: 1px solid #d9d9d9;*/
+    /*border-radius: 6px;*/
   }
 
   .ant-advanced-search-form .ant-form-item {

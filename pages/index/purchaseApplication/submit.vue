@@ -1,7 +1,7 @@
 <template>
   <application :formData="formData">
     <template v-slot:first>
-      <a-form-model-item >
+      <a-form-model-item  label="物品ID" >
         <a-input
           v-decorator="[
           'objectId',
@@ -43,13 +43,13 @@
         current: 0,
         formData: [
           [{
-            title: '填写申请信息'
+            title: '基础信息'
           }],
           [{
-            title: '验证'
+            title: '详细详细'
           }],
           [{
-            title: '成功'
+            title: '成功提交申请'
           }]
         ],
       };

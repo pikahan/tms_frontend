@@ -9,18 +9,6 @@
             <span>{{ menuItem.name }}</span>
           </nuxt-link>
         </a-menu-item>
-        <!--<a-menu-item key="1">-->
-          <!--<a-icon type="user" />-->
-          <!--<span>nav 1</span>-->
-        <!--</a-menu-item>-->
-        <!--<a-menu-item key="2">-->
-          <!--<a-icon type="video-camera" />-->
-          <!--<span>nav 2</span>-->
-        <!--</a-menu-item>-->
-        <!--<a-menu-item key="3">-->
-          <!--<a-icon type="upload" />-->
-          <!--<span>nav 3</span>-->
-        <!--</a-menu-item>-->
       </a-menu>
     </a-layout-sider>
     <a-layout>
@@ -68,10 +56,18 @@
         }, {
           name: '报修申请',
           router: '/repairApplication'
+        }, {
+          name: '采购入库申请',
+          router: '/purchaseApplication'
         }]
         this.menuItemList = data
         console.log(this.getSelectedKey(this.$route.path))
-        this.selectedKeys = [this.getSelectedKey(this.$route.path)]
+        let key = this.getSelectedKey(this.$route.path)
+        if (key === '/') { // 进入第一个tab
+          key = data[0].router
+          this.$router.push(key)
+        }
+        this.selectedKeys = [key]
       }, 500)
     }
   };

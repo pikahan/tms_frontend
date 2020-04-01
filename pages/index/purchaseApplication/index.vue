@@ -1,6 +1,9 @@
 <template>
   <div>
     <searchPane :search-data="searchData" />
+    <nuxt-link to="/purchaseApplication/submit">
+      <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
+    </nuxt-link>
     <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1300 }">
       <a slot="action" slot-scope="text" href="javascript:;">action</a>
     </a-table>
