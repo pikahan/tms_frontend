@@ -1,6 +1,19 @@
 <template>
   <application :formData="formData">
     <template v-slot:first>
+      <a-form-model-item  label="领用人" >
+        <a-input
+          v-decorator="[
+          'person'
+        ]"
+          :disabled="true"
+          placeholder="账号"
+          v-model="current"
+        >
+          <!--TODO 之后要把current改了-->
+          <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
+        </a-input>
+      </a-form-model-item>
       <a-form-model-item  label="物品ID" >
         <a-input
           v-decorator="[
@@ -74,24 +87,5 @@
   };
 </script>
 <style scoped>
-  .steps-content {
-    margin-top: 16px;
-    min-height: 200px;
-    /*text-align: center;*/
-    padding-top: 80px;
-  }
-
-  .steps-action {
-    margin-top: 24px;
-  }
-
-  .steps-content {
-    position: relative;
-    max-width: 600px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 20px 40px 0;
-    margin-top: 40px;
-  }
 
 </style>
