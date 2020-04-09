@@ -1,0 +1,9 @@
+{
+  userTypes {
+    payload {
+      id
+      name
+      permission
+    }
+  }
+}

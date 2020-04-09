@@ -8,8 +8,8 @@
 </template>
 
 <script>
-  import searchPane from '../../components/searchPane'
-  import { searchData } from '../../util/testData' //TODO 接口完成之后删除
+  import searchPane from '@/components/searchPane'
+  import { searchData } from '@/util/testData' //TODO 接口完成之后删除
 
   //TODO mock数据,之后替换
   const columns = [

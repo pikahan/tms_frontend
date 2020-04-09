@@ -86,9 +86,6 @@
 <style scoped>
   .ant-advanced-search-form {
     padding: 24px;
-    /*background: #fbfbfb;*/
-    /*border: 1px solid #d9d9d9;*/
-    /*border-radius: 6px;*/
   }
 
   .ant-advanced-search-form .ant-form-item {
@@ -102,13 +99,5 @@
   #components-form-demo-advanced-search .ant-form {
     max-width: none;
   }
-  /*#components-form-demo-advanced-search .search-result-list {*/
-    /*margin-top: 16px;*/
-    /*border: 1px dashed #e9e9e9;*/
-    /*border-radius: 6px;*/
-    /*background-color: #fafafa;*/
-    /*min-height: 200px;*/
-    /*text-align: center;*/
-    /*padding-top: 80px;*/
-  /*}*/
+
 </style>

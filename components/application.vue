@@ -57,6 +57,7 @@
   //TODO 这个页面之后可能要重构, 先这么写了
   import AFormItem from 'ant-design-vue/es/form/FormItem'
   import ACol from 'ant-design-vue/es/grid/Col'
+
   export default {
     components: {ACol, AFormItem},
     beforeCreate() {

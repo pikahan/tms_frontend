@@ -1,0 +1,9 @@
+{
+  workcells {
+    totalCount
+    payload {
+      id
+      name
+    }
+  }
+}

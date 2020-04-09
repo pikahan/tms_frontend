@@ -1,0 +1,10 @@
+mutation ($password: String!, $employeeId: String!, $workcellId: Int!, $userTypeId: Int!) {
+  createUser(user: {
+    password: $password
+    employeeId: $employeeId
+    workcellId: $workcellId
+    userTypeId: $userTypeId
+  }) {
+    success
+  }
+}

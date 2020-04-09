@@ -29,7 +29,7 @@
           <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
         </a-input>
       </a-form-item>
-      <a-form-item has-feedback>
+      <a-form-item>
         <a-select
           v-decorator="[
           'select',
@@ -37,11 +37,9 @@
         ]"
           placeholder="请选择你的workcell"
         >
-          <a-select-option value="china">
-            China
-          </a-select-option>
-          <a-select-option value="usa">
-            U.S.A
+
+          <a-select-option v-for="workcell in workcellData.payload" :value="workcell.name" :key="workcell.name">
+            {{ workcell.name }}
           </a-select-option>
         </a-select>
           <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
@@ -71,10 +69,25 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   export default {
     beforeCreate() {
       this.form = this.$form.createForm(this, { name: 'normal_login' });
     },
+    data() {
+      return {
+        workcells:{
+          payload: []
+        }
+      }
+    },
+    computed: mapState('workcell', ['workcellData']),
+    // apollo: {
+    //   workcells: {
+    //     prefetch: true,
+    //     query: allWorkcells
+    //   }
+    // },
     methods: {
       handleSubmit(e) {
         e.preventDefault();
@@ -85,6 +98,9 @@
         });
       },
     },
+    async fetch() {
+      await this.$store.dispatch('workcell/fetchWorkcellData')
+    }
   };
 </script>
 <style>

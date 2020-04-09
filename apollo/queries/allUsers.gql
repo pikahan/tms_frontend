@@ -1,0 +1,19 @@
+{
+  users {
+    payload {
+      employeeId
+      userType {
+        id
+        name
+        permission
+      }
+      id
+      workcell {
+        name
+        id
+      }
+      workcellId
+    }
+
+  }
+}

@@ -72,7 +72,8 @@
         }
         this.selectedKeys = [key]
       }, 500)
-    }
+    },
+
   };
 </script>
 <style>

@@ -29,17 +29,26 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/antd-ui'
+    '@/plugins/antd-ui',
   ],
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/graphql' : '' // TODO 之后该线上地址
+      }
+    }
+  },
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    '@nuxt/typescript-build'
   ],
   /*
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/apollo'
   ],
   /*
   ** Build configuration
@@ -50,5 +59,9 @@ export default {
     */
     extend (config, ctx) {
     }
+  },
+  server: {
+    port: 2380,
+    host: '127.0.0.1'
   }
 }

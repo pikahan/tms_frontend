@@ -1,0 +1,123 @@
+{
+  "_queryType": "TMSQuery",
+  "_mutationType": "TMSMutation",
+  "_subscriptionType": null,
+  "_directives": [
+    {
+      "name": "include",
+      "description": "Directs the executor to include this field or fragment only when the 'if' argument is true.",
+      "locations": [
+        "FIELD",
+        "FRAGMENT_SPREAD",
+        "INLINE_FRAGMENT"
+      ],
+      "args": [
+        {
+          "name": "if",
+          "description": "Included when true.",
+          "type": "Boolean!"
+        }
+      ]
+    },
+    {
+      "name": "skip",
+      "description": "Directs the executor to skip this field or fragment when the 'if' argument is true.",
+      "locations": [
+        "FIELD",
+        "FRAGMENT_SPREAD",
+        "INLINE_FRAGMENT"
+      ],
+      "args": [
+        {
+          "name": "if",
+          "description": "Skipped when true.",
+          "type": "Boolean!"
+        }
+      ]
+    },
+    {
+      "name": "deprecated",
+      "description": "Marks an element of a GraphQL schema as no longer supported.",
+      "locations": [
+        "FIELD_DEFINITION",
+        "ENUM_VALUE"
+      ],
+      "args": [
+        {
+          "name": "reason",
+          "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted in [Markdown](https://daringfireball.net/projects/markdown/).",
+          "type": "String",
+          "defaultValue": "No longer supported"
+        }
+      ]
+    }
+  ],
+  "astNode": null,
+  "_typeMap": {
+    "TMSQuery": "TMSQuery",
+    "Int": "Int",
+    "CheckContent": "CheckContent",
+    "String": "String",
+    "FamilyPage": "FamilyPage",
+    "Family": "Family",
+    "Line": "Line",
+    "Workcell": "Workcell",
+    "LinePage": "LinePage",
+    "Model": "Model",
+    "ModelPage": "ModelPage",
+    "PartNo": "PartNo",
+    "PartNoPage": "PartNoPage",
+    "User": "User",
+    "UserType": "UserType",
+    "PermissionStatus": "PermissionStatus",
+    "Boolean": "Boolean",
+    "UserPage": "UserPage",
+    "UserTypePage": "UserTypePage",
+    "WorkcellPage": "WorkcellPage",
+    "TMSMutation": "TMSMutation",
+    "CheckContentCreateInput": "CheckContentCreateInput",
+    "StatusType": "StatusType",
+    "FamilyCreateInput": "FamilyCreateInput",
+    "LineCreateInput": "LineCreateInput",
+    "ModelCreateInput": "ModelCreateInput",
+    "PartNoCreateInput": "PartNoCreateInput",
+    "UserCreateInput": "UserCreateInput",
+    "UserTypeCreateInput": "UserTypeCreateInput",
+    "WorkcellCreateInput": "WorkcellCreateInput",
+    "CheckContentUpdateInput": "CheckContentUpdateInput",
+    "FamilyUpdateInput": "FamilyUpdateInput",
+    "LineUpdateInput": "LineUpdateInput",
+    "ModelUpdateInput": "ModelUpdateInput",
+    "PartNoUpdateInput": "PartNoUpdateInput",
+    "UserUpdateInput": "UserUpdateInput",
+    "UserTypeUpdateInput": "UserTypeUpdateInput",
+    "WorkcellUpdateInput": "WorkcellUpdateInput",
+    "__Schema": "__Schema",
+    "__Type": "__Type",
+    "__TypeKind": "__TypeKind",
+    "__Field": "__Field",
+    "__InputValue": "__InputValue",
+    "__EnumValue": "__EnumValue",
+    "__Directive": "__Directive",
+    "__DirectiveLocation": "__DirectiveLocation",
+    "Float": "Float",
+    "ID": "ID",
+    "Date": "Date",
+    "DateTime": "DateTime",
+    "DateTimeOffset": "DateTimeOffset",
+    "Seconds": "Seconds",
+    "Milliseconds": "Milliseconds",
+    "Decimal": "Decimal",
+    "Uri": "Uri",
+    "Guid": "Guid",
+    "Short": "Short",
+    "UShort": "UShort",
+    "UInt": "UInt",
+    "Long": "Long",
+    "BigInt": "BigInt",
+    "ULong": "ULong",
+    "Byte": "Byte",
+    "SByte": "SByte"
+  },
+  "_implementations": {}
+}
