@@ -38,7 +38,7 @@
           placeholder="请选择你的workcell"
         >
 
-          <a-select-option v-for="workcell in workcellData.payload" :value="workcell.name" :key="workcell.name">
+          <a-select-option v-for="workcell in workcellData" :value="workcell.name" :key="workcell.name">
             {{ workcell.name }}
           </a-select-option>
         </a-select>
@@ -99,7 +99,13 @@
       },
     },
     async fetch() {
-      await this.$store.dispatch('workcell/fetchWorkcellData')
+      if (window.localStorage.getItem('token')) {
+        this.$router.push('/')
+      }
+      let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMCIsIlJlYWQiOiJUcnVlIiwiV2FyZWhvdXNlSW4iOiJGYWxzZSIsIldhcmVob3VzZU91dCI6IkZhbHNlIiwiQ2hlY2siOiJGYWxzZSIsIlRlbXBXYXJlaG91c2VJbiI6IkZhbHNlIiwiVGVtcFdhcmVob3VzZU91dCI6IkZhbHNlIiwiUmVwYWlyQXBwbGljYXRpb24iOiJGYWxzZSIsIlJlcGFpckFwcGxpY2F0aW9uUHJvY2VzcyI6IkZhbHNlIiwiRGlzcG9zYWxBcHBsaWNhdGlvbiI6IkZhbHNlIiwiRGlzcG9zYWxBcHBsaWNhdGlvbk1pZGRsZVByb2Nlc3MiOiJGYWxzZSIsIkRpc3Bvc2FsQXBwbGljYXRpb25GaW5hbFByb2Nlc3MiOiJUcnVlIiwiQnV5b2ZmQXBwbGljYXRpb24iOiJGYWxzZSIsIkJ1eW9mZkFwcGxpY2F0aW9uTWlkZGxlUHJvY2VzcyI6IkZhbHNlIiwiQnV5b2ZmQXBwbGljYXRpb25GaW5hbFByb2Nlc3MiOiJGYWxzZSIsIkNsYW1waW5nQXBwYXJhdHVzSW5mb3JtYXRpb25NdXRhdGlvbiI6IkZhbHNlIiwiU3lzdGVtTWFuYWdlbWVudCI6IkZhbHNlIiwiZXhwIjoxNTg2ODU1MDg0LCJpc3MiOiJUTVMgR29CaWcgVGVhbSIsImF1ZCI6ImphYmlsIn0.3uH-SUC-9tmv0QiJK1NtOqGuDdFNNfhEWajk0UAflow" // TODO 之后修改
+      await this.$apolloHelpers.onLogin(token, undefined, { expires: 7 })
+      window.localStorage.setItem('token', token)
+      await this.$store.dispatch('workcell/fetchData')
     }
   };
 </script>

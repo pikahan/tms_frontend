@@ -1,7 +1,26 @@
 // @ts-ignore
 import allUsers from '@/apollo/queries/allUsers.gql'
+// @ts-ignore
+import createOne from '@/apollo/mutations/user/createOne.gql'
+// @ts-ignore
+import updateOne from '@/apollo/mutations/user/updateOne.gql'
 import { storeTemp, State } from '@/util/helper'
-import {Workcell} from './workcell'
+import { Workcell } from './workcell'
+
+export interface UserCreateQuery {
+  index?: number
+  password: string
+  employeeId: string
+  workcellId: number
+  userTypeId: number
+}
+
+export interface UserUpdateQuery {
+  password?: string
+  employeeId?: string
+  workcellId?: number
+  userTypeId?: number
+}
 
 export interface UserType {
   id: number
@@ -27,7 +46,7 @@ interface ProcessedUserData {
   userTypeId: number
 }
 
-export default storeTemp('user', { allData: allUsers } as any, null, {
+export default storeTemp('user', { allData: allUsers }, { createOne, updateOne }, {
   getters: {
     processedUserData: (state: State<UserData>) => {
       const ret = <Array<ProcessedUserData>>[]

@@ -40,6 +40,7 @@
     },
     computed: mapGetters('user', ['processedUserData']),
     methods: {
+
     },
     async fetch () {
       await this.$store.dispatch('user/fetchData')

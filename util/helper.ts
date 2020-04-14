@@ -1,3 +1,5 @@
+import {UserCreateQuery,UserUpdateQuery} from '../store/user'
+
 interface StoreTempOptions {
   state?: object
   mutations?: object
@@ -7,11 +9,17 @@ interface StoreTempOptions {
 
 interface GQLQuery {
   allData: object
-  datum: object
+  datum?: object
 }
+
 
 interface GQLMutation {
   createOne: Object
+  updateOne: Object
+}
+
+interface StateData {
+  id: number | string
 }
 
 export interface State<T> {
@@ -19,13 +27,24 @@ export interface State<T> {
   [propName: string]: any
 }
 
-interface CreateDataOption {
+type CreateDataOption = UserCreateQuery
+
+type UpdateDataQuery = UserUpdateQuery
+
+interface UpdateDataOption<T>{
+  data: T
   index: number
 }
 
 const defaultOptions: StoreTempOptions = { state: {}, mutations: {}, getters: {}, actions: {} }
 
-export const storeTemp = (dataName: string, query: GQLQuery, mutation: GQLMutation | null, options=defaultOptions) => {
+
+
+export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery, mutation: (GQLMutation | null) = null, options=defaultOptions) => {
+
+  const findIdByState = (currState: State<T>, index: number) => {
+    return currState.data[index].id
+  }
 
   const state = () => ({
     data: [],
@@ -60,22 +79,40 @@ export const storeTemp = (dataName: string, query: GQLQuery, mutation: GQLMutati
         return
       }
       let client = (this as any).app.apolloProvider.defaultClient
-      let { index, ...opt } = option
-      let { data } = await client.mutation({
+      let { data } = await client.mutate({
         mutation: mutation.createOne,
-        variables: opt
+        variables: option
       })
 
       if (data.success) {
         let { data: datum } = await client.query({
           query: query.datum
         })
-
         commit('addData', datum[dataName])
       }
 
       // TODO 错误处理
 
+    },
+    async updateData({ commit, state }: any, option: UpdateDataOption<UpdateDataQuery>) {
+      if (mutation === null) {
+        return
+      }
+      const id = findIdByState(state, option.index)
+      let client = (this as any).app.apolloProvider.defaultClient
+
+      try {
+        console.log({ id, ...option.data }  )
+        let { data } = await client.mutate({
+          mutation: mutation.updateOne,
+          variables: { input: {id, ...option.data }}
+        })
+
+      } catch (e) {
+        console.log(e, 'update error')
+      }
+      // TODO 改变数据
+      // commit('addData, data')
     },
     ...options.actions
   }

@@ -1,0 +1,9 @@
+{
+  families {
+    payload {
+      id
+      name
+    }
+    totalCount
+  }
+}

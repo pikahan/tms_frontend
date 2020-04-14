@@ -34,7 +34,7 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/graphql' : '' // TODO 之后该线上地址
+        httpEndpoint: process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8080/api/graphql' : '' // TODO 之后该线上地址
       }
     }
   },
