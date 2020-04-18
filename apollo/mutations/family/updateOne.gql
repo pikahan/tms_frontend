@@ -1,0 +1,5 @@
+mutation ($familyUpdateInput: FamilyUpdateInput!) {
+  updateFamily(family: $familyUpdateInput) {
+    success
+  }
+}

@@ -1,0 +1,14 @@
+query($familyId: Int){
+  models(familyId: $familyId) {
+    payload {
+      id
+      name
+      family {
+        id
+        name
+      }
+      familyId
+    }
+    totalCount
+  }
+}

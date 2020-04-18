@@ -1,0 +1,14 @@
+query($modelId: Int){
+  partNos(modelId: $modelId) {
+    payload {
+      id
+      name
+      model {
+        id
+        name
+      }
+      modelId
+    }
+    totalCount
+  }
+}

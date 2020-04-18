@@ -5,6 +5,7 @@ interface StoreTempOptions {
   mutations?: object
   getters?: object
   actions?: object
+  queryVariables?: object
 }
 
 interface GQLQuery {
@@ -36,7 +37,7 @@ interface UpdateDataOption<T>{
   index: number
 }
 
-const defaultOptions: StoreTempOptions = { state: {}, mutations: {}, getters: {}, actions: {} }
+const defaultOptions: StoreTempOptions = { state: {}, mutations: {}, getters: {}, actions: {}, queryVariables: {} }
 
 
 
@@ -66,13 +67,16 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
   }
 
   const actions = {
-    async fetchData({ commit }: any) {
+    async fetchData({ commit }: any, variables: any) {
       let client = (this as any).app.apolloProvider.defaultClient
       const { data } = await client.query({
-        query: query.allData
+        query: query.allData,
+        variables: typeof variables === 'undefined' ? undefined : variables
       })
       console.log(data, "fetch data")
-      commit('setData', data[`${dataName}s`].payload)
+      const allDataName = dataName.endsWith('y') ? dataName.substr(0, dataName.length-1) + 'ies' : dataName + 's';
+      console.log(allDataName)
+      commit('setData', data[allDataName].payload)
     },
     async createData({ commit }: any, option: CreateDataOption) {
       if (mutation === null) {

@@ -1,66 +1,74 @@
 <template>
   <div>
-    <searchPane :search-data="searchData" />
-    <nuxt-link to="/purchaseApplication/submit">
-      <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
-    </nuxt-link>
-    <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1300 }">
-      <a slot="action" slot-scope="text" href="javascript:;">action</a>
-    </a-table>
+    <list-panel-wrapper>
+      <list-panel title="family" :name-list="formatData(data)" :clickCallback="handleFamilyListClick" :hoverPos="pos[0]" :addBtnClick="testFn" />
+      <list-panel title="model" :name-list="formatData(modelData)" :clickCallback="handleModelListClick" :hoverPos="pos[1]" />
+      <list-panel title="part No" :name-list="formatData(partNoData)" :hoverPos="pos[2]" :clickCallback="handlePartNoListClick" />
+    </list-panel-wrapper>
   </div>
 </template>
 
 <script>
   import searchPane from '@/components/searchPane'
+  import listPanelWrapper from '@/components/listPanelWrapper'
+  import listPanel from '@/components/listPanel'
   import { searchData } from '@/util/testData' //TODO 接口完成之后删除
+  import { fetchDataIn } from '@/util/helper'
+  import { mapState } from 'vuex'
+  import Vue from 'vue'
 
-  //TODO mock数据,之后替换
-  const columns = [
-    { title: 'Full', dataIndex: 'name', key: 'name'},
-    { title: 'Age', dataIndex: 'age', key: 'age'},
-    { title: 'Column 1', dataIndex: 'address', key: '1' },
-    { title: 'Column 2', dataIndex: 'address', key: '2' },
-    { title: 'Column 3', dataIndex: 'address', key: '3' },
-    { title: 'Column 4', dataIndex: 'address', key: '4' },
-    { title: 'Column 5', dataIndex: 'address', key: '5' },
-    { title: 'Column 6', dataIndex: 'address', key: '6' },
-    { title: 'Column 7', dataIndex: 'address', key: '7' },
-    { title: 'Column 8', dataIndex: 'address', key: '8' },
-    {
-      title: 'Action',
-      key: 'operation',
-      fixed: 'right',
-      width: '100px',
-      scopedSlots: { customRender: 'action' },
-    },
-  ];
-
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 40,
-      address: 'London Park',
-    },
-  ];
+  const FAMILY_POS = 0;
+  const MODEL_POS = 1;
+  const PART_NO_POS = 2;
 
   export default {
-    name: 'putInOper',
     components: {
       searchPane,
+      listPanel,
+      listPanelWrapper,
     },
     data() {
       return {
-        searchData,
-        data,
-        columns,
+        pos: [-1, -1, -1]
       }
+    },
+    methods: {
+      async handleFamilyListClick(pos) {
+        if (pos !== this.pos[FAMILY_POS]) {
+          this.pos.splice(MODEL_POS, 2, -1, -1)
+        }
+        Vue.set(this.pos, FAMILY_POS, pos)
+        await this.$store.dispatch('model/fetchData', { familyId: this.data[pos].id })
+      },
+      async handleModelListClick(pos) {
+        if (pos !== this.pos[MODEL_POS]) {
+          this.pos.splice(PART_NO_POS, 1, -1)
+        }
+        Vue.set(this.pos, MODEL_POS, pos)
+        await this.$store.dispatch('partNo/fetchData', { modelId: this.modelData[pos].id })
+      },
+      handlePartNoListClick(pos) {
+        Vue.set(this.pos, PART_NO_POS, pos)
+      },
+      formatData(fetchedData) {
+        return fetchedData.map(data => data.name)
+      },
+      testFn(pos) {
+        console.log(pos)
+      }
+    },
+    computed: {
+      ...mapState('family', ['data']),
+      ...mapState('model', {
+        modelData: 'data'
+      }),
+      ...mapState('partNo', {
+        partNoData: 'data'
+      })
+    },
+    async fetch() {
+      const fetchDataFor = fetchDataIn(this)
+      await fetchDataFor('family')
     }
   }
 </script>

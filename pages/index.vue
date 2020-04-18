@@ -62,6 +62,9 @@
         }, {
           name: '工夹具信息',
           router: '/apparatusData'
+        }, {
+          name: '类别管理',
+          router: '/apparatusTypeManagement'
         }]
         this.menuItemList = data
         console.log(this.getSelectedKey(this.$route.path))
