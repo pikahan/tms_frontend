@@ -1,0 +1,5 @@
+query($workcellId: Int!, $password: String!, $employeeId: String!){
+  auth(workcellId: $workcellId, password: $password, employeeId: $employeeId) {
+    token
+  }
+}

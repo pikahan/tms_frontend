@@ -1,5 +1,5 @@
 mutation ($input: Int!) {
-  deleteFamily(id: $input) {
+  deleteModel(id: $input) {
     success
   }
 }

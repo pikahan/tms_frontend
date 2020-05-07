@@ -1,14 +1,17 @@
 <template>
   <div class="panel">
     <div class="panel_list">
-      <div class="title">{{ title }}</div>
-      <div class="list_ltem" :style="currPos === pos ? { background: 'rgba(208, 230, 255, 0.65)' } : {}" v-for="(name, pos) of nameList" @click="handleItemClick(pos)">
-        {{ name }}
-      </div>
+      <div class="title">{{ type.title }}</div>
+      <a-spin :spinning="spinning">
+        <div class="list_item" :style="currPos === pos ? { background: 'rgba(208, 230, 255, 0.65)' } : {}" v-for="(name, pos) of nameList" @click="handleItemClick(pos)">
+          {{ name }}
+          <a-icon type="edit" theme="twoTone" class="edit_btn" v-show="currPos === pos" @click="btnClick(type, 'update', currPos, name)" />
+        </div>
+      </a-spin>
     </div>
-    <div class="btn_list" v-if="hasBtn">
-      <a-button @click="addBtnClick(currPos)">+</a-button>
-      <a-button @click="deleteBtnClick(currPos)">-</a-button>
+    <div class="btn_list" v-if="hasBtn" >
+      <a-button @click="btnClick(type, 'add', currPos)">+</a-button>
+      <a-button @click="btnClick(type, 'delete', currPos)">-</a-button>
     </div>
   </div>
 </template>
@@ -31,9 +34,9 @@
         type: Function,
         default: () => {}
       },
-      title: {
-        type: String,
-        default: 'Title'
+      type: {
+        type: Object,
+        default: { title: 'Title', key: 'title' }
       },
       hoverPos: {
         type: Number
@@ -42,13 +45,13 @@
         type: Boolean,
         default: true
       },
-      addBtnClick: {
+      btnClick: {
         type: Function,
         default: () => {}
       },
-      deleteBtnClick: {
-        type: Function,
-        default: () => {}
+      spinning: {
+        type: Boolean,
+        default: false
       }
     },
     methods: {
@@ -67,7 +70,6 @@
     },
     computed: {
       currPos() {
-        // console.log(typeof this.hoverPos === 'undefined' ? this._hovorPos : this.hoverPos)
         return typeof this.hoverPos === 'undefined' ? this._hovorPos : this.hoverPos
       }
     }
@@ -104,9 +106,18 @@
       color: rgba(0,0,0,.85);
     }
 
-    .list_ltem {
+    .list_item {
+      position: relative;
       font-size: 14px;
       color: rgba(0,0,0,.65);
+
+      .edit_btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
     }
+
   }
 </style>

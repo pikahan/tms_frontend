@@ -1,0 +1,5 @@
+mutation ($input: PartNoCreateInput!) {
+  createPartNo(partNo: $input) {
+    success
+  }
+}

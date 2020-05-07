@@ -34,9 +34,20 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8080/api/graphql' : '' // TODO 之后该线上地址
+        httpEndpoint: process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:5000/api/graphql' : '' // TODO 之后该线上地址
       }
-    }
+    },
+    defaultOptions: {
+      // See 'apollo' definition
+      // For example: default query options
+      $query: {
+        loadingKey: 'loading',
+        fetchPolicy: 'network-only',
+      },
+      $watchQuery: {
+        fetchPolicy: 'network-only'
+      },
+    },
   },
   /*
   ** Nuxt.js dev-modules

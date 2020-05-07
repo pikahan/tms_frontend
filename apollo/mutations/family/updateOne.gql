@@ -1,5 +1,5 @@
-mutation ($familyUpdateInput: FamilyUpdateInput!) {
-  updateFamily(family: $familyUpdateInput) {
+mutation ($input: FamilyUpdateInput!) {
+  updateFamily(family: $input) {
     success
   }
 }

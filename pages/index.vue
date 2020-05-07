@@ -97,4 +97,8 @@
     background: rgba(255, 255, 255, 0.2);
     margin: 16px;
   }
+
+  .thumbnail {
+   max-width: 80px;
+  }
 </style>

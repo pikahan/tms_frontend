@@ -1,0 +1,37 @@
+query($pageIndex: Int, $status: String, $billNo: String){
+  apparatusEntities(pageIndex: $pageIndex, status: $status, billNo: $billNo) {
+    payload {
+      id
+      billNo
+      defId
+      def {
+        id
+        code
+        recBy
+        uPL
+        name
+        owner
+        recOn
+        family {
+          id
+          name
+        }
+        models
+        partNos
+        pMPeriod
+        remark
+        workcell {
+          id
+          name
+        }
+      }
+      seqId
+      status
+      location
+      picture
+      regDate
+      status
+    }
+    totalCount
+  }
+}

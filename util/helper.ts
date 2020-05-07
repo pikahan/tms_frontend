@@ -1,4 +1,7 @@
 import {UserCreateQuery,UserUpdateQuery} from '../store/user'
+import {FamilyCreateQuery} from '../store/family'
+import {ModelCreateQuery} from '../store/model'
+import {PartNoCreateQuery} from '../store/partNo'
 
 interface StoreTempOptions {
   state?: object
@@ -17,6 +20,7 @@ interface GQLQuery {
 interface GQLMutation {
   createOne: Object
   updateOne: Object
+  deleteOne: Object
 }
 
 interface StateData {
@@ -28,7 +32,7 @@ export interface State<T> {
   [propName: string]: any
 }
 
-type CreateDataOption = UserCreateQuery
+type CreateDataOption = UserCreateQuery | FamilyCreateQuery | ModelCreateQuery | PartNoCreateQuery
 
 type UpdateDataQuery = UserUpdateQuery
 
@@ -44,6 +48,7 @@ const defaultOptions: StoreTempOptions = { state: {}, mutations: {}, getters: {}
 export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery, mutation: (GQLMutation | null) = null, options=defaultOptions) => {
 
   const findIdByState = (currState: State<T>, index: number) => {
+    console.log('findIdByState index: ' + index)
     return currState.data[index].id
   }
 
@@ -67,34 +72,39 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
   }
 
   const actions = {
-    async fetchData({ commit }: any, variables: any) {
+    async fetchData({ commit }: any, option: any) {
       let client = (this as any).app.apolloProvider.defaultClient
-      const { data } = await client.query({
-        query: query.allData,
-        variables: typeof variables === 'undefined' ? undefined : variables
-      })
-      console.log(data, "fetch data")
-      const allDataName = dataName.endsWith('y') ? dataName.substr(0, dataName.length-1) + 'ies' : dataName + 's';
-      console.log(allDataName)
-      commit('setData', data[allDataName].payload)
+      console.log(option)
+      try {
+        const { data } = await client.query({
+          query: query.allData,
+          fetchPolicy: 'network-only',
+          ...option
+        })
+        console.log(data, "fetch data")
+        const allDataName = dataName.endsWith('y') ? dataName.substr(0, dataName.length-1) + 'ies' : dataName + 's';
+        console.log(allDataName)
+        commit('setData', data[allDataName].payload)
+      } catch (e) {
+        console.error(e)
+      }
     },
     async createData({ commit }: any, option: CreateDataOption) {
       if (mutation === null) {
+        console.error('no mutation')
         return
       }
       let client = (this as any).app.apolloProvider.defaultClient
-      let { data } = await client.mutate({
-        mutation: mutation.createOne,
-        variables: option
-      })
+      console.log(option)
+      try {
 
-      if (data.success) {
-        let { data: datum } = await client.query({
-          query: query.datum
+        let { data } = await client.mutate({
+          mutation: mutation.createOne,
+          variables: { input: option }
         })
-        commit('addData', datum[dataName])
+      } catch (e) {
+        console.error(e)
       }
-
       // TODO 错误处理
 
     },
@@ -106,7 +116,8 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
       let client = (this as any).app.apolloProvider.defaultClient
 
       try {
-        console.log({ id, ...option.data }  )
+
+
         let { data } = await client.mutate({
           mutation: mutation.updateOne,
           variables: { input: {id, ...option.data }}
@@ -117,6 +128,24 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
       }
       // TODO 改变数据
       // commit('addData, data')
+    },
+    async deleteData({ commit, state }: any, option: any) {
+      if (mutation === null) {
+        return
+      }
+      const id = findIdByState(state, option.index)
+      let client = (this as any).app.apolloProvider.defaultClient
+      try {
+        let res = await client.mutate({
+          mutation: mutation.deleteOne,
+          variables: { input: typeof option.data === 'undefined' ? id : {id, ...option.data }}
+        })
+
+        // TODO 错误处理
+        console.log('delete res', res)
+      } catch (e) {
+        console.log(e, 'delete error')
+      }
     },
     ...options.actions
   }
@@ -131,8 +160,23 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
 
 export function fetchDataIn(ctx: any) {
   return async (name: string) => {
+    console.log(ctx.$store.state[name].data.length)
     if (ctx.$store.state[name].data.length === 0 ) {
-      return await ctx.$store.dispatch(`${name}/fetchData`)
+      console.log('fetch data start')
+      let ret = await ctx.$store.dispatch(`${name}/fetchData`)
+      console.log('fetch data end')
+      return ret
     }
   }
+}
+
+export function arrayBufferToBase64(buffer: Array<number> ) {
+  var binary = '';
+  var bytes = new Uint8Array( buffer );
+  var len = bytes.byteLength;
+  for (var i = 0; i < len; i++) {
+    binary += String.fromCharCode( bytes[ i ] );
+  }
+  console.log("arrayBufferToBase64:" + binary)
+  return window.btoa( binary );
 }

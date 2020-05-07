@@ -1,33 +1,34 @@
 <template>
   <div>
     <searchPane :search-data="searchData" />
-    <nuxt-link to="/purchaseApplication/submit">
+    <nuxt-link to="/purchase/submit">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
     </nuxt-link>
-    <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1300 }">
-      <a slot="action" slot-scope="text" href="javascript:;">action</a>
+    <a-table :columns="columns" :dataSource="processedApparatusEntityData" :scroll="{ x: 1300 }">
+      <a slot="action" slot-scope="text" href="javascript:;">详细</a>
+        <img class="thumbnail" slot="picture" slot-scope="picture"  :src="`data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`" alt="img">
     </a-table>
   </div>
 </template>
 
 <script>
   import searchPane from '@/components/searchPane'
+  import { mapGetters } from 'vuex'
   import { searchData } from '@/util/testData' //TODO 接口完成之后删除
+  import { arrayBufferToBase64 } from '@/util/helper'
 
-  //TODO mock数据,之后替换
   const columns = [
-    { title: 'Full', dataIndex: 'name', key: 'name'},
-    { title: 'Age', dataIndex: 'age', key: 'age'},
-    { title: 'Column 1', dataIndex: 'address', key: '1' },
-    { title: 'Column 2', dataIndex: 'address', key: '2' },
-    { title: 'Column 3', dataIndex: 'address', key: '3' },
-    { title: 'Column 4', dataIndex: 'address', key: '4' },
-    { title: 'Column 5', dataIndex: 'address', key: '5' },
-    { title: 'Column 6', dataIndex: 'address', key: '6' },
-    { title: 'Column 7', dataIndex: 'address', key: '7' },
-    { title: 'Column 8', dataIndex: 'address', key: '8' },
+    { title: '采购单据号', dataIndex: 'billNo', key: 'billNo'},
+    { title: '编号', dataIndex: 'code', key: 'code'},
+    { title: '责任人', dataIndex: 'owner', key: 'owner' },
+    { title: '大类', dataIndex: 'familyName', key: 'familyName' },
+    { title: '模组', dataIndex: 'models', key: 'models' },
+    { title: '料号', dataIndex: 'partNos', key: 'partNos' },
+    { title: '录入日期', dataIndex: 'recOn', key: 'recOn' },
+    { title: '图片', key: 'picture', dataIndex: 'picture', scopedSlots: { customRender: 'picture' } },
+    { title: '状态', dataIndex: 'status', key: 'status' },
     {
-      title: 'Action',
+      title: '操作',
       key: 'operation',
       fixed: 'right',
       width: '100px',
@@ -35,33 +36,28 @@
     },
   ];
 
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 40,
-      address: 'London Park',
-    },
-  ];
 
   export default {
-    name: 'putInOper',
     components: {
       searchPane,
     },
     data() {
       return {
         searchData,
-        data,
         columns,
       }
-    }
+    },
+    methods: {
+       arrayBufferToBase64
+    },
+    computed: {
+      ...mapGetters('apparatusEntity', ['processedApparatusEntityData'])
+    },
+    async fetch() {
+      await this.$store.dispatch(`apparatusEntity/fetchData`)
+    },
+    middleware:
+      'isAuth'
   }
 </script>
 

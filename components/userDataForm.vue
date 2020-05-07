@@ -106,6 +106,7 @@
         return typeof this.$route.params.id === 'undefined'
       },
       async createData() {
+        console.log('create')
         await this.$store.dispatch('user/createData', this.form)
       },
       async updateData() {

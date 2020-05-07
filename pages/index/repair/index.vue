@@ -1,28 +1,26 @@
 <template>
   <div>
     <searchPane :search-data="searchData" />
-    <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1300 }">
+    <a-table :columns="columns" :dataSource="processedRepairRecordData" :scroll="{ x: 1300 }">
       <a slot="action" slot-scope="text" href="javascript:;">action</a>
+      <img class="thumbnail" slot="picture" slot-scope="picture"  :src="`data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`" alt="img">
     </a-table>
   </div>
 </template>
 
 <script>
   import searchPane from '@/components/searchPane'
+  import { mapGetters } from 'vuex'
   import { searchData } from '@/util/testData' //TODO 接口完成之后删除
+  import { arrayBufferToBase64 } from '@/util/helper'
 
-  //TODO mock数据,之后替换
   const columns = [
-    { title: 'Full', dataIndex: 'name', key: 'name'},
-    { title: 'Age', dataIndex: 'age', key: 'age'},
-    { title: 'Column 1', dataIndex: 'address', key: '1' },
-    { title: 'Column 2', dataIndex: 'address', key: '2' },
-    { title: 'Column 3', dataIndex: 'address', key: '3' },
-    { title: 'Column 4', dataIndex: 'address', key: '4' },
-    { title: 'Column 5', dataIndex: 'address', key: '5' },
-    { title: 'Column 6', dataIndex: 'address', key: '6' },
-    { title: 'Column 7', dataIndex: 'address', key: '7' },
-    { title: 'Column 8', dataIndex: 'address', key: '8' },
+    { title: '物品代码', dataIndex: 'code', key: 'code'},
+    { title: '申请时间', dataIndex: 'applicationTime', key: 'applicationTime' },
+    { title: '修复结果时间', dataIndex: 'finishTime', key: 'finishTime' },
+    { title: '图片', dataIndex: 'picture', key: 'picture',scopedSlots: { customRender: 'picture' }},
+    { title: '故障描述', dataIndex: 'description', key: 'description' },
+    { title: 'status', dataIndex: 'status', key: 'status' },
     {
       title: 'Action',
       key: 'operation',
@@ -32,20 +30,6 @@
     },
   ];
 
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 40,
-      address: 'London Park',
-    },
-  ];
 
   export default {
     name: 'putInOper',
@@ -55,9 +39,17 @@
     data() {
       return {
         searchData,
-        data,
         columns,
       }
+    },
+    computed: {
+      ...mapGetters('repairRecord', ['processedRepairRecordData'])
+    },
+    async fetch() {
+      await this.$store.dispatch(`repairRecord/fetchData`)
+    },
+    methods: {
+      arrayBufferToBase64
     }
   }
 </script>

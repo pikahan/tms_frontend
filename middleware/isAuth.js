@@ -1,6 +1,7 @@
-export default function ({app, error}) {
+export default function ({app, error, redirect}) {
   const hasToken = !!app.$apolloHelpers.getToken()
+  console.log('token: ' + app.$apolloHelpers.getToken())
   if (!hasToken) {
-    error({errorCode:503, message:'你没有权限'})
+    redirect('/login')
   }
 }

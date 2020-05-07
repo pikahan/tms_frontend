@@ -1,0 +1,5 @@
+mutation ($input: PartNoUpdateInput!) {
+  updatePartNo(partNo: $input) {
+    success
+  }
+}

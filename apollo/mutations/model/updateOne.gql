@@ -1,0 +1,5 @@
+mutation ($input: ModelUpdateInput!) {
+  updateModel(model: $input) {
+    success
+  }
+}

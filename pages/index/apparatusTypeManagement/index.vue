@@ -1,14 +1,25 @@
 <template>
   <div>
     <list-panel-wrapper>
-      <list-panel title="family" :name-list="formatData(data)" :clickCallback="handleFamilyListClick" :hoverPos="pos[0]" :addBtnClick="testFn" />
-      <list-panel title="model" :name-list="formatData(modelData)" :clickCallback="handleModelListClick" :hoverPos="pos[1]" />
-      <list-panel title="part No" :name-list="formatData(partNoData)" :hoverPos="pos[2]" :clickCallback="handlePartNoListClick" />
+      <list-panel :btnClick="handleBtnClick" :spinning="spinning.family" :type="{ title:'family', key: 'family' }" :name-list="formatData(data)" :clickCallback="handleFamilyListClick" :hoverPos="pos[0]" />
+      <list-panel :btnClick="handleBtnClick" :spinning="spinning.model" :type="{ title:'model', key: 'model' }" :name-list="formatData(modelData)" :clickCallback="handleModelListClick" :hoverPos="pos[1]" />
+      <list-panel :btnClick="handleBtnClick" :spinning="spinning.partNo" :type="{ title:'part No', key: 'partNo' }" :name-list="formatData(partNoData)" :hoverPos="pos[2]" :clickCallback="handlePartNoListClick" />
     </list-panel-wrapper>
+    <a-modal
+      :title="modelTitle"
+      :visible="visible"
+      @ok="handleOk"
+      :confirmLoading="confirmLoading"
+      @cancel="handleCancel"
+    >
+      <p>
+        {{ "名称" }}<a-input v-model="inputValue"/>
+      </p>
+    </a-modal>
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import searchPane from '@/components/searchPane'
   import listPanelWrapper from '@/components/listPanelWrapper'
   import listPanel from '@/components/listPanel'
@@ -21,6 +32,48 @@
   const MODEL_POS = 1;
   const PART_NO_POS = 2;
 
+  const btnEventMap = {
+    family: {
+      async add(pos) {
+        console.log(arguments)
+        await this.$store.dispatch('family/createData', { name: this.inputValue })
+      },
+      async delete(pos) {
+        console.log(arguments)
+        await this.$store.dispatch('family/deleteData', { index: this.pos[FAMILY_POS] })
+      },
+      async update() {
+        await this.$store.dispatch('family/updateData', { index: this.pos[FAMILY_POS], data: { name: this.inputValue  }})
+      }
+    },
+    model: {
+      async add() {
+        const familyId = this.data[this.pos[FAMILY_POS]].id
+        await this.$store.dispatch('model/createData', { name: this.inputValue, familyId })
+      },
+      async delete(pos) {
+        console.log(arguments)
+        await this.$store.dispatch('model/deleteData', { index: this.pos[MODEL_POS] })
+      },
+      async update() {
+        await this.$store.dispatch('model/updateData', { index: this.pos[MODEL_POS], data: { name: this.inputValue  } })
+      }
+    },
+    partNo: {
+      async add() {
+        const modelId = this.data[this.pos[MODEL_POS]].id
+        await this.$store.dispatch('partNo/createData', { name: this.inputValue, modelId: modelId })
+      },
+      async delete(pos) {
+        console.log(arguments)
+        await this.$store.dispatch('partNo/deleteData', { index: this.pos[PART_NO_POS] })
+      },
+      async update() {
+        await this.$store.dispatch('partNo/updateData', { index: this.pos[PART_NO_POS], data: { name: this.inputValue  }})
+      }
+    }
+  }
+
   export default {
     components: {
       searchPane,
@@ -29,7 +82,19 @@
     },
     data() {
       return {
-        pos: [-1, -1, -1]
+        pos: [-1, -1, -1],
+        spinning: {
+          family: true,
+          model: false,
+          partNo: false
+        },
+        modelTitle: 'Family',
+        modelKey: 'family',
+        visible: false,
+        callback: null,
+        confirmLoading: false,
+        callbackArgs: [],
+        inputValue: ''
       }
     },
     methods: {
@@ -38,14 +103,26 @@
           this.pos.splice(MODEL_POS, 2, -1, -1)
         }
         Vue.set(this.pos, FAMILY_POS, pos)
-        await this.$store.dispatch('model/fetchData', { familyId: this.data[pos].id })
+        this.changeSpinningStatus('model')
+        await this.$store.dispatch('model/fetchData', {
+          variables: {
+            familyId: this.data[pos].id
+          }
+        })
+        this.changeSpinningStatus('model')
       },
       async handleModelListClick(pos) {
         if (pos !== this.pos[MODEL_POS]) {
           this.pos.splice(PART_NO_POS, 1, -1)
         }
         Vue.set(this.pos, MODEL_POS, pos)
-        await this.$store.dispatch('partNo/fetchData', { modelId: this.modelData[pos].id })
+        this.changeSpinningStatus('partNo')
+        await this.$store.dispatch('partNo/fetchData', {
+          variables: {
+            modelId: this.modelData[pos].id
+          }
+        })
+        this.changeSpinningStatus('partNo')
       },
       handlePartNoListClick(pos) {
         Vue.set(this.pos, PART_NO_POS, pos)
@@ -53,8 +130,57 @@
       formatData(fetchedData) {
         return fetchedData.map(data => data.name)
       },
-      testFn(pos) {
-        console.log(pos)
+      changeSpinningStatus(type) {
+        this.spinning[type] = !this.spinning[type]
+      },
+      handleBtnClick(dataType, functionType, ...args) {
+        this.modelTitle = dataType.title
+        this.modelKey = dataType.key
+        this.visible = true
+        this.callback = btnEventMap[dataType.key][functionType].bind(this)
+        this.callbackArgs = args
+      },
+      async handleOk() {
+        console.log('handle ok')
+        this.confirmLoading = true
+        await this.callback(...this.callbackArgs, this.inputValue)
+
+        console.log('modelKey: ', this.modelKey)
+        // TODO bug
+        await this.fetchData(this.modelKey)
+
+        this.inputValue = ''
+        this.confirmLoading = false
+        this.visible = false
+      },
+      handleCancel(e) {
+        console.log('Clicked cancel button')
+        this.visible = false
+      },
+      async fetchData(name) {
+        let ret
+        switch(name) {
+          case 'family':
+            ret = await this.$store.dispatch(`family/fetchData`)
+            break
+          case 'model':
+            ret = await this.$store.dispatch('model/fetchData', {
+              variables: {
+                familyId: this.data[this.pos[FAMILY_POS]].id
+              }
+            })
+            break
+          case 'partNo':
+            ret = await this.$store.dispatch('partNo/fetchData', {
+              variables: {
+                modelId: this.data[this.pos[MODEL_POS]].id
+              }
+            })
+            break
+          default:
+            console.error('error')
+        }
+        return ret
       }
     },
     computed: {
@@ -69,7 +195,10 @@
     async fetch() {
       const fetchDataFor = fetchDataIn(this)
       await fetchDataFor('family')
-    }
+      this.changeSpinningStatus('family')
+    },
+    middleware:
+      'isAuth'
   }
 </script>
 
