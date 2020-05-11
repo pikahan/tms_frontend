@@ -5,8 +5,9 @@
     </a-steps>
     <div class="steps-content">
       <a-form-model
-        :form="form"
-        @submit="handleSubmit"
+        ref="ruleForm"
+        :model="form"
+        :rules="rules"
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
         >
@@ -27,18 +28,17 @@
             </slot>
           </template>
         </a-result>
-        <a-form-model-item :wrapperCol="24">
+        <a-form-model-item :wrapperCol="{span: 24}">
           <div class="steps-action">
             <a-row>
-              <a-col :span="20" :offset="4">
+              <a-col :span="16" :offset="8">
                 <a-button v-if="current < steps.length - 2" type="primary" @click="next">
                   下一步
                 </a-button>
                 <a-button
                   v-if="current == steps.length - 2"
                   type="primary"
-                  html-type="submit"
-                  @click="$message.success('Processing complete!')"
+                  @click="handleSubmit"
                 >
                   提交
                 </a-button>
@@ -60,9 +60,6 @@
 
   export default {
     components: {ACol, AFormItem},
-    beforeCreate() {
-      this.form = this.$form.createForm(this, { name: 'repair' });
-    },
     data() {
       return {
         current: 0,
@@ -70,19 +67,37 @@
     },
     methods: {
       next() {
-        this.current++;
+        console.log('next click')
+        this.validataField(() => { this.current++ })
       },
       prev() {
         this.current--;
       },
-      handleSubmit(e) {
-        e.preventDefault();
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            console.log('Received values of form: ', values);
-            this.current++
-          }
 
+      validataField(cb) {
+        console.log(this.modelList[this.current])
+        let errFlag = false
+        this.$refs.ruleForm.validateField(this.modelList[this.current], (err, values) => {
+          console.log(arguments)
+          if (err) {
+            errFlag = true
+          }
+        });
+
+        if (errFlag === false) {
+          cb()
+        }
+      },
+
+      handleSubmit() {
+        this.$refs.ruleForm.validate(valid => {
+          if (valid) {
+            this.current++
+            console.log('current ++ by handleSubmit')
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
         });
       },
     },
@@ -92,17 +107,35 @@
       },
       labelCol: {
         type: Object,
-        default: { span: 4 }
+        default: () => ({ span: 4 })
       },
       wrapperCol: {
         type: Object,
-        default: { span: 20 }
+        default: () => ({ span: 20 })
+      },
+      form: {
+        type: Object,
+        default: () => ({})
+      },
+      rules: {
+        type: Object,
+        default: () => ({})
       }
 
     },
     computed: {
       steps() { // 二维数组转一位数组, 并取title为数组中的元素
-        return this.formData.reduce((arr, curr) => arr.concat(curr.map(step => step.title)), [])
+        console.log(this.formData.reduce((arr, curr) => arr.concat(curr.title), []))
+        return this.formData.reduce((arr, curr) => arr.concat(curr.title), [])
+      },
+      modelList() {
+        const ret = []
+        this.formData.forEach(option => {
+          if (typeof option.modelItem !== 'undefined') {
+            ret.push(option.modelItem)
+          }
+        })
+        return ret
       }
     }
   };
@@ -110,16 +143,17 @@
 <style scoped>
   .steps-content {
     position: relative;
-    max-width: 600px;
     left: 50%;
     transform: translateX(-50%);
     padding: 20px 40px 0;
     margin-top: 40px;
     min-height: 200px;
+    max-width: 800px;
   }
 
   .steps-action {
     margin-top: 24px;
+
   }
 
 </style>

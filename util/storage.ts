@@ -1,5 +1,5 @@
 interface StorageProps {
-  source: any
+  source?: any
 }
 
 
@@ -15,8 +15,8 @@ interface IStorage {
 export default class MyStorage implements IStorage{
   readonly props: StorageProps
   readonly source: any
-  constructor(props: StorageProps) {
-    this.props = props || {}
+  constructor(props: StorageProps={}) {
+    this.props = props
     this.source = this.props.source || window.localStorage
     this.initRun();
   }

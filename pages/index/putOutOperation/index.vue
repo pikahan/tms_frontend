@@ -40,7 +40,6 @@
         columns,
       }
     },
-    middleware: 'isAuth',
     async fetch() {
       await this.$store.dispatch(`apparatusEntity/fetchData`)
     },

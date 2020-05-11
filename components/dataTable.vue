@@ -5,12 +5,6 @@
 </template>
 <script>
   export default {
-    // data() {
-    //   return {
-    //     data,
-    //     columns,
-    //   };
-    // },
     props: {
       columns: {
         type: Array,

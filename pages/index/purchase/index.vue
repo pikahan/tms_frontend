@@ -5,7 +5,7 @@
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
     </nuxt-link>
     <a-table :columns="columns" :dataSource="processedApparatusEntityData" :scroll="{ x: 1300 }">
-      <a slot="action" slot-scope="text" href="javascript:;">详细</a>
+      <a slot="action" slot-scope="text, data" href="javascript:;">{{ data.status === '' }}</a>
         <img class="thumbnail" slot="picture" slot-scope="picture"  :src="`data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`" alt="img">
     </a-table>
   </div>
@@ -48,16 +48,22 @@
       }
     },
     methods: {
-       arrayBufferToBase64
+      arrayBufferToBase64,
     },
     computed: {
-      ...mapGetters('apparatusEntity', ['processedApparatusEntityData'])
+      ...mapGetters('apparatusEntity', ['processedApparatusEntityData']),
+      permission() {
+        // TODO 划分好权限之后更改
+        return {
+          approvalPermission: true
+
+        }
+      }
     },
     async fetch() {
       await this.$store.dispatch(`apparatusEntity/fetchData`)
     },
-    middleware:
-      'isAuth'
+
   }
 </script>
 

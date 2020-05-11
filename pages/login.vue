@@ -102,9 +102,9 @@
       },
     },
     async fetch() {
-      if (window.localStorage.getItem('token')) {
-        // this.$router.push('/')
-      }
+      // if (window.localStorage.getItem('token')) {
+      //   // this.$router.push('/')
+      // }
 
       await this.$store.dispatch('workcell/fetchData')
     }

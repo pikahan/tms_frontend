@@ -177,6 +177,6 @@ export function arrayBufferToBase64(buffer: Array<number> ) {
   for (var i = 0; i < len; i++) {
     binary += String.fromCharCode( bytes[ i ] );
   }
-  console.log("arrayBufferToBase64:" + binary)
+  console.log('computer say: ' + binary)
   return window.btoa( binary );
 }

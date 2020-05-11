@@ -1,8 +1,6 @@
 query($pageIndex: Int){
-  repairRecords(pageIndex: $pageIndex) {
+  scrapRecords(pageIndex: $pageIndex) {
     payload {
-      acceptor
-      acceptorTime
       apparatusEntity {
         seqId
         def {
@@ -10,13 +8,14 @@ query($pageIndex: Int){
         }
       }
       apparatusEntityId
+      proposer
       applicationTime
-      description
-      finishTime
+      middleProcessor
+      finalProcessor
       id
-      picture
       proposer
       status
+      reason
     }
     totalCount
   }

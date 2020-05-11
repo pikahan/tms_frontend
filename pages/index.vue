@@ -28,6 +28,7 @@
   </a-layout>
 </template>
 <script>
+  import MyStorage from '@/util/storage'
   export default {
     data() {
       return {
@@ -67,6 +68,9 @@
           router: '/apparatusTypeManagement'
         }]
         this.menuItemList = data
+        const store = new MyStorage()
+        const userInfo = store.get('userInfo')
+        this.$store.commit('user/setUserInfo', userInfo)
         console.log(this.getSelectedKey(this.$route.path))
         let key = this.getSelectedKey(this.$route.path)
         if (key === '/') { // 进入第一个tab
@@ -76,6 +80,7 @@
         this.selectedKeys = [key]
       }, 500)
     },
+    middleware: 'isAuth',
 
   };
 </script>

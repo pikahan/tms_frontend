@@ -8,6 +8,7 @@ import updateOne from '@/apollo/mutations/user/updateOne.gql'
 import auth from '@/apollo/queries/auth.gql'
 import { storeTemp, State } from '@/util/helper'
 import { Workcell } from './workcell'
+import MyStorage from '../util/storage'
 
 export interface UserCreateQuery {
   index?: number
@@ -30,6 +31,13 @@ export interface UserType {
   permission: number
 }
 
+export interface UserInfo {
+  id: number
+  name: string
+  permission: number
+  userTypeName: string
+}
+
 export interface UserData {
   id?: number
   employeeId: string
@@ -38,6 +46,8 @@ export interface UserData {
   workcellId?: number
   passward?: string
 }
+
+const EXPIRES = 1000 * 60 * 60
 
 interface ProcessedUserData {
   index: number
@@ -55,6 +65,7 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne }
       message: '',
       status: 'validating'
     },
+    userInfo: {}
   },
   getters: {
     processedUserData: (state: State<UserData>) => {
@@ -76,6 +87,9 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne }
   mutations: {
     setPasswordState: (state: State<any>, data: any) => {
       state.passwordState = data
+    },
+    setUserInfo: (state: State<any>, data: UserInfo) => {
+      state.userInfo = data
     }
   },
   actions: {
@@ -83,18 +97,41 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne }
       let client = (this as any).app.apolloProvider.defaultClient
 
       try {
-        console.log(userData)
-        // const { remeber, ...variables } = userData
         let rep = await client.query({
           query: auth,
           variables: { ...userData }
         })
         if (typeof rep.errors !== 'undefined') {
+
           // 密码错误
           return commit('setPasswordState', { message: rep.errors.message, status: 'error' })
         }
         const token = rep.data.auth.token
-        await (this as any).app.$apolloHelpers.onLogin(token, undefined, { expires: 1/24 })
+        await (this as any).app.$apolloHelpers.onLogin(token, undefined, { expires: 1/24 / 1000 / 60 / 60 * EXPIRES })
+
+        let userRes = await client.query({
+          query: allUsers,
+          variables: {
+            employeeId: userData.employeeId
+          }
+        })
+        console.log(userRes)
+        let currUserData = userRes.data.users.payload[0]
+
+        const { permission, name: typeName } = currUserData.userType
+
+        let storageUserData = {
+          employeeId: userData.employeeId,
+          permission,
+          typeName,
+          id: currUserData.id,
+          workcellId: currUserData.workcellId,
+        }
+
+        let storage = new MyStorage();
+        storage.set('userInfo', storageUserData, EXPIRES)
+        commit('setUserInfo', storageUserData)
+
         return commit('setPasswordState', { message: '', status: 'success' })
 
       } catch (e) {

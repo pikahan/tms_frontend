@@ -5,7 +5,17 @@
         <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交入库记录</a-button>
       </nuxt-link>
       <a-table :columns="columns" :dataSource="apparatusEntityData" :scroll="{ x: 1300 }">
-        <a slot="action" slot-scope="text" href="javascript:;">查看详情</a>
+        <span slot="action" slot-scope="text, data" >
+          <nuxt-link to="/putInOperation/submit" v-if="data.status === '线上'">
+            入库
+          </nuxt-link>
+          <!--TODO 之后更改to的地址-->
+          <nuxt-link to="/putInOperation/submit" v-else>
+            查看详情
+          </nuxt-link>
+        </span>
+        <!--<nuxt-link :to="">-->
+        <!--</nuxt-link>-->
       </a-table>
     </div>
 </template>
@@ -20,6 +30,7 @@
     { title: '编号', dataIndex: 'code', key: 'code'},
     { title: '名字', dataIndex: 'name', key: 'name' },
     { title: '库位', dataIndex: 'location', key: 'location'},
+    { title: '状态', dataIndex: 'status', key: 'status' },
     // { title: '图片', dataIndex: 'picture', key: 'picture' },
     {
       title: '操作',
@@ -42,7 +53,6 @@
         columns,
       }
     },
-    middleware: 'isAuth',
     async fetch() {
       // const fetchDataFor = fetchDataIn(this)
       // console.log('dasfasdf2222')

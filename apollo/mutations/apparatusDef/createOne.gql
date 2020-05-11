@@ -1,0 +1,5 @@
+mutation ($input: ApparatusDefCreateInput!) {
+  createApparatusDef(apparatusDef: $input) {
+    success
+  }
+}

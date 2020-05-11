@@ -5,7 +5,7 @@
       <a-spin :spinning="spinning">
         <div class="list_item" :style="currPos === pos ? { background: 'rgba(208, 230, 255, 0.65)' } : {}" v-for="(name, pos) of nameList" @click="handleItemClick(pos)">
           {{ name }}
-          <a-icon type="edit" theme="twoTone" class="edit_btn" v-show="currPos === pos" @click="btnClick(type, 'update', currPos, name)" />
+          <a-icon v-if="hasBtn"  type="edit" theme="twoTone" class="edit_btn" v-show="currPos === pos" @click="btnClick(type, 'update', currPos, name)" />
         </div>
       </a-spin>
     </div>
@@ -59,14 +59,6 @@
         this._hovorPos = pos
         this.clickCallback(pos)
       },
-      // _handleAddBtnClick() {
-      //   console.log(this.currPos)
-      //   this.addBtnClick(this.currPos)
-      // },
-      // _handleDeleteBtnClick() {
-      //   console.log(this.currPos)
-      //   this.deleteBtnClick(this.currPos)
-      // }
     },
     computed: {
       currPos() {
@@ -83,13 +75,21 @@
   }
 
   .btn_list {
-    margin-top: 10px;
+    position: absolute;
+    padding-top: 10px;
+    bottom: 0;
+    border-left: 1px solid #fff;
   }
 
   .panel_list {
+
     border: 1px solid rgba(0,0,0,.05);
+    border-right: transparent;
     border-radius: 3px;
     min-height: 200px;
+    padding-bottom: 2000px;
+    margin-bottom: -2000px;
+
 
     &:last-child {
       margin-right: 0;
