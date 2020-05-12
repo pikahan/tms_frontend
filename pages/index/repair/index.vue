@@ -2,7 +2,14 @@
   <div>
     <searchPane :search-data="searchData" />
     <a-table :columns="columns" :dataSource="processedRepairRecordData" :scroll="{ x: 1300 }">
-      <a slot="action" slot-scope="text" href="javascript:;">action</a>
+      <a slot="action" slot-scope="text, data" href="javascript:;">
+        <div v-if="permission.approvalPermission && data.status === '申请中'">
+          审批
+        </div>
+        <div v-else>
+          查看详情
+        </div>
+      </a>
       <img class="thumbnail" slot="picture" slot-scope="picture"  :src="`data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`" alt="img">
     </a-table>
   </div>
@@ -43,14 +50,21 @@
       }
     },
     computed: {
-      ...mapGetters('repairRecord', ['processedRepairRecordData'])
+      ...mapGetters('repairRecord', ['processedRepairRecordData']),
+      permission() {
+        // TODO 划分好权限之后更改
+        return {
+          approvalPermission: true
+        }
+      }
     },
     async fetch() {
       await this.$store.dispatch(`repairRecord/fetchData`)
     },
     methods: {
       arrayBufferToBase64
-    }
+    },
+
   }
 </script>
 

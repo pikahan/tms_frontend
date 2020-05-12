@@ -1,0 +1,26 @@
+query($pageIndex: Int){
+  apparatusDefs(pageIndex: $pageIndex) {
+    payload {
+      id
+      code
+      recBy
+      uPL
+      name
+      owner
+      recOn
+      family {
+        id
+        name
+      }
+      models
+      partNos
+      pMPeriod
+      remark
+      workcell {
+        id
+        name
+      }
+    }
+    totalCount
+  }
+}

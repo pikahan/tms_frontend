@@ -38,13 +38,18 @@
                 <a-button
                   v-if="current == steps.length - 2"
                   type="primary"
-                  @click="handleSubmit"
+                  @click="submitBtnClick"
                 >
                   提交
                 </a-button>
                 <a-button v-if="current>0" style="margin-left: 8px" @click="prev">
                   上一步
                 </a-button>
+                <nuxt-link :to="goBackUrl">
+                  <a-button v-if="current === steps.length - 1" style="margin-left: 8px">
+                    返回
+                  </a-button>
+                </nuxt-link>
               </a-col>
             </a-row>
           </div>
@@ -89,10 +94,12 @@
         }
       },
 
-      handleSubmit() {
+      submitBtnClick() {
         this.$refs.ruleForm.validate(valid => {
           if (valid) {
-            this.current++
+            this.handleSubmit(this.form, () => {
+              this.current++
+            })
             console.log('current ++ by handleSubmit')
           } else {
             console.log('error submit!!');
@@ -120,6 +127,13 @@
       rules: {
         type: Object,
         default: () => ({})
+      },
+      handleSubmit: {
+        type: Function,
+        default: (data, cb) => { console.log(data);cb();}
+      },
+      goBackUrl: {
+        default: '/'
       }
 
     },

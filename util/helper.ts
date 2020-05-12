@@ -18,9 +18,9 @@ interface GQLQuery {
 
 
 interface GQLMutation {
-  createOne: Object
-  updateOne: Object
-  deleteOne: Object
+  createOne?: Object
+  updateOne?: Object
+  deleteOne?: Object
 }
 
 interface StateData {

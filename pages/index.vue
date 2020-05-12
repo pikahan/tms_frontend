@@ -47,38 +47,36 @@
     },
     created() {
       //TODO 之后和接口对接
-      setTimeout(() => {
-        const data = [{
-          name: '入库操作',
-          router: '/putInOperation'
-        }, {
-          name: '出库操作',
-          router: '/putOutOperation'
-        }, {
-          name: '报修',
-          router: '/repair'
-        }, {
-          name: '采购入库',
-          router: '/purchase'
-        }, {
-          name: '工夹具信息',
-          router: '/apparatusData'
-        }, {
-          name: '类别管理',
-          router: '/apparatusTypeManagement'
-        }]
-        this.menuItemList = data
-        const store = new MyStorage()
-        const userInfo = store.get('userInfo')
-        this.$store.commit('user/setUserInfo', userInfo)
-        console.log(this.getSelectedKey(this.$route.path))
-        let key = this.getSelectedKey(this.$route.path)
-        if (key === '/') { // 进入第一个tab
-          key = data[0].router
-          this.$router.push(key)
-        }
-        this.selectedKeys = [key]
-      }, 500)
+      const data = [{
+        name: '入库操作',
+        router: '/putInOperation'
+      }, {
+        name: '出库操作',
+        router: '/putOutOperation'
+      }, {
+        name: '报修',
+        router: '/repair'
+      }, {
+        name: '采购入库',
+        router: '/purchase'
+      }, {
+        name: '工夹具信息',
+        router: '/apparatusData'
+      }, {
+        name: '类别管理',
+        router: '/apparatusTypeManagement'
+      }]
+      this.menuItemList = data
+      const store = new MyStorage()
+      const userInfo = store.get('userInfo')
+      this.$store.commit('user/setUserInfo', userInfo)
+      console.log(this.getSelectedKey(this.$route.path))
+      let key = this.getSelectedKey(this.$route.path)
+      if (key === '/') { // 进入第一个tab
+        key = data[0].router
+        this.$router.push(key)
+      }
+      this.selectedKeys = [key]
     },
     middleware: 'isAuth',
 

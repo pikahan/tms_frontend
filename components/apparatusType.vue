@@ -126,6 +126,7 @@
       },
       handlePartNoListClick(pos) {
         Vue.set(this.pos, PART_NO_POS, pos)
+        this.partNoCallback(this.data[this.pos[FAMILY_POS]], this.modelData[this.pos[MODEL_POS]], this.partNoData[pos])
        },
       formatData(fetchedData) {
         return fetchedData.map(data => data.name)
@@ -141,11 +142,9 @@
         this.callbackArgs = args
       },
       async handleOk() {
-        console.log('handle ok')
         this.confirmLoading = true
         await this.callback(...this.callbackArgs, this.inputValue)
 
-        console.log('modelKey: ', this.modelKey)
         // TODO bug
         await this.fetchData(this.modelKey)
 

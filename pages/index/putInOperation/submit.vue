@@ -1,5 +1,5 @@
 <template>
-  <application :formData="formData" :form="form" :rules="rules">
+  <application :formData="formData" :form="form" :rules="rules" goBackUrl="/putInOperation">
     <template v-slot:first>
       <a-form-model-item  label="领用人" prop="current" >
         <a-input

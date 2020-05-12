@@ -51,7 +51,6 @@
   ];
 
   export default {
-    name: 'putInOper',
     components: {
       searchPane,
     },
