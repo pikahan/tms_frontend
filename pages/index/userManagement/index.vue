@@ -35,9 +35,9 @@
     return char.charCodeAt(0)
   }
 
-  function readWorkbookFromLocalFile(file, callback) {
+   const readWorkbookFromLocalFile = (file, callback, ctx) => {
     const reader = new FileReader()
-    reader.onload = function (e) {
+    reader.onload =  (e) => {
       const data = e.target.result
       const workbook = XLSX.read(data, {type: 'binary'})
       if (callback) callback(workbook)
@@ -75,6 +75,8 @@
 
       }
 
+
+      ctx.$store.dispatch('user/createMultipleData', ret)
       console.log(ret)
     }
     reader.readAsBinaryString(file)
@@ -112,7 +114,7 @@
           console.log(info.file, info.fileList);
         }
         if (info.file.status === 'done') {
-          readWorkbookFromLocalFile(info.file.originFileObj)
+          readWorkbookFromLocalFile(info.file.originFileObj, () => {}, this)
           this.$message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
           this.$message.error(`${info.file.name} file upload failed.`);

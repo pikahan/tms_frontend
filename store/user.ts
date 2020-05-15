@@ -2,6 +2,8 @@
 import allUsers from '@/apollo/queries/allUsers.gql'
 // @ts-ignore
 import createOne from '@/apollo/mutations/user/createOne.gql'
+import create from '@/apollo/mutations/user/create.gql'
+
 // @ts-ignore
 import updateOne from '@/apollo/mutations/user/updateOne.gql'
 // @ts-ignore
@@ -59,7 +61,7 @@ interface ProcessedUserData {
   userTypeId: number
 }
 
-export default storeTemp('user', { allData: allUsers }, { createOne, updateOne }, {
+export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, create }, {
   state: {
     passwordState: {
       message: '',
