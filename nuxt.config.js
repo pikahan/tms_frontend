@@ -30,6 +30,7 @@ export default {
   */
   plugins: [
     '@/plugins/antd-ui',
+    '@/plugins/v-chart'
   ],
   apollo: {
     clientConfigs: {

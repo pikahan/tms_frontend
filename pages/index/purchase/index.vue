@@ -4,7 +4,7 @@
     <nuxt-link to="/purchase/submit">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
     </nuxt-link>
-    <a-table :columns="columns" :dataSource="processedApparatusEntityData" :scroll="{ x: 1300 }">
+    <a-table :columns="columns" :dataSource="processedApparatusEntityData" :scroll="{ x: 1300 }" rowKey="id">
       <a slot="action" slot-scope="text, data" href="javascript:;">{{ data.status === '' }}</a>
         <img class="thumbnail" slot="picture" slot-scope="picture"  :src="`data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`" alt="img">
     </a-table>

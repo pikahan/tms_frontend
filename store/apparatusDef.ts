@@ -2,7 +2,7 @@ import {FamilyData} from './family'
 import {ApparatusEntityData} from './apparatusEntity'
 import {State} from '../util/helper'
 import { storeTemp } from '@/util/helper'
-import allApparatusEntities from '@/apollo/queries/allApparatusEntities.gql' // TODO change
+import allApparatusDefs from '@/apollo/queries/allApparatusDefs.gql' // TODO change
 import createOne from '@/apollo/mutations/apparatusDef/createOne.gql'
 import updateOne from '@/apollo/mutations/apparatusDef/updateOne.gql'
 import deleteOne from '@/apollo/mutations/apparatusDef/deleteOne.gql'
@@ -23,6 +23,6 @@ export interface ApparatusDefData {
 }
 
 
-export default storeTemp('apparatusDef', { allData: allApparatusEntities }, { createOne, updateOne }, {
+export default storeTemp('apparatusDef', { allData: allApparatusDefs }, { createOne, updateOne }, {
 
 })

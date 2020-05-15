@@ -1,8 +1,8 @@
 // @ts-ignore
 import allRepairRecords from '@/apollo/queries/allRepairRecords.gql'
-import createOne from '@/apollo/mutations/partNo/createOne.gql'
-import updateOne from '@/apollo/mutations/partNo/updateOne.gql'
-import deleteOne from '@/apollo/mutations/partNo/deleteOne.gql'
+import createOne from '@/apollo/mutations/repairRecord/createOne.gql'
+import updateOne from '@/apollo/mutations/repairRecord/updateOne.gql'
+import deleteOne from '@/apollo/mutations/repairRecord/deleteOne.gql'
 import { storeTemp } from '@/util/helper'
 import {ApparatusEntityData} from './apparatusEntity'
 import {State} from '../util/helper'

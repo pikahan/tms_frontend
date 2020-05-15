@@ -1,34 +1,26 @@
 <template>
   <application :formData="formData" :form="form" :rules="rules" :handleSubmit="handleSubmit"  goBackUrl="/purchase">
     <template v-slot:first>
-      <a-form-model-item  label="序列号" prop="seqId" >
-        <a-input-number
-          :min="1"
-          :style="{width: '100%'}"
-          placeholder="输入序列号"
-          v-model="form.seqId"
-        />
+      <a-form-model-item  label="申请人" prop="proposer"  >
+        <a-input
+          v-model="form.proposer"
+          :disabled="true"
+        >
+        </a-input>
       </a-form-model-item>
-      <a-form-model-item  label="夹具名" prop="defId" >
+      <a-form-model-item  label="夹具" prop="apparatusEntityId" >
         <a-select
           show-search
-          v-model="form.defId"
+          v-model="form.apparatusEntityId"
           option-filter-prop="name"
           :filter-option="filterOption"
           placeholder="Select a person"
         >
 
-          <a-select-option v-for="item in data" :key="item.id" :value="item.id">
-            {{item.name}}
+          <a-select-option v-for="item in filterApparatusEntityData" :key="item.id" :value="item.def.id">
+            {{item.def.name}}
           </a-select-option>
         </a-select>
-      </a-form-model-item>
-      <a-form-model-item  label="库位" prop="location"  >
-        <a-input
-          placeholder="输入库位"
-          v-model="form.location"
-        >
-        </a-input>
       </a-form-model-item>
       <a-form-model-item  label="照片" prop="picture">
         <a-upload
@@ -47,7 +39,14 @@
           </div>
         </a-upload>
       </a-form-model-item>
-
+      <a-form-model-item  label="描述" prop="description"  >
+        <a-input
+          placeholder="输入描述"
+          v-model="form.description"
+          type="textarea"
+        >
+        </a-input>
+      </a-form-model-item>
     </template>
   </application>
 </template>
@@ -55,7 +54,7 @@
   import application from '@/components/application'
   import ApparatusType from '@/components/apparatusType'
   import { base64ToUint8Array } from '@/util/helper'
-  import { mapState } from 'vuex'
+  import { mapGetters } from 'vuex'
   function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -69,9 +68,9 @@
     data() {
       return {
         form: {
-          seqId: '',
-          defId: '',
-          location: '',
+          apparatusEntityId: '',
+          description: '',
+          proposer: '',
           picture: '',
         },
         formData: [
@@ -95,9 +94,7 @@
     methods: {
       async handleSubmit(data, next) {
         const date = (new Date).toISOString()
-        date.split('').filter(ch => (ch !== ' ')).join("")
-        const { seqId } = data
-        await this.$store.dispatch('apparatusEntity/createData', {...data, regDate: date, status: '在库', billNo: date.split('').filter(ch => (ch !== ' ')).join(""), seqId: seqId*1})
+        await this.$store.dispatch('repairRecord/createData', {...data, applicationTime: date, status: '申请中'})
         next()
 
       },
@@ -138,13 +135,17 @@
 
     },
     computed: {
-      ...mapState('apparatusDef', ['data'])
+      // ...mapState('apparatusDef', ['data']),
+      ...mapGetters('apparatusEntity', ['filterApparatusEntityData'])
     },
     async fetch() {
-      console.log('fetch')
-      await this.$store.dispatch('apparatusDef/fetchData')
+      await this.$store.dispatch('apparatusEntity/fetchData')
     },
-
+    created() {
+      console.log(this.$store.state.user.userInfo)
+      const { employeeId } = this.$store.state.user.userInfo
+      this.form = {...this.form, proposer: employeeId}
+    },
   };
 </script>
 <style>

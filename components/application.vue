@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-steps :current="current">
+    <a-steps :style="{padding: '0 30px 0'}" :current="current">
       <a-step v-for="stepName in steps" :key="stepName" :title="stepName" />
     </a-steps>
     <div class="steps-content">

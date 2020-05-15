@@ -12,8 +12,11 @@
       :confirmLoading="confirmLoading"
       @cancel="handleCancel"
     >
-      <p>
+      <p v-if="functionType !== 'delete'">
         {{ "名称" }}<a-input v-model="inputValue"/>
+      </p>
+      <p v-else>
+        确定删除吗?
       </p>
     </a-modal>
   </div>
@@ -94,7 +97,8 @@
         callback: null,
         confirmLoading: false,
         callbackArgs: [],
-        inputValue: ''
+        inputValue: '',
+        functionType: 'delete'
       }
     },
     methods: {
@@ -137,6 +141,7 @@
       handleBtnClick(dataType, functionType, ...args) {
         this.modelTitle = dataType.title
         this.modelKey = dataType.key
+        this.functionType = functionType
         this.visible = true
         this.callback = btnEventMap[dataType.key][functionType].bind(this)
         this.callbackArgs = args

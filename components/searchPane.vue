@@ -10,13 +10,21 @@
               :span="12"
               :style="{ display: i < count ? 'block' : 'none' }"
             >
-              <a-form-item :label="searchDatum.name">
+              <a-form-item :label="searchDatum.label" >
                 <a-input
+                  v-if="searchDatum.type === 'input'"
                   v-decorator="[
                     searchDatum.name,
                     searchDatum.option,
                   ]"
                   :placeholder="searchDatum.placeholder"
+                />
+                <a-range-picker
+                  v-else="searchData.type === 'range'"
+                  v-decorator="[
+                    searchDatum.name,
+                    searchDatum.option,
+                  ]"
                 />
               </a-form-item>
             </a-col>
@@ -57,6 +65,10 @@
       lengthOfCollapsed: {
         type: Number,
         default: 7
+      },
+      handleData: {
+        type: Function,
+        default: (...data) => (console.log(data))
       }
     },
     computed: {
@@ -68,8 +80,25 @@
       handleSearch(e) {
         e.preventDefault();
         this.form.validateFields((error, values) => {
-          console.log('error', error);
-          console.log('Received values of form: ', values);
+
+
+          const ret = {}
+          const keys = Object.keys(values)
+          keys.forEach(key => {
+            const value = values[key]
+            console.log(values[key])
+            if (Array.isArray(value)) {
+              const startTime = value[0].toISOString()
+              const endTime = value[1].toISOString()
+              const dataNames = key.split('\t')
+              ret[dataNames[0]] = startTime
+              ret[dataNames[1]] = endTime
+            } else if (typeof value !== 'undefined') {
+              ret[key] = value
+            }
+          })
+
+          this.handleData(ret)
         });
       },
 

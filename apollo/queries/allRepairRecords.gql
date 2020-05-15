@@ -1,5 +1,5 @@
-query($pageIndex: Int){
-  repairRecords(pageIndex: $pageIndex) {
+query($pageIndex: Int, $applicationTimeFrom: DateTime, $applicationTimeTo: DateTime){
+  repairRecords(pageIndex: $pageIndex, applicationTimeTo: $applicationTimeTo, applicationTimeFrom: $applicationTimeFrom) {
     payload {
       acceptor
       acceptorTime

@@ -1,23 +1,41 @@
 <template>
   <application :formData="formData" :form="form" :rules="rules" goBackUrl="/putInOperation">
     <template v-slot:first>
-      <a-form-model-item  label="领用人" prop="current" >
+      <a-form-model-item  label="经手人" prop="inHandlingPerson" >
         <a-input
-          :disabled="true"
-          v-model="form.user"
+          placeholder="输入库位"
+          v-model="form.inHandlingPerson"
         >
-          <!--TODO 之后要把current改了-->
-          <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
         </a-input>
       </a-form-model-item>
-      <a-form-model-item  label="物品ID" prop="code" >
-        <a-input
-          placeholder="账号"
-          v-model="form.code"
-        >
-          <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
-        </a-input>
-      </a-form-model-item>
+      <a-form-model-item  label="记录人" prop="inHandlingPerson" >
+      <a-input
+        placeholder="输入入库记录人"
+        v-model="form.inRecordPerson"
+      >
+      </a-input>
+    </a-form-model-item>
+        <a-form-model-item  label="夹具名" prop="lineId" >
+          <a-select
+            show-search
+            v-model="form.lineId"
+            option-filter-prop="name"
+            :filter-option="filterOption"
+            placeholder="Select a person"
+          >
+
+            <a-select-option v-for="line in lineData" :key="line.id" :value="line.id">
+              {{line.name}}
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item  label="库位" prop="location"  >
+          <a-input
+            placeholder="输入库位"
+            v-model="form.location"
+          >
+          </a-input>
+        </a-form-model-item>
     </template>
     <template v-slot:second>
       <a-form-model-item  prop="validate">
@@ -33,6 +51,8 @@
 </template>
 <script>
   import application from '@/components/application'
+  import { mapState } from 'vuex'
+
   //TODO 这个页面之后可能要重构, 先这么写了
   export default {
 
@@ -42,9 +62,10 @@
     data() {
       return {
         form: {
-          user: 'hello',
-          code: '',
-          validate: ''
+          outRecordPerson: '',
+          outHandlingPerson: '',
+          apparatusEntityId: '',
+          lineId: '',
         },
         formData: [
           {
@@ -64,6 +85,29 @@
           validate: [{ required: true, message: '请放入你的员工卡!' }]
         }
       };
+    },
+    methods: {
+      async handleSubmit(data, next) {
+        const date = (new Date).toISOString()
+        date.split('').filter(ch => (ch !== ' ')).join("")
+        const { seqId } = data
+        await this.$store.dispatch('apparatusEntity/createData', {...data, regDate: date, status: '在库', billNo: date.split('').filter(ch => (ch !== ' ')).join(""), seqId: seqId*1})
+        next()
+
+      },
+      filterOption(input, option) {
+        console.log(option)
+        return (
+          option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        );
+      },
+    },
+    computed: {
+      ...mapState('line', ['data'])
+    },
+    async fetch() {
+      console.log('fetch')
+      await this.$store.dispatch('apparatusDef/fetchData')
     },
 
   };

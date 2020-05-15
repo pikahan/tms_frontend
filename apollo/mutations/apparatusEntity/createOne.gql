@@ -1,0 +1,5 @@
+mutation($input: ApparatusEntityCreateInput!) {
+  createApparatusEntity(apparatusEntity: $input) {
+    success
+  }
+}

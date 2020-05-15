@@ -1,9 +1,6 @@
 <template>
   <div>
-    <searchPane :search-data="searchData" :handleData="handleSearchData" />
-    <nuxt-link to="/repair/submit">
-      <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
-    </nuxt-link>
+    <searchPane :search-data="searchData" />
     <a-table :columns="columns" :dataSource="processedRepairRecordData" :scroll="{ x: 1300 }">
       <a slot="action" slot-scope="text, data" href="javascript:;">
         <div v-if="permission.approvalPermission && data.status === '申请中'">
@@ -21,26 +18,8 @@
 <script>
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
+  import { searchData } from '@/util/testData' //TODO 接口完成之后删除
   import { arrayBufferToBase64 } from '@/util/helper'
-
-
-  const searchData = [
-    {
-      label: '物品代码',
-      name: '物品代码',
-      type: 'input',
-      placeholder: '请输入物品代码',
-      option: {}
-    },
-    {
-      label: '物品代码',
-      name: 'applicationTimeFrom\tapplicationTimeTo',
-      type: 'range',
-      placeholder: '请输入物品代码',
-      option: {}
-    }
-  ]
-
 
   const columns = [
     { title: '物品代码', dataIndex: 'code', key: 'code'},
@@ -82,10 +61,7 @@
       await this.$store.dispatch(`repairRecord/fetchData`)
     },
     methods: {
-      arrayBufferToBase64,
-      handleSearchData(data) {
-        this.$store.dispatch('repairRecord/fetchData', {variables: data})
-      }
+      arrayBufferToBase64
     },
 
   }

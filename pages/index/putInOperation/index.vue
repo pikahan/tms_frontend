@@ -25,7 +25,6 @@
   import { mapGetters } from 'vuex'
   import { searchData } from '@/util/testData' //TODO 接口完成之后删除
 
-  //TODO mock数据,之后替换
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code'},
     { title: '名字', dataIndex: 'name', key: 'name' },

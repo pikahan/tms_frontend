@@ -65,6 +65,9 @@
       }, {
         name: '类别管理',
         router: '/apparatusTypeManagement'
+      }, {
+        name: '夹具定义',
+        router: '/apparatusDef'
       }]
       this.menuItemList = data
       const store = new MyStorage()

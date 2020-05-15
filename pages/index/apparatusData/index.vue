@@ -1,33 +1,28 @@
 <template>
   <div>
-    <searchPane :search-data="searchData" />
-    <nuxt-link to="/purchaseApplication/submit">
-      <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
-    </nuxt-link>
-    <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1300 }">
-      <a slot="action" slot-scope="text" href="javascript:;">action</a>
+    <searchPane :search-data="searchData"  :handleData="handleSearchData"  />
+    <a-table :columns="columns" :dataSource="apparatusEntityData" :scroll="{ x: 1300 }" rowKey="id">
+        <span slot="action" slot-scope="text, data" >
+          <nuxt-link to="/apparatusData/1">
+            查看详情
+          </nuxt-link>
+        </span>
     </a-table>
   </div>
 </template>
 
 <script>
   import searchPane from '@/components/searchPane'
-  import { searchData } from '@/util/testData' //TODO 接口完成之后删除
+  import { mapGetters } from 'vuex'
 
-  //TODO mock数据,之后替换
   const columns = [
-    { title: 'Full', dataIndex: 'name', key: 'name'},
-    { title: 'Age', dataIndex: 'age', key: 'age'},
-    { title: 'Column 1', dataIndex: 'address', key: '1' },
-    { title: 'Column 2', dataIndex: 'address', key: '2' },
-    { title: 'Column 3', dataIndex: 'address', key: '3' },
-    { title: 'Column 4', dataIndex: 'address', key: '4' },
-    { title: 'Column 5', dataIndex: 'address', key: '5' },
-    { title: 'Column 6', dataIndex: 'address', key: '6' },
-    { title: 'Column 7', dataIndex: 'address', key: '7' },
-    { title: 'Column 8', dataIndex: 'address', key: '8' },
+    { title: '编号', dataIndex: 'code', key: 'code'},
+    { title: '名字', dataIndex: 'name', key: 'name' },
+    { title: '库位', dataIndex: 'location', key: 'location'},
+    { title: '状态', dataIndex: 'status', key: 'status' },
+    // { title: '图片', dataIndex: 'picture', key: 'picture' },
     {
-      title: 'Action',
+      title: '操作',
       key: 'operation',
       fixed: 'right',
       width: '100px',
@@ -35,20 +30,31 @@
     },
   ];
 
-  const data = [
+   const searchData = [
     {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York Park',
+      label: '物品编号',
+      name: 'code',
+      type: 'input',
+      placeholder: '请输入夹具编号',
+      option: {}
     },
     {
-      key: '2',
-      name: 'Jim Green',
-      age: 40,
-      address: 'London Park',
+      label: '采购单号',
+      name: 'billNo',
+      type: 'input',
+      placeholder: '请输入夹具采购单号',
+      option: {}
     },
-  ];
+     {
+       label: '物品状态',
+       name: 'status',
+       type: 'input',
+       placeholder: '请输入夹具状态',
+       option: {}
+     }
+  ]
+
+
 
   export default {
     components: {
@@ -57,8 +63,23 @@
     data() {
       return {
         searchData,
-        data,
         columns,
+      }
+    },
+    async fetch() {
+      // const fetchDataFor = fetchDataIn(this)
+      // console.log('dasfasdf2222')
+      await this.$store.dispatch(`apparatusEntity/fetchData`)
+      // await fetchDataFor('apparatusEntity')
+    },
+    computed: {
+      ...mapGetters('apparatusEntity', {
+        apparatusEntityData: 'processedApparatusEntityData'
+      })
+    },
+    methods: {
+      handleSearchData(data) {
+        this.$store.dispatch('apparatusEntity/fetchData', {variables: data})
       }
     }
   }

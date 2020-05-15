@@ -12,6 +12,7 @@ query($pageIndex: Int){
         id
         name
       }
+      usedFor
       models
       partNos
       pMPeriod

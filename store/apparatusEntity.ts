@@ -1,13 +1,13 @@
 // @ts-ignore
 import allApparatusEntities from '@/apollo/queries/allApparatusEntities.gql'
-// import createOne from '@/apollo/mutations/family/createOne.gql'
+import createOne from '@/apollo/mutations/apparatusEntity/createOne.gql'
 // import updateOne from '@/apollo/mutations/family/updateOne.gql'
 // import deleteOne from '@/apollo/mutations/family/deleteOne.gql'
 
 import { storeTemp } from '@/util/helper'
 import {UserData} from './user'
 import {State} from '../util/helper'
-import {ApparatusDefData} from './apparatusDef'
+import {default as apparatusDef, ApparatusDefData} from './apparatusDef'
 import {FamilyData} from './family'
 
 type ApparatusEntityStatus = '在库'| '线上' | '临时领出' | '维修' | '报废'
@@ -22,12 +22,10 @@ export interface ApparatusEntityData {
   location: string
   picture: Array<number>
   regDate: string
-  usedCount: number
-  usedHours: number
 }
 
 interface ProcessedApparatusEntityData extends ApparatusDefData {
-  key: number
+  id: number
   billNo: String
   // def: ApparatusDefData | null
   defId: number
@@ -37,26 +35,36 @@ interface ProcessedApparatusEntityData extends ApparatusDefData {
   picture: Array<number>
   familyName: string
   regDate: string
-  usedCount: number
-  usedHours: number
 }
 
-export default storeTemp('apparatusEntity', { allData: allApparatusEntities }, undefined, {
+export default storeTemp('apparatusEntity', { allData: allApparatusEntities }, {createOne}, {
   getters: {
     processedApparatusEntityData: (state: State<ApparatusEntityData>) => {
       const ret = <Array<ProcessedApparatusEntityData>>[]
       state.data.forEach((apparatusData, i) => {
-        const { def, id: key, ...data } = apparatusData
+        const { def, ...data } = apparatusData
         const { family } = def
         ret.push({
             familyName: family.name,
             ...def,
             ...data,
-            key
         })
       })
       return ret
     },
+    filterApparatusEntityData: (state: State<ApparatusEntityData>) => {
+      const ret = <Array<ApparatusEntityData>>[]
+      const set = new Set()
+      state.data.forEach((apparatusData, i) => {
+        const { defId, ...data } = apparatusData
+        if (set.has(defId)) {
+          return
+        }
+        set.add(defId)
+        ret.push(apparatusData)
+      })
+      return ret
+    }
   }
 })
 

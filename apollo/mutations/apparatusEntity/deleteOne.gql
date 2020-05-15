@@ -1,0 +1,5 @@
+mutation ($input: Int!) {
+  deleteApparatusDef(id: $input) {
+    success
+  }
+}

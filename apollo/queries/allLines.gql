@@ -1,0 +1,13 @@
+query($pageIndex: Int){
+  lines(pageIndex: $pageIndex) {
+    payload {
+      id
+      workcell {
+        id
+        name
+      }
+      name
+    }
+    totalCount
+  }
+}

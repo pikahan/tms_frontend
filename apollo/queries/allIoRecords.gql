@@ -1,0 +1,10 @@
+query($pageIndex: Int){
+  ioRecords(pageIndex: $pageIndex) {
+    payload {
+      id
+
+    }
+    totalCount
+  }
+}
+
