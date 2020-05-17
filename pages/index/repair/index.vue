@@ -4,10 +4,21 @@
     <nuxt-link to="/repair/submit">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
     </nuxt-link>
+    <a-upload
+      name="file"
+      @change="handleUploadChange"
+    >
+      <a-button  :style="{ margin: '0px 0px 10px' }"> <a-icon type="upload" />批量新增 </a-button>
+    </a-upload>
     <a-table :columns="columns" :dataSource="processedRepairRecordData" :scroll="{ x: 1300 }">
       <a slot="action" slot-scope="text, data" href="javascript:;">
         <div v-if="permission.approvalPermission && data.status === '申请中'">
-          审批
+          <a-popconfirm placement="topRight" ok-text="同意" cancel-text="拒绝" @confirm="processingApplication" @cancel="processingApplication">
+            <template slot="title">
+              <p>是否同意申请?</p>
+            </template>
+            <a-button>审批</a-button>
+          </a-popconfirm>
         </div>
         <div v-else>
           查看详情
@@ -22,6 +33,7 @@
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
   import { arrayBufferToBase64 } from '@/util/helper'
+  import {readWorkbookFromLocalFile} from '@/util/excel'
 
 
   const searchData = [
@@ -85,6 +97,23 @@
       arrayBufferToBase64,
       handleSearchData(data) {
         this.$store.dispatch('repairRecord/fetchData', {variables: data})
+      },
+      handleUploadChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          readWorkbookFromLocalFile(info.file.originFileObj, data => {
+            this.$store.dispatch('repairRecord/createMultipleData', data)
+          }, this)
+          this.$message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+          this.$message.error(`${info.file.name} file upload failed.`);
+        }
+      },
+
+      processingApplication() {
+
       }
     },
 

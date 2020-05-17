@@ -23,64 +23,10 @@
   import searchPane from '@/components/searchPane'
   import { searchData } from '@/util/testData' //TODO 接口完成之后删除
   import { mapGetters } from 'vuex'
-  import {importExcel} from '@/util/excel'
-  import XLSX from 'xlsx'
+  import {readWorkbookFromLocalFile} from '@/util/excel'
 
 
-  function asciiToChar(ascii) {
-    return String.fromCharCode(ascii)
-  }
 
-  function charToAscii(char) {
-    return char.charCodeAt(0)
-  }
-
-   const readWorkbookFromLocalFile = (file, callback, ctx) => {
-    const reader = new FileReader()
-    reader.onload =  (e) => {
-      const data = e.target.result
-      const workbook = XLSX.read(data, {type: 'binary'})
-      if (callback) callback(workbook)
-      console.log(workbook)
-      console.log(workbook.Sheets.Sheet1[`!ref`])
-
-      const sheet = workbook.Sheets.Sheet1
-
-      const cells = workbook.Sheets.Sheet1[`!ref`].split(':')
-      // const cellStart = cells[0]
-      const cellEnd = cells[1]
-      const endChar = cells[1][0]
-      const endLine = cells[1][1]
-
-
-      const Aascii = charToAscii('A')
-      const endCharAscii = charToAscii(endChar)
-
-      const columnLength = endCharAscii - Aascii + 1
-
-      const rowLength = endLine
-      console.log('column length: ' + columnLength)
-      console.log('row length: ' + rowLength)
-
-
-      const ret = []
-      for (let i = 2; i <= rowLength; i++) {
-        const data = {}
-
-        for (let j = 0; j < columnLength; j++) {
-          const columnName = sheet[asciiToChar(Aascii+j) + '1'].v
-          data[columnName] = sheet[asciiToChar(Aascii+j) + i].v
-        }
-        ret.push(data)
-
-      }
-
-
-      ctx.$store.dispatch('user/createMultipleData', ret)
-      console.log(ret)
-    }
-    reader.readAsBinaryString(file)
-  }
 
 
   //TODO mock数据,之后替换
@@ -114,7 +60,9 @@
           console.log(info.file, info.fileList);
         }
         if (info.file.status === 'done') {
-          readWorkbookFromLocalFile(info.file.originFileObj, () => {}, this)
+          readWorkbookFromLocalFile(info.file.originFileObj, data => {
+            this.$store.dispatch('user/createMultipleData', data)
+          }, this)
           this.$message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
           this.$message.error(`${info.file.name} file upload failed.`);

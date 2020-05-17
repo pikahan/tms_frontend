@@ -71,3 +71,52 @@ function map2json (list) {
   });
   return datalist;
 }
+
+function asciiToChar(ascii) {
+  return String.fromCharCode(ascii)
+}
+
+function charToAscii(char) {
+  return char.charCodeAt(0)
+}
+
+function formatExcelData(workbook) {
+  const sheetNames = Object.keys( workbook.Sheets)
+  const ret = []
+  sheetNames.forEach(sheetName => {
+    const currSheet = workbook.Sheets[sheetName]
+    const cells = currSheet[`!ref`].split(':')
+    const [endChar, rowLength] = cells[1]
+    const Aascii = charToAscii('A')
+    const endCharAscii = charToAscii(endChar)
+    const columnLength = endCharAscii - Aascii + 1
+
+    for (let i = 2; i <= rowLength; i++) {
+      const data = {}
+
+      for (let j = 0; j < columnLength; j++) {
+        const columnName = currSheet[asciiToChar(Aascii+j) + '1'].v
+        data[columnName] = currSheet[asciiToChar(Aascii+j) + i].v
+      }
+      ret.push(data)
+    }
+  })
+
+
+  return ret
+}
+
+
+
+export const readWorkbookFromLocalFile = (file, callback, ctx) => {
+  const reader = new FileReader()
+  reader.onload =  (e) => {
+    const data = e.target.result
+    const workbook = XLSX.read(data, {type: 'binary'})
+
+    const formattedData = formatExcelData(workbook)
+    if (callback) callback.call(ctx, formattedData)
+  }
+  reader.readAsBinaryString(file)
+}
+
