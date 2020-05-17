@@ -1,8 +1,8 @@
 // @ts-ignore
 import allApparatusEntities from '@/apollo/queries/allApparatusEntities.gql'
 import createOne from '@/apollo/mutations/apparatusEntity/createOne.gql'
-// import updateOne from '@/apollo/mutations/family/updateOne.gql'
-// import deleteOne from '@/apollo/mutations/family/deleteOne.gql'
+import updateOne from '@/apollo/mutations/apparatusEntity/updateOne.gql'
+import deleteOne from '@/apollo/mutations/apparatusEntity/deleteOne.gql'
 
 import { storeTemp } from '@/util/helper'
 import {UserData} from './user'
@@ -10,7 +10,7 @@ import {State} from '../util/helper'
 import {default as apparatusDef, ApparatusDefData} from './apparatusDef'
 import {FamilyData} from './family'
 
-type ApparatusEntityStatus = '在库'| '线上' | '临时领出' | '维修' | '报废'
+export type ApparatusEntityStatus = '在库'| '线上' | '临时领出' | '维修' | '报废'
 
 export interface ApparatusEntityData {
   id: number

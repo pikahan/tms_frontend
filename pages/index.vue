@@ -46,6 +46,7 @@
       }
     },
     created() {
+
       //TODO 之后和接口对接
       const data = [{
         name: '入库操作',

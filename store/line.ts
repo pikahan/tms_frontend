@@ -11,9 +11,10 @@ import { storeTemp } from '@/util/helper'
 //   name: string
 // }
 //
-// export interface FamilyData {
-//   id: number
-//   name: string
-// }
+export interface LineData {
+  id: number
+  name: string
+  workcellId: number
+}
 
 export default storeTemp('line', { allData: allLines }, { createOne, updateOne, deleteOne })

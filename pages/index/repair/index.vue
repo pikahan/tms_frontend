@@ -10,7 +10,7 @@
     >
       <a-button  :style="{ margin: '0px 0px 10px' }"> <a-icon type="upload" />批量新增 </a-button>
     </a-upload>
-    <a-table :columns="columns" :dataSource="processedRepairRecordData" :scroll="{ x: 1300 }">
+    <a-table :columns="columns" :dataSource="processedRepairRecordData" :scroll="{ x: 1300 }" @change="handleTableChange">
       <a slot="action" slot-scope="text, data" href="javascript:;">
         <div v-if="permission.approvalPermission && data.status === '申请中'">
           <a-popconfirm placement="topRight" ok-text="同意" cancel-text="拒绝" @confirm="processingApplication(data.id, 'confirm')" @cancel="processingApplication(data.id, 'cancel')">
@@ -33,7 +33,7 @@
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
   import { arrayBufferToBase64 } from '@/util/helper'
-  import {readWorkbookFromLocalFile} from '@/util/excel'
+  import {readWorkbookFromLocalFile, downloadExcel} from '@/util/excel'
 
 
   const searchData = [
@@ -55,8 +55,8 @@
 
 
   const columns = [
-    { title: '物品代码', dataIndex: 'code', key: 'code'},
-    { title: '申请时间', dataIndex: 'applicationTime', key: 'applicationTime' },
+    { title: '物品代码', dataIndex: 'code', key: 'code', sorter: true,},
+    { title: '申请时间', dataIndex: 'applicationTime', key: 'applicationTime', sorter: true, },
     { title: '修复结果时间', dataIndex: 'finishTime', key: 'finishTime' },
     { title: '图片', dataIndex: 'picture', key: 'picture',scopedSlots: { customRender: 'picture' }},
     { title: '故障描述', dataIndex: 'description', key: 'description' },
@@ -79,6 +79,8 @@
       return {
         searchData,
         columns,
+        pagination: {},
+        loading: false,
       }
     },
     computed: {
@@ -118,7 +120,37 @@
           status = '拒绝申请'
         }
         this.$store.dispatch('repairRecord/updateData', {id, status: '拒绝申请'})
-      }
+      },
+      handleTableChange(pagination, filters, sorter) {
+        const pager = { ...this.pagination };
+        pager.current = pagination.current;
+        this.pagination = pager;
+        this.$store.dispatch('repairRecord/fetchData', {variables: {
+            pageSize: pagination.pageSize,
+            pageIndex: pagination.current,
+            orderBy: sorter.field,
+            orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+            ...filters,
+          }})
+
+        console.log({
+          pageSize: pagination.pageSize,
+          pageIndex: pagination.current,
+          orderBy: sorter.field,
+          orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+          ...filters,
+        });
+
+        // this.fetch({
+        //   results: pagination.pageSize,
+        //   page: pagination.current,
+        //   sortField: sorter.field,
+        //   sortOrder: sorter.order,
+        //   ...filters,
+        // });
+      },
+      downloadExcel
+
     },
 
   }

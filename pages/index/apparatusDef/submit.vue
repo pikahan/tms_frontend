@@ -85,24 +85,6 @@
   import application from '@/components/application'
   import ApparatusType from '@/components/apparatusType'
   // TODO 这个页面之后可能要重构, 先这么写了
-
-
-  // code
-  // name
-  // uPL
-  // userFor
-  // pMPeriod
-  // owner
-  // workcellId
-  // recOn
-  // recBy
-  // remark
-  // familyId
-  // models
-  // partNos
-  // family
-
-
   export default {
 
     components: {

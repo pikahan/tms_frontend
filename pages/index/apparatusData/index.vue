@@ -67,10 +67,7 @@
       }
     },
     async fetch() {
-      // const fetchDataFor = fetchDataIn(this)
-      // console.log('dasfasdf2222')
       await this.$store.dispatch(`apparatusEntity/fetchData`)
-      // await fetchDataFor('apparatusEntity')
     },
     computed: {
       ...mapGetters('apparatusEntity', {

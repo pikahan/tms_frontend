@@ -137,8 +137,6 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
       let client = (this as any).app.apolloProvider.defaultClient
 
       try {
-
-
         let { data } = await client.mutate({
           mutation: mutation.updateOne,
           variables: { input: typeof option.data !== 'undefined' ? {id, ...option.data } : option}
@@ -198,7 +196,6 @@ export function arrayBufferToBase64(buffer: Array<number> ) {
   for (var i = 0; i < len; i++) {
     binary += String.fromCharCode( bytes[ i ] );
   }
-  console.log('computer say: ' + binary)
   return window.btoa( binary );
 }
 
@@ -214,6 +211,5 @@ export function base64ToUint8Array(base64String: string) {
   for (let i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }
-  console.log(outputArray)
   return outputArray;
 }

@@ -11,7 +11,17 @@
     >
       <a-button  :style="{ margin: '0px 0px 10px' }"> <a-icon type="upload" />批量新增 </a-button>
     </a-upload>
+    <multiplyDownload
+      :uploadCallback="handleUploadCallback"
+      :tipList="[
+      { name: '用户Id', value: 'employeeId', type: '文字', explanation: '用户工号' },
+      { name: '用户Id', value: 'employeeId', type: '文字', explanation: '用户工号' },
+      { name: '用户Id', value: 'employeeId', type: '文字', explanation: '用户工号' }]"
+    />
 
+    <!--<a-col :span="6">{{ data.name }}</a-col>-->
+    <!--<a-col :span="6">{{ data.type }}</a-col>-->
+    <!--<a-col :span="12">{{ data.explanation }}</a-col>-->
 
     <a-table :columns="columns" :dataSource="processedUserData">
       <nuxt-link slot="operation" slot-scope="operation" :to="`/usermanagement/modify/${operation.index}`"><a  href="javascript:;">编辑</a></nuxt-link>
@@ -24,10 +34,7 @@
   import { searchData } from '@/util/testData' //TODO 接口完成之后删除
   import { mapGetters } from 'vuex'
   import {readWorkbookFromLocalFile} from '@/util/excel'
-
-
-
-
+  import multiplyDownload from '@/components/multiplyDownload'
 
   //TODO mock数据,之后替换
   const columns = [
@@ -46,6 +53,7 @@
   export default {
     components: {
       searchPane,
+      multiplyDownload
     },
     data() {
       return {
@@ -68,6 +76,10 @@
           this.$message.error(`${info.file.name} file upload failed.`);
         }
       },
+      handleUploadCallback(info) {
+        this.$store.dispatch('user/createMultipleData', info)
+
+      }
     },
     async fetch () {
       await this.$store.dispatch('user/fetchData')

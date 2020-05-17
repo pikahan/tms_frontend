@@ -8,9 +8,9 @@ import updateOne from '@/apollo/mutations/apparatusDef/updateOne.gql'
 import deleteOne from '@/apollo/mutations/apparatusDef/deleteOne.gql'
 
 export interface ApparatusDefData {
+  id: number
   code: string
   family: FamilyData
-  id: number
   models: string
   name: string
   owner: string
