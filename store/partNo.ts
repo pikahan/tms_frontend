@@ -14,5 +14,4 @@ export interface PartNoCreateQuery {
   input: PartNoCreateInput
 }
 
-// @ts-ignore
 export default storeTemp('partNo', { allData: allParNos }, { createOne, updateOne, deleteOne })

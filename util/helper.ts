@@ -38,6 +38,7 @@ type CreateDataOption = UserCreateQuery | FamilyCreateQuery | ModelCreateQuery |
 type UpdateDataQuery = UserUpdateQuery
 
 interface UpdateDataOption<T>{
+  id: number
   data: T
   index: number
 }
@@ -132,7 +133,7 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
       if (mutation === null) {
         return
       }
-      const id = findIdByState(state, option.index)
+      const id = typeof option.id !== 'undefined' ? option.id : findIdByState(state, option.index)
       let client = (this as any).app.apolloProvider.defaultClient
 
       try {
@@ -140,7 +141,7 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
 
         let { data } = await client.mutate({
           mutation: mutation.updateOne,
-          variables: { input: {id, ...option.data }}
+          variables: { input: typeof option.data !== 'undefined' ? {id, ...option.data } : option}
         })
 
       } catch (e) {

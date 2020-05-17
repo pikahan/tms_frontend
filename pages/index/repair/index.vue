@@ -13,11 +13,11 @@
     <a-table :columns="columns" :dataSource="processedRepairRecordData" :scroll="{ x: 1300 }">
       <a slot="action" slot-scope="text, data" href="javascript:;">
         <div v-if="permission.approvalPermission && data.status === '申请中'">
-          <a-popconfirm placement="topRight" ok-text="同意" cancel-text="拒绝" @confirm="processingApplication" @cancel="processingApplication">
+          <a-popconfirm placement="topRight" ok-text="同意" cancel-text="拒绝" @confirm="processingApplication(data.id, 'confirm')" @cancel="processingApplication(data.id, 'cancel')">
             <template slot="title">
               <p>是否同意申请?</p>
             </template>
-            <a-button>审批</a-button>
+            审批
           </a-popconfirm>
         </div>
         <div v-else>
@@ -112,8 +112,12 @@
         }
       },
 
-      processingApplication() {
-
+      processingApplication(id, type) {
+        let status = '维修中'
+        if (type === 'cancel') {
+          status = '拒绝申请'
+        }
+        this.$store.dispatch('repairRecord/updateData', {id, status: '拒绝申请'})
       }
     },
 
