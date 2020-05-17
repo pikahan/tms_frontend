@@ -68,6 +68,9 @@
       }, {
         name: '夹具定义',
         router: '/apparatusDef'
+      }, {
+        name: '用户管理',
+        router: '/userManagement'
       }]
       this.menuItemList = data
       const store = new MyStorage()
