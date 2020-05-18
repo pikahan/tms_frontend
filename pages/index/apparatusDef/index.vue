@@ -10,6 +10,9 @@
           查看详情
         </div>
       </a>
+      <div slot="remark" slot-scope="text">
+        {{ text ? text : '-----' }}
+      </div>
     </a-table>
   </div>
 </template>
@@ -30,7 +33,7 @@
     { title: '点检周期', dataIndex: 'pMPeriod', key: 'pMPeriod' },
     { title: '责任人', dataIndex: 'owner', key: 'owner' },
     { title: '用途', dataIndex: 'recBy', key: 'recBy' },
-    { title: '备注', dataIndex: 'remark', key: 'remark' },
+    { title: '备注', dataIndex: 'remark', key: 'remark', scopedSlots: { customRender: 'remark' } },
     {
       title: 'Action',
       key: 'operation',

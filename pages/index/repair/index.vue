@@ -24,6 +24,9 @@
           查看详情
         </div>
       </a>
+      <div slot="finishTime" slot-scope="text">
+        {{ text.slice(0, 4) !== '0001' ? text : '-----' }}
+      </div>
       <img class="thumbnail" slot="picture" slot-scope="picture"  :src="`data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`" alt="img">
     </a-table>
   </div>
@@ -46,10 +49,10 @@
       option: {}
     },
     {
-      label: '物品代码',
+      label: '申请时间',
       name: 'applicationTimeFrom\tapplicationTimeTo',
       type: 'range',
-      placeholder: '请输入物品代码',
+      placeholder: ['起始时间', '结束时间'],
       option: {}
     }
   ]
@@ -58,12 +61,12 @@
   const columns = [
     { title: '物品代码', dataIndex: 'code', key: 'code', sorter: true,},
     { title: '申请时间', dataIndex: 'applicationTime', key: 'applicationTime', sorter: true, },
-    { title: '修复结果时间', dataIndex: 'finishTime', key: 'finishTime' },
-    { title: '图片', dataIndex: 'picture', key: 'picture',scopedSlots: { customRender: 'picture' }},
+    { title: '修复结果时间', dataIndex: 'finishTime', key: 'finishTime', scopedSlots: { customRender: 'finishTime' } },
+    { title: '图片', dataIndex: 'picture', key: 'picture', scopedSlots: { customRender: 'picture' }},
     { title: '故障描述', dataIndex: 'description', key: 'description' },
-    { title: 'status', dataIndex: 'status', key: 'status' },
+    { title: '状态', dataIndex: 'status', key: 'status' },
     {
-      title: 'Action',
+      title: '操作',
       key: 'operation',
       fixed: 'right',
       width: '100px',

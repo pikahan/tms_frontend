@@ -2,7 +2,7 @@
   <div id="components-form-demo-advanced-search">
     <a-form class="ant-advanced-search-form" :form="form" @submit="handleSearch">
       <a-row>
-        <a-col :span="18">
+        <a-col :span="24">
           <a-row :gutter="24">
             <a-col
               v-for="(searchDatum, i) in searchData"
@@ -10,7 +10,7 @@
               :span="12"
               :style="{ display: i < count ? 'block' : 'none' }"
             >
-              <a-form-item :label="searchDatum.label" >
+              <a-form-item :label="searchDatum.label" :labelCol="{span: 6}" >
                 <a-input
                   v-if="searchDatum.type === 'input'"
                   v-decorator="[
@@ -25,17 +25,29 @@
                     searchDatum.name,
                     searchDatum.option,
                   ]"
+                  :placeholder="searchDatum.placeholder"
                 />
+                <a-select
+                  v-else="searchData.type === 'select'"
+                  v-decorator="[
+                    searchDatum.name,
+                    searchDatum.option,
+                  ]"
+                >
+                  <a-select-option v-for="option in searchData.selectOption" :value="option.value">
+                    {{ option.content }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </a-row>
         </a-col>
-        <a-col :span="6" :style="{ textAlign: 'right' , marginTop: '4px'}">
+        <a-col :span="24" :style="{ textAlign: 'right', marginTop: '4px', marginBottom: '10px'}">
           <a-button type="primary" html-type="submit">
-            Search
+            搜索
           </a-button>
           <a-button :style="{ marginLeft: '8px' }" @click="handleReset">
-            Clear
+            清空
           </a-button>
           <a :style="{ marginLeft: '8px', fontSize: '12px' }"
              @click="toggle"
@@ -114,7 +126,9 @@
 </script>
 <style scoped>
   .ant-advanced-search-form {
+    background: rgba(0, 0, 0, .02);
     padding: 24px;
+    margin-bottom: 16px;
   }
 
   .ant-advanced-search-form .ant-form-item {

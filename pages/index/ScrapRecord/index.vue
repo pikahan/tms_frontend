@@ -26,6 +26,18 @@
           -----
         </div>
       </div>
+      <div slot="middleProcessor" slot-scope="text">
+        {{ text ? text : '-----' }}
+      </div>
+      <div slot="middleProcessTime" slot-scope="text">
+        {{ text.slice(0, 4) === '0001' ? text : '-----' }}
+      </div>
+      <div slot="finalProcessTime" slot-scope="text">
+        {{ text.slice(0, 4) === '0001' ? text : '-----' }}
+      </div>
+      <div slot="finalProcessor" slot-scope="text">
+        {{ text ? text : '-----' }}
+      </div>
     </a-table>
   </div>
 </template>
@@ -41,10 +53,10 @@
     { title: '物品代码', dataIndex: 'code', key: 'code'},
     { title: '申请时间', dataIndex: 'applicationTime', key: 'applicationTime' },
     { title: '申请人', dataIndex: 'proposer', key: 'proposer' },
-    { title: '初审人', dataIndex: 'middleProcessor', key: 'middleProcessor'},
-    { title: '初审时间', dataIndex: 'middleProcessTime', key: 'middleProcessTime'},
-    { title: '终审时间', dataIndex: 'finalProcessTime', key: 'finalProcessTime'},
-    { title: '终审人', dataIndex: 'finalProcessor', key: 'finalProcessor'},
+    { title: '初审人', dataIndex: 'middleProcessor', key: 'middleProcessor', scopedSlots: { customRender: 'middleProcessor' }},
+    { title: '初审时间', dataIndex: 'middleProcessTime', key: 'middleProcessTime', scopedSlots: { customRender: 'middleProcessTime' }},
+    { title: '终审时间', dataIndex: 'finalProcessTime', key: 'finalProcessTime', scopedSlots: { customRender: 'finalProcessTime' }},
+    { title: '终审人', dataIndex: 'finalProcessor', key: 'finalProcessor', scopedSlots: { customRender: 'finalProcessor' }},
     { title: '状态', dataIndex: 'status', key: 'status' },
     { title: '报废原因', dataIndex: 'reason', key: 'reason' },
     {
