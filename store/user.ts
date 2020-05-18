@@ -120,12 +120,13 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, 
         console.log(userRes)
         let currUserData = userRes.data.users.payload[0]
 
-        const { permission, name: typeName } = currUserData.userType
+        const { permission, name: typeName, permissions } = currUserData.userType
 
         let storageUserData = {
           employeeId: userData.employeeId,
           permission,
           typeName,
+          permissions,
           id: currUserData.id,
           workcellId: currUserData.workcellId,
         }
@@ -142,4 +143,5 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, 
     }
   }
 })
+
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="{display: 'inline-block'}">
     <a-button @click="showModal">
       <a-icon type="download" />批量新增
     </a-button>
@@ -24,7 +24,10 @@
             <a-col :span="5">{{ data.name }}</a-col>
             <a-col :span="5">{{ data.value }}</a-col>
             <a-col :span="4">{{ data.type }}</a-col>
-            <a-col :span="10">{{ data.explanation }}</a-col>
+            <a-col :span="10">
+              <span v-if="typeof data.required !== 'undefined' && data.required" style="color: rgba(255,67,63,0.65)">必填项 </span>
+              {{ data.explanation }}
+            </a-col>
           </a-row>
         </div>
       </div>
@@ -36,6 +39,11 @@
       >
         <a-button  :style="{ margin: '0px 0px 10px' }"> <a-icon type="upload" />批量新增 </a-button>
       </a-upload>
+      <template slot="footer">
+        <a-button key="back" @click="handleCancel">
+          返回
+        </a-button>
+      </template>
     </a-modal>
   </div>
 </template>

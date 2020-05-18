@@ -4,19 +4,12 @@
     <nuxt-link to="/userManagement/add">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 新增</a-button>
     </nuxt-link>
-
-    <a-upload
-      name="file"
-      @change="handleChange"
-    >
-      <a-button  :style="{ margin: '0px 0px 10px' }"> <a-icon type="upload" />批量新增 </a-button>
-    </a-upload>
     <multiplyDownload
       :uploadCallback="handleUploadCallback"
       :tipList="[
-      { name: '用户Id', value: 'employeeId', type: '文字', explanation: '用户工号' },
-      { name: '用户Id', value: 'employeeId', type: '文字', explanation: '用户工号' },
-      { name: '用户Id', value: 'employeeId', type: '文字', explanation: '用户工号' }]"
+      { name: '工号', value: 'employeeId', type: '文字', explanation: '用户工号', required: true  },
+      { name: 'workcell Id', value: 'workcellId', type: '数字', explanation: 'workcell的id号', required: true },
+      { name: '用户类别Id', value: 'typeId', type: '数字', explanation: '用户类别的id号', required: true }]"
     />
 
     <!--<a-col :span="6">{{ data.name }}</a-col>-->

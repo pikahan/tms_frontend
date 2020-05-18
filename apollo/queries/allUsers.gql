@@ -2,10 +2,15 @@ query($employeeId: String){
   users(employeeId: $employeeId) {
     payload {
       employeeId
+      mail
       userType {
         id
         name
         permission
+        permissions {
+          name
+          value
+        }
       }
       id
       workcell {
