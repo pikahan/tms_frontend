@@ -1,0 +1,5 @@
+mutation ($input: Int!) {
+  deleteFamily(id: $input) {
+    success
+  }
+}

@@ -68,8 +68,6 @@ export default storeTemp('ioRecord', { allData: allIoRecords }, { createOne, upd
       const ret = <Array<ProcessedIoRecordData>>[]
       state.data.forEach((ioRecordData, i) => {
         const { apparatusEntity, line, ...otherData } = ioRecordData
-
-
         const { def, ...data } = apparatusEntity
         const { family, name, ...otherDefData } = def
         ret.push({
@@ -82,6 +80,7 @@ export default storeTemp('ioRecord', { allData: allIoRecords }, { createOne, upd
           ...otherData
         })
       })
+      console.log(ret)
       return ret
     },
   }

@@ -1,12 +1,9 @@
 <template>
     <div>
       <searchPane :search-data="searchData" />
-      <nuxt-link to="/putInOperation/submit">
-        <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交入库记录</a-button>
-      </nuxt-link>
-      <a-table :columns="columns" :dataSource="apparatusEntityData" :scroll="{ x: 1300 }">
+      <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }">
         <span slot="action" slot-scope="text, data" >
-          <nuxt-link to="/putInOperation/submit" v-if="data.status === '线上'">
+          <nuxt-link :to="`/putInOperation/update/${data.id}`" v-if="data.status === '线上'">
             入库
           </nuxt-link>
           <!--TODO 之后更改to的地址-->
@@ -27,7 +24,7 @@
 
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code'},
-    { title: '名字', dataIndex: 'name', key: 'name' },
+    { title: '名字', dataIndex: 'apparatusDefName', key: 'apparatusDefName' },
     { title: '库位', dataIndex: 'location', key: 'location'},
     { title: '状态', dataIndex: 'status', key: 'status' },
     // { title: '图片', dataIndex: 'picture', key: 'picture' },
@@ -55,13 +52,11 @@
     async fetch() {
       // const fetchDataFor = fetchDataIn(this)
       // console.log('dasfasdf2222')
-      await this.$store.dispatch(`apparatusEntity/fetchData`)
+      await this.$store.dispatch(`ioRecord/fetchData`)
       // await fetchDataFor('apparatusEntity')
     },
     computed: {
-      ...mapGetters('apparatusEntity', {
-        apparatusEntityData: 'processedApparatusEntityData'
-      })
+      ...mapGetters('ioRecord', ['processedIoRecordData'])
     }
   }
 </script>

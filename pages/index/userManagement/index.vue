@@ -26,7 +26,7 @@
   import searchPane from '@/components/searchPane'
   import { searchData } from '@/util/testData' //TODO 接口完成之后删除
   import { mapGetters } from 'vuex'
-  import {readWorkbookFromLocalFile} from '@/util/excel'
+  import { readWorkbookFromLocalFile } from '@/util/excel'
   import multiplyDownload from '@/components/multiplyDownload'
 
   //TODO mock数据,之后替换

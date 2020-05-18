@@ -72,6 +72,9 @@
       }, {
         name: '用户管理',
         router: '/userManagement'
+      }, {
+        name: '报废管理',
+        router: '/scrapRecord'
       }]
       this.menuItemList = data
       const store = new MyStorage()

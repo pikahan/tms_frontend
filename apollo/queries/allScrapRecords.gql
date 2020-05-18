@@ -11,7 +11,9 @@ query($pageIndex: Int){
       proposer
       applicationTime
       middleProcessor
+      middleProcessTime
       finalProcessor
+      finalProcessTime
       id
       proposer
       status

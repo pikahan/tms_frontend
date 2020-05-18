@@ -1,8 +1,8 @@
 // @ts-ignore
 import allScrapRecords from '@/apollo/queries/allScrapRecords.gql'
-import createOne from '@/apollo/mutations/partNo/createOne.gql'
-import updateOne from '@/apollo/mutations/partNo/updateOne.gql'
-import deleteOne from '@/apollo/mutations/partNo/deleteOne.gql'
+import createOne from '@/apollo/mutations/scrapRecord/createOne.gql'
+import updateOne from '@/apollo/mutations/scrapRecord/updateOne.gql'
+import deleteOne from '@/apollo/mutations/scrapRecord/deleteOne.gql'
 import { storeTemp } from '@/util/helper'
 import {ApparatusEntityData} from './apparatusEntity'
 import {State} from '../util/helper'

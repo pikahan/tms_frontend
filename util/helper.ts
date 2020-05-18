@@ -141,6 +141,11 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
           mutation: mutation.updateOne,
           variables: { input: typeof option.data !== 'undefined' ? {id, ...option.data } : option}
         })
+        console.log('update ok')
+        console.log('the variables start')
+
+        console.log({ input: typeof option.data !== 'undefined' ? {id, ...option.data } : option})
+        console.log('the variables end')
 
       } catch (e) {
         console.log(e, 'update error')

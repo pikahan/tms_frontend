@@ -5,7 +5,7 @@
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
     </nuxt-link>
     <a-table :columns="columns" :dataSource="processedApparatusEntityData" :scroll="{ x: 1300 }" rowKey="id">
-      <a slot="action" slot-scope="text, data" href="javascript:;">{{ data.status === '' }}</a>
+      <!--<a slot="action" slot-scope="text, data" href="javascript:;">{{ data.status === '' }}</a>-->
         <img class="thumbnail" slot="picture" slot-scope="picture"  :src="`data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`" alt="img">
     </a-table>
   </div>
@@ -13,8 +13,9 @@
 
 <script>
   import searchPane from '@/components/searchPane'
-  import { mapGetters } from 'vuex'
-  import { searchData } from '@/util/testData' //TODO 接口完成之后删除
+  import { mapGetters, mapState } from 'vuex'
+  import permissions from '../../../util/permissions'
+  import { searchData } from '@/util/testData' // TODO 接口完成之后删除
   import { arrayBufferToBase64 } from '@/util/helper'
 
   const columns = [
@@ -27,13 +28,13 @@
     { title: '录入日期', dataIndex: 'recOn', key: 'recOn' },
     { title: '图片', key: 'picture', dataIndex: 'picture', scopedSlots: { customRender: 'picture' } },
     { title: '状态', dataIndex: 'status', key: 'status' },
-    {
-      title: '操作',
-      key: 'operation',
-      fixed: 'right',
-      width: '100px',
-      scopedSlots: { customRender: 'action' },
-    },
+    // {
+    //   title: '操作',
+    //   key: 'operation',
+    //   fixed: 'right',
+    //   width: '100px',
+    //   scopedSlots: { customRender: 'action' },
+    // },
   ];
 
 
@@ -52,6 +53,7 @@
     },
     computed: {
       ...mapGetters('apparatusEntity', ['processedApparatusEntityData']),
+      ...mapState('user', ['userInfo']),
       permission() {
         // TODO 划分好权限之后更改
         return {

@@ -12,7 +12,7 @@
     </a-upload>
     <a-table :columns="columns" :dataSource="processedRepairRecordData" :scroll="{ x: 1300 }" @change="handleTableChange">
       <a slot="action" slot-scope="text, data" href="javascript:;">
-        <div v-if="permission.approvalPermission && data.status === '申请中'">
+        <div v-if="permission.RepairApplicationProcess && data.status === '申请中'">
           <a-popconfirm placement="topRight" ok-text="同意" cancel-text="拒绝" @confirm="processingApplication(data.id, 'confirm')" @cancel="processingApplication(data.id, 'cancel')">
             <template slot="title">
               <p>是否同意申请?</p>
@@ -31,7 +31,8 @@
 
 <script>
   import searchPane from '@/components/searchPane'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapState } from 'vuex'
+  import permissions from '../../../util/permissions'
   import { arrayBufferToBase64 } from '@/util/helper'
   import {readWorkbookFromLocalFile, downloadExcel} from '@/util/excel'
 
@@ -85,12 +86,16 @@
     },
     computed: {
       ...mapGetters('repairRecord', ['processedRepairRecordData']),
+      ...mapState('user', ['userInfo']),
       permission() {
         // TODO 划分好权限之后更改
-        return {
-          approvalPermission: true
-        }
-      }
+        const ret = {}
+        this.userInfo.permissions.forEach(permission => {
+          ret[permission.name] = permission.value
+        })
+        return ret
+      },
+
     },
     async fetch() {
       await this.$store.dispatch(`repairRecord/fetchData`)
@@ -141,13 +146,6 @@
           ...filters,
         });
 
-        // this.fetch({
-        //   results: pagination.pageSize,
-        //   page: pagination.current,
-        //   sortField: sorter.field,
-        //   sortOrder: sorter.order,
-        //   ...filters,
-        // });
       },
       downloadExcel
 

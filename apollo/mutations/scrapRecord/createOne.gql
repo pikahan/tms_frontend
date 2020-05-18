@@ -1,0 +1,5 @@
+mutation ($input: ScrapRecordCreateInput!) {
+  createScrapRecord(scrapRecord: $input) {
+    success
+  }
+}

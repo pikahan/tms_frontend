@@ -1,7 +1,38 @@
-query($pageIndex: Int){
-  ioRecords(pageIndex: $pageIndex) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $outRecordPerson: String){
+  ioRecords(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, outRecordPerson: $outRecordPerson) {
     payload {
       id
+      apparatusEntity {
+        billNo
+        def {
+          family {
+            name
+          }
+          name
+          code
+          familyId
+          models
+          partNos
+        }
+        defId
+        location
+        regDate
+        seqId
+        status
+        picture
+
+      }
+      apparatusEntityId
+      inHandlingPerson
+      inRecordPerson
+      inTime
+      line {
+        name
+      }
+      lineId
+      outHandlingPerson
+      outRecordPerson
+      outTime
 
     }
     totalCount

@@ -4,9 +4,9 @@
       <nuxt-link to="/putOutOperation/submit">
         <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交出库记录</a-button>
       </nuxt-link>
-      <a-table :columns="columns" :dataSource="apparatusEntityData" :scroll="{ x: 1300 }">
-        <a slot="action" slot-scope="text" href="javascript:;">action</a>
-      </a-table>    </div>
+      <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }" rowKey='id'>
+      </a-table>
+    </div>
 </template>
 
 <script>
@@ -17,15 +17,9 @@
   //TODO mock数据,之后替换
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code'},
-    { title: '名字', dataIndex: 'name', key: 'name' },
+    { title: '名字', dataIndex: 'apparatusDefName', key: 'apparatusDefName' },
     { title: '库位', dataIndex: 'location', key: 'location'},
-    {
-      title: '操作',
-      key: 'operation',
-      fixed: 'right',
-      width: '100px',
-      scopedSlots: { customRender: 'action' },
-    },
+    { title: '状态', dataIndex: 'status', key: 'status' },
   ];
 
 
@@ -41,12 +35,10 @@
       }
     },
     async fetch() {
-      await this.$store.dispatch(`apparatusEntity/fetchData`)
+      await this.$store.dispatch(`ioRecord/fetchData`)
     },
     computed: {
-      ...mapGetters('apparatusEntity', {
-        apparatusEntityData: 'processedApparatusEntityData'
-      })
+      ...mapGetters('ioRecord', ['processedIoRecordData'])
     }
   }
 </script>
