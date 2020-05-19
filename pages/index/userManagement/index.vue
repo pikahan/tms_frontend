@@ -29,11 +29,11 @@
   import { readWorkbookFromLocalFile } from '@/util/excel'
   import multiplyDownload from '@/components/multiplyDownload'
 
-  //TODO mock数据,之后替换
   const columns = [
     { title: '工号', dataIndex: 'employeeId', key: 'employeeId'},
     { title: 'workcell', dataIndex: 'workcell', key: 'workcell'},
     { title: '用户级别', dataIndex: 'userType', key: 'userType' },
+    { title: '邮箱', dataIndex: 'mail', key: 'mail' },
     {
       title: '操作',
       key: 'operation',

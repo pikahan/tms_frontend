@@ -32,7 +32,7 @@ interface ProcessedRepairRecordData extends RepairRecordData {
 
 }
 
-type RepairStatus = '在库'| '线上' | '临时领出' | '维修' | '报废'
+export type RepairStatus = '在库'| '线上' | '临时领出' | '维修' | '报废'
 
 export default storeTemp('repairRecord', { allData: allRepairRecords }, { createOne, updateOne, deleteOne }, {
   getters: {

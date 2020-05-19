@@ -1,0 +1,26 @@
+query{
+  repairRecords {
+    payload {
+      id
+      status
+      applicationTime
+      apparatusEntity {
+        def {
+          name
+        }
+      }
+    }
+  }
+  scrapRecords {
+    payload {
+      id
+      status
+      apparatusEntity {
+        def {
+          name
+        }
+      }
+      applicationTime
+    }
+  }
+}

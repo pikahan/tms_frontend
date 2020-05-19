@@ -37,6 +37,18 @@
         </div>
       </div>
     </div>
+    <div>
+      <h1>时间线</h1>
+      <a-timeline style="margin: 30px 30px 0">
+        <a-timeline-item>Create a services site 2015-09-01</a-timeline-item>
+        <a-timeline-item>Solve initial network problems 2015-09-01</a-timeline-item>
+        <a-timeline-item color="red">
+          <a-icon slot="dot" type="clock-circle-o" style="font-size: 16px;" />
+          Technical testing 2015-09-01
+        </a-timeline-item>
+        <a-timeline-item>Network problems being solved 2015-09-01</a-timeline-item>
+      </a-timeline>
+    </div>
   </div>
 </template>
 

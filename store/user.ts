@@ -127,6 +127,7 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, 
           permission,
           typeName,
           permissions,
+          mail: currUserData.mail,
           id: currUserData.id,
           workcellId: currUserData.workcellId,
         }

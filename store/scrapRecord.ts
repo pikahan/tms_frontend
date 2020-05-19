@@ -33,7 +33,7 @@ interface ProcessedScrapRecordData extends ScrapRecordData {
 
 }
 
-type ScrapStatus = '申请中' | '初审通过' | '初审拒绝' | '终审通过' | '终审拒绝'
+export type ScrapStatus = '申请中' | '初审通过' | '初审拒绝' | '终审通过' | '终审拒绝'
 
 export default storeTemp('scrapRecord', { allData: allScrapRecords }, { createOne, updateOne, deleteOne }, {
   getters: {

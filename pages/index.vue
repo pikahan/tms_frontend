@@ -1,8 +1,8 @@
 <template>
-  <a-layout id="components-layout-demo-custom-trigger">
-    <a-layout-sider :trigger="null" collapsible v-model="collapsed">
+  <a-layout id="components-layout-demo-custom-trigger" class="height100">
+    <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="height: 100%" class="height100">
       <div class="logo" />
-      <a-menu theme="dark" mode="inline" :selectedKeys="selectedKeys" @click="handleMenuClick">
+      <a-menu theme="dark" mode="inline" :selectedKeys="selectedKey" @click="handleMenuClick">
         <a-menu-item v-for="(menuItem, i) in menuItemList" :key="menuItem.router">
           <nuxt-link :to="menuItem.router">
             <a-icon type="user" />
@@ -11,31 +11,157 @@
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
-        <a-icon
-          class="trigger"
-          :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-          @click="()=> collapsed = !collapsed"
-        />
+    <a-layout
+      class="height100"
+    >
+      <a-layout-header  class="header_bar" style="background: #fff; padding: 0;display: flex;justify-content: space-between">
+        <div>
+          <a-icon
+            class="trigger"
+            :type="collapsed ? 'menu-unfold' : 'menu-fold'"
+            @click="()=> collapsed = !collapsed"
+          />
+          <a-breadcrumb style="display: inline-block;position: relative;top: -2px;">
+            <a-breadcrumb-item >Home</a-breadcrumb-item>
+            <a-breadcrumb-item v-for="name of breadcrumb">{{ name }}</a-breadcrumb-item>
+          </a-breadcrumb>
+        </div>
+        <div class="bar-right">
+          <div class="bell-icon" style="position: relative; top: 2px; display: inline-block">
+            <a-badge dot><a-icon style="font-size: 16px" type="bell" /></a-badge>
+          </div>
+          <a-dropdown>
+            <a style="position: relative">
+              <a-avatar :size="22" icon="user" />
+            {{ this.$store.state.user.userInfo.employeeId }}
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a @click="handleLogout">注销</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a href="javascript:;">修改密码</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </div>
       </a-layout-header>
       <a-layout-content
-        :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
+        :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px', overflowY: 'scroll', flex: '1' }"
       >
-        <router-view />
+
+        <div v-if="this.$route.fullPath === '/'">
+          <welcome :name="this.$store.state.user.userInfo.employeeId" :info="`还有${listInfo.length}件未处理的消息, 请及时处理。`" />
+          <h3>待处理消息</h3>
+          <a-list item-layout="horizontal" :data-source="listInfo">
+            <a-list-item slot="renderItem" slot-scope="item, index">
+              <a-list-item-meta
+                :description="item.description"
+              >
+                <nuxt-link :to="item.router" slot="title">
+                  {{ item.title }}
+                </nuxt-link>
+                <a-avatar
+                  slot="avatar"
+                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                />
+              </a-list-item-meta>
+            </a-list-item>
+          </a-list>
+        </div>
+        <router-view v-else />
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
+  import { mapGetters } from 'vuex'
   import MyStorage from '@/util/storage'
+  import permissionsIndex from '../util/permissions'
+  import welcome from '@/components/welcome'
+
+  const op1Router = {
+    home: '主页',
+    putInOperation: '入库操作',
+    putOutOperation: '出库操作',
+    repair: '报修',
+    apparatusData: '工夹具信息',
+  }
+
+  const op2Router = {
+    purchase: '采购入库',
+    scrapRecord: '报废管理',
+    apparatusDef: '夹具定义',
+  }
+
+  const supervisorRouter = {
+    apparatusTypeManagement: '类别管理',
+  }
+
+  const adminRouter = {
+    userManagement: '用户管理',
+  }
+
   export default {
+    components: {
+      welcome
+    },
     data() {
       return {
         collapsed: false,
         menuItemList: [],
-        selectedKeys: []
       };
+    },
+    computed: {
+      ...mapGetters('homeData', ['processedRepairRecords', 'processedScrapRecords']),
+      listInfo() {
+        let ret = []
+        if (1) { // TODO 有维修处理权限
+          this.processedRepairRecords.forEach(record => {
+            let status = record.status
+            if (status === '申请中') {
+              ret.push({
+                title: '新的维修处理待批准',
+                router: '/repair',
+                description: `夹具名${record.name}, 申请时间${record.applicationTime}`
+              })
+            }
+          })
+        }
+
+        if (1) { // TODO 有报废处理权限
+          this.processedScrapRecords.forEach(record => {
+            let status = record.status
+            console.log(record)
+            if (status === '申请中' || status === '终审通过') {
+              ret.push({
+                title: '新的报废处理待批准',
+                router: '/scrapRecord',
+                description: `夹具名${record.name}, 申请时间${record.applicationTime}`
+
+              })
+            }
+          })
+        }
+
+        ret.sort((a, b) => {
+          return Date.parse(a.date) -  Date.parse(b.date)
+        })
+
+        return ret
+      },
+      breadcrumb() {
+        console.log(this.$route.fullPath.split('/').filter(router => {
+          return router !== '' || Number.isNaN(router*1)
+        }))
+        return this.$route.fullPath.split('/').filter(router => {
+          return router !== '' && Number.isNaN(router*1)
+        })
+
+      },
+      selectedKey() {
+        return [this.getSelectedKey(this.$route.path)]
+      }
     },
     methods: {
       handleMenuClick({ item, key, keyPath }) {
@@ -43,52 +169,54 @@
       },
       getSelectedKey(path) {
         return `/${path.split('/')[1]}`
+      },
+      handleLogout(e) {
+        e.preventDefault()
+        this.$apolloHelpers.onLogout()
+        const storage = new MyStorage()
+        storage.remove('userInfo')
+        this.$router.push('/login')
+
       }
     },
     created() {
-
-      //TODO 之后和接口对接
-      const data = [{
-        name: '入库操作',
-        router: '/putInOperation'
-      }, {
-        name: '出库操作',
-        router: '/putOutOperation'
-      }, {
-        name: '报修',
-        router: '/repair'
-      }, {
-        name: '采购入库',
-        router: '/purchase'
-      }, {
-        name: '工夹具信息',
-        router: '/apparatusData'
-      }, {
-        name: '类别管理',
-        router: '/apparatusTypeManagement'
-      }, {
-        name: '夹具定义',
-        router: '/apparatusDef'
-      }, {
-        name: '用户管理',
-        router: '/userManagement'
-      }, {
-        name: '报废管理',
-        router: '/scrapRecord'
-      }]
-      this.menuItemList = data
       const store = new MyStorage()
       const userInfo = store.get('userInfo')
       this.$store.commit('user/setUserInfo', userInfo)
-      console.log(this.getSelectedKey(this.$route.path))
-      let key = this.getSelectedKey(this.$route.path)
-      if (key === '/') { // 进入第一个tab
-        key = data[0].router
-        this.$router.push(key)
+      let permissions = userInfo.permissions
+      let data = { ...op1Router}
+      if (permissions[permissionsIndex.RepairApplicationProcess].value) {
+        Object.assign(data, op2Router)
       }
-      this.selectedKeys = [key]
+
+      if (permissions[permissionsIndex.ClampingApparatusInformationMutation].value) {
+        Object.assign(data, supervisorRouter)
+      }
+
+      if (permissions[permissionsIndex.SystemManagement].value) {
+        Object.assign(data, adminRouter)
+      }
+
+      const router = []
+      const keys = Object.keys(data)
+      keys.forEach(key => {
+        router.push({
+          name: data[key],
+          router: `/${key !== 'home' ? key : ''}`
+        })
+      })
+
+      this.menuItemList = router
+      // if (key === '/') { // TODO 之后改成首页
+      //   key = "/" + Object.keys(data)[0]
+      //   // this.$router.push(key)
+      // }
     },
     middleware: 'isAuth',
+    async fetch() {
+      let userInfo = this.$store.state.user.userInfo
+      await this.$store.dispatch(`homeData/fetchData`)
+    }
 
   };
 </script>
@@ -113,5 +241,33 @@
 
   .thumbnail {
    max-width: 80px;
+  }
+
+  .bar-right > * {
+    margin-left: 20px;
+  }
+
+  .bar-right {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+    text-align: right;
+  }
+
+  .height100 {
+    height: 100%;
+  }
+
+  #__nuxt {
+    height: 100%;
+  }
+
+  #__layout {
+    height: 100%;
+  }
+
+  #__layout > * {
+    height: 100%;
+
   }
 </style>

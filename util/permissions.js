@@ -5,14 +5,12 @@ export default {
   TempWarehouseOut: 3,
   RepairApplication: 4,
   RepairApplicationProcess: 5,
-  DisposalApplication: 6,
-  DisposalApplicationMiddleProcess: 7,
-  DisposalApplicationFinalProcess: 8,
-  BuyoffApplication: 9,
-  BuyoffApplicationMiddleProcess: 10,
-  BuyoffApplicationFinalProcess: 11,
-  ClampingApparatusInformationMutation: 12,
-  SystemManagement: 13,
+  ClampingApparatusInformationMutation: 6,
+  DisposalApplication: 7,
+  DisposalApplicationMiddleProcess: 8,
+  CategoryMutation: 10,
+  DisposalApplicationFinalProcess: 9,
+  SystemManagement: 11,
 }
 
 

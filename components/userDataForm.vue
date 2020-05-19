@@ -13,26 +13,31 @@
       <a-input v-model="form.password" />
     </a-form-model-item>
     <a-form-model-item label="workcell" prop="workcellId">
-      <a-select v-model="form.workcellId" placeholder="please select your workcell">
+      <a-select v-model="form.workcellId" placeholder="请选择workcell">
         <a-select-option v-for="workcell in workcellData" :value="workcell.id" :key="workcell.name">
           {{ workcell.name }}
         </a-select-option>
       </a-select>
     </a-form-model-item>
     <a-form-model-item label="用户职能" prop="userTypeId">
-      <a-select v-model="form.userTypeId" placeholder="please select your userType">
+      <a-select v-model="form.userTypeId" placeholder="请选择用户类别">
         <a-select-option v-for="userType in userTypeData" :value="userType.id" :key="userType.name">
           {{ userType.name }}
         </a-select-option>
       </a-select>
     </a-form-model-item>
+    <a-form-model-item label="邮箱" prop="mail">
+      <a-input v-model="form.mail" placeholder="请输入邮箱" />
+    </a-form-model-item>
     <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" @click="onSubmit">
         {{ typeof this.$route.params.id === 'undefined' ? '创建' : '修改' }}
       </a-button>
-      <a-button style="margin-left: 10px;">
-        取消
-      </a-button>
+      <nuxt-link to="/userManagement">
+        <a-button style="margin-left: 10px;">
+          取消
+        </a-button>
+      </nuxt-link>
     </a-form-model-item>
   </a-form-model>
 </template>
@@ -50,7 +55,8 @@
           employeeId: '',
           userTypeId: '',
           workcellId: '',
-          password: ''
+          password: '',
+          mail: ''
         },
         rules: {
           employeeId: [
@@ -65,6 +71,10 @@
           password: [
             { required: true, message: '请输入密码', trigger: 'blur' },
             { min: 6, max: 16, message: '长度需在6-16之间', trigger: 'blur' } // TODO 密码长度
+          ],
+          mail: [
+            { required: true, message: '请输入邮箱', trigger: 'blur' },
+            { type: 'email', message: '请输入正确的邮箱格式' }
           ]
         }
       };
