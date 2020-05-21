@@ -133,10 +133,12 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
       if (mutation === null) {
         return
       }
-      const id = typeof option.id !== 'undefined' ? option.id : findIdByState(state, option.index)
+      const id = typeof option.id !== 'undefined' ? option.id*1 : findIdByState(state, option.index)
       let client = (this as any).app.apolloProvider.defaultClient
 
       try {
+        console.log('update args')
+        console.log(typeof option.data !== 'undefined' ? {id, ...option.data } : option)
         let { data } = await client.mutate({
           mutation: mutation.updateOne,
           variables: { input: typeof option.data !== 'undefined' ? {id, ...option.data } : option}

@@ -1,0 +1,50 @@
+query($input: Int!){
+  ioRecords(apparatusEntityId: $input) {
+    payload {
+      id
+      outTime
+      outRecordPerson
+      inTime
+      inRecordPerson
+    }
+  }
+  repairRecords(apparatusEntityId: $input) {
+    payload {
+      id
+      status
+      finishTime
+      acceptorTime
+      acceptor
+      proposer
+      applicationTime
+      apparatusEntity {
+        def {
+          name
+        }
+      }
+    }
+  }
+  scrapRecords(apparatusEntityId: $input) {
+    payload {
+      id
+      status
+      finalProcessTime
+      middleProcessTime
+      finalProcessor
+      middleProcessor
+      proposer
+      apparatusEntity {
+        def {
+          name
+        }
+      }
+      applicationTime
+    }
+  }
+  trainLogs(type: "apparatusEntity", relevantId: $input) {
+    payload {
+      id
+      detail
+    }
+  }
+}

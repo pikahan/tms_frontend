@@ -37,7 +37,7 @@ interface ProcessedApparatusEntityData extends ApparatusDefData {
   regDate: string
 }
 
-export default storeTemp('apparatusEntity', { allData: allApparatusEntities }, {createOne}, {
+export default storeTemp('apparatusEntity', { allData: allApparatusEntities }, {createOne, updateOne, deleteOne}, {
   getters: {
     processedApparatusEntityData: (state: State<ApparatusEntityData>) => {
       const ret = <Array<ProcessedApparatusEntityData>>[]

@@ -46,6 +46,7 @@ export interface UserData {
   userType: UserType
   workcell: Workcell
   workcellId?: number
+  mail: string
   passward?: string
 }
 
@@ -54,6 +55,7 @@ const EXPIRES = 1000 * 60 * 60
 interface ProcessedUserData {
   index: number
   key: number
+  mail: string
   employeeId: string
   workcell: string
   workcellId: number
@@ -76,6 +78,7 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, 
         ret.push({
           index: i,
           key: userData.id ? userData.id : 0,
+          mail: userData.mail ? userData.mail : '暂无',
           employeeId: userData.employeeId,
           workcell: userData.workcell.name,
           workcellId: <number>userData.workcellId,

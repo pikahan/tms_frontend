@@ -1,16 +1,17 @@
 <template>
   <div id="components-form-demo-advanced-search">
     <a-form class="ant-advanced-search-form" :form="form" @submit="handleSearch">
-      <a-row>
-        <a-col :span="24">
-          <a-row :gutter="24">
+        <div>
+          <a-row>
             <a-col
               v-for="(searchDatum, i) in searchData"
               :key="searchDatum.name"
-              :span="12"
+              :xs="24"
+              :sm="12"
+              :md="6"
               :style="{ display: i < count ? 'block' : 'none' }"
             >
-              <a-form-item :label="searchDatum.label" :labelCol="{span: 6}" >
+              <a-form-item :label="searchDatum.label" :labelCol="{xs: {span: 1}, sm: {span:1}}" >
                 <a-input
                   v-if="searchDatum.type === 'input'"
                   v-decorator="[
@@ -41,8 +42,8 @@
               </a-form-item>
             </a-col>
           </a-row>
-        </a-col>
-        <a-col :span="24" :style="{ textAlign: 'right', marginTop: '4px', marginBottom: '10px'}">
+        </div>
+        <div :style="{ textAlign: 'right', marginTop: '4px', marginBottom: '10px'}">
           <a-button type="primary" html-type="submit">
             搜索
           </a-button>
@@ -55,8 +56,7 @@
           >
             展开 <a-icon :type="expand ? 'up' : 'down'" />
           </a>
-        </a-col>
-      </a-row>
+        </div>
     </a-form>
   </div>
 </template>

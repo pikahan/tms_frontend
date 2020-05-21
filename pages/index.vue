@@ -1,8 +1,8 @@
 <template>
   <a-layout id="components-layout-demo-custom-trigger" class="height100">
-    <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="height: 100%" class="height100">
+    <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="height: 100%" class="height100 menu-inline" >
       <div class="logo" />
-      <a-menu theme="dark" mode="inline" :selectedKeys="selectedKey" @click="handleMenuClick">
+      <a-menu theme="dark" mode="inline" :selectedKeys="selectedKey" @click="handleMenuClick" >
         <a-menu-item v-for="(menuItem, i) in menuItemList" :key="menuItem.router">
           <nuxt-link :to="menuItem.router">
             <a-icon type="user" />
@@ -14,36 +14,46 @@
     <a-layout
       class="height100"
     >
-      <a-layout-header  class="header_bar" style="background: #fff; padding: 0;display: flex;justify-content: space-between">
-        <div>
-          <a-icon
-            class="trigger"
-            :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-            @click="()=> collapsed = !collapsed"
-          />
-          <a-breadcrumb style="display: inline-block;position: relative;top: -2px;">
-            <a-breadcrumb-item >Home</a-breadcrumb-item>
-            <a-breadcrumb-item v-for="name of breadcrumb">{{ name }}</a-breadcrumb-item>
-          </a-breadcrumb>
-        </div>
-        <div class="bar-right">
-          <div class="bell-icon" style="position: relative; top: 2px; display: inline-block">
-            <a-badge dot><a-icon style="font-size: 16px" type="bell" /></a-badge>
+      <a-layout-header  style="background: #fff; padding: 0;">
+        <a-menu theme="dark" mode="horizontal" :selectedKeys="selectedKey" @click="handleMenuClick" class="menu-horizontal" >
+          <a-menu-item v-for="(menuItem, i) in menuItemList" :key="menuItem.router">
+            <nuxt-link :to="menuItem.router">
+              <a-icon type="user" />
+              <span>{{ menuItem.name }}</span>
+            </nuxt-link>
+          </a-menu-item>
+        </a-menu>
+        <div class="header_bar"  style="display: flex;justify-content: space-between">
+          <div>
+            <a-icon
+              class="trigger"
+              :type="collapsed ? 'menu-unfold' : 'menu-fold'"
+              @click="()=> collapsed = !collapsed"
+            />
+            <a-breadcrumb style="display: inline-block;position: relative;top: -2px;">
+              <a-breadcrumb-item >Home</a-breadcrumb-item>
+              <a-breadcrumb-item v-for="name of breadcrumb">{{ name }}</a-breadcrumb-item>
+            </a-breadcrumb>
           </div>
-          <a-dropdown>
-            <a style="position: relative">
-              <a-avatar :size="22" icon="user" />
-            {{ this.$store.state.user.userInfo.employeeId }}
-            </a>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a @click="handleLogout">注销</a>
-              </a-menu-item>
-              <a-menu-item>
-                <a href="javascript:;">修改密码</a>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
+          <div class="bar-right">
+            <div class="bell-icon" style="position: relative; top: 2px; display: inline-block">
+              <a-badge dot><a-icon style="font-size: 16px" type="bell" /></a-badge>
+            </div>
+            <a-dropdown>
+              <a style="position: relative">
+                <a-avatar :size="22" icon="user" />
+              {{ this.$store.state.user.userInfo.employeeId }}
+              </a>
+              <a-menu slot="overlay">
+                <a-menu-item>
+                  <a @click="handleLogout">注销</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">修改密码</a>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
+          </div>
         </div>
       </a-layout-header>
       <a-layout-content
@@ -110,6 +120,7 @@
       return {
         collapsed: false,
         menuItemList: [],
+        processedCheckRemindData: [],
       };
     },
     computed: {
@@ -141,6 +152,20 @@
 
               })
             }
+          })
+        }
+
+        if (1) { // TODO 点检提醒
+          this.processedCheckRemindData.forEach(record => {
+            const { apparatusEntity } = record
+            const name = apparatusEntity.def.name
+            const seqId = apparatusEntity.seqId
+            const day = record.time
+            ret.push({
+              title: '点检提醒',
+              router: '/apparatusData',
+              description: `名字${name}, 序列号${seqId}的夹具离点检日期还有${day}天`
+            })
           })
         }
 
@@ -176,7 +201,16 @@
         const storage = new MyStorage()
         storage.remove('userInfo')
         this.$router.push('/login')
+      },
+      async fetchCheckRound() {
 
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: checkRoundlQuery,
+          variables: { input: this.$store.state.user.userInfo}
+        })
+
+        let { checkReminds } = data
+        this.processedCheckRemindData = checkReminds.payload
       }
     },
     created() {
@@ -216,7 +250,8 @@
     async fetch() {
       let userInfo = this.$store.state.user.userInfo
       await this.$store.dispatch(`homeData/fetchData`)
-    }
+    },
+
 
   };
 </script>
@@ -270,4 +305,25 @@
     height: 100%;
 
   }
+
+
+  .menu-horizontal {
+    display: none;
+  }
+
+  .menu-inline {
+    display: block;
+  }
+
+  @media screen and (max-width: 576px) {
+    .menu-horizontal {
+      display: block;
+    }
+
+    .menu-inline {
+      display: none;
+    }
+  }
+
+
 </style>

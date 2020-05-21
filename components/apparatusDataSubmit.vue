@@ -1,5 +1,5 @@
 <template>
-  <application :formData="formData" :form="form" :rules="rules" :handleSubmit="handleSubmit"  goBackUrl="/purchase">
+  <application :formData="formData" :form="form" :rules="rules" :handleSubmit="handleSubmit"  goBackUrl="/apparatusData">
     <template v-slot:first>
       <a-form-model-item  label="序列号" prop="seqId" >
         <a-input-number
@@ -9,25 +9,19 @@
           v-model="form.seqId"
         />
       </a-form-model-item>
-      <a-form-model-item  label="夹具名" prop="defId" >
+      <a-form-model-item  label="夹具定义" prop="defId" >
         <a-select
           show-search
           v-model="form.defId"
           option-filter-prop="name"
           :filter-option="filterOption"
-          placeholder="Select a person"
+          placeholder="选择夹具定义"
         >
+
           <a-select-option v-for="item in data" :key="item.id" :value="item.id">
             {{item.name}}
           </a-select-option>
         </a-select>
-      </a-form-model-item>
-      <a-form-model-item  label="库位" prop="location"  >
-        <a-input
-          placeholder="输入库位"
-          v-model="form.location"
-        >
-        </a-input>
       </a-form-model-item>
       <a-form-model-item  label="照片" prop="picture">
         <a-upload
@@ -46,15 +40,15 @@
           </div>
         </a-upload>
       </a-form-model-item>
-
     </template>
   </application>
 </template>
 <script>
   import application from '@/components/application'
   import ApparatusType from '@/components/apparatusType'
-  import { base64ToUint8Array } from '@/util/helper'
-  import { mapState } from 'vuex'
+  import { base64ToUint8Array, arrayBufferToBase64 } from '@/util/helper'
+  import gqlQuery from '@/apollo/queries/apparatusEntity'
+  import { mapGetters, mapState } from 'vuex'
   function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -70,13 +64,12 @@
         form: {
           seqId: '',
           defId: '',
-          location: '',
           picture: '',
         },
         formData: [
           {
             title: '基础信息',
-            modelItem: ['seqId', 'defId', 'location', 'picture']
+            modelItem: ['seqId', 'apparatusDefId', 'picture']
           },
           {
             title: '成功提交申请'
@@ -84,8 +77,7 @@
         ],
         rules: {
           seqId: [{ required: true, message: '请输入物品ID!' }],
-          defId: [{ required: true, message: '请输入物品名称!' }],
-          location: [{ required: true, message: '请输入产线需要配备的数量!' }],
+          apparatusDefId: [{ required: true, message: '请选择夹具定义!' }],
         },
         loading: false,
         imageUrl: ''
@@ -94,9 +86,11 @@
     methods: {
       async handleSubmit(data, next) {
         const date = (new Date).toISOString()
-        date.split('').filter(ch => (ch !== ' ')).join("")
-        const { seqId } = data
-        await this.$store.dispatch('apparatusEntity/createData', {...data, regDate: date, status: '在库', billNo: date.split('').filter(ch => (ch !== ' ')).join(""), seqId: seqId*1})
+        if (this.pageType === 'add') { // create
+          await this.$store.dispatch('apparatusEntity/createData', {...data, regDate: date, status: '在库'})
+        } else { // update
+          await this.$store.dispatch('apparatusEntity/updateData', {...data, id: this.$route.params.id*1})
+        }
         next()
 
       },
@@ -137,13 +131,37 @@
 
     },
     computed: {
-      ...mapState('apparatusDef', ['data'])
+      ...mapState('apparatusDef', ['data']),
+      pageType() {
+        return typeof this.$route.params.id === 'undefined' ? 'add' : 'update'
+      }
+      // ...mapGetters('apparatusEntity', ['filterApparatusEntityData'])
     },
     async fetch() {
-      console.log('fetch')
       await this.$store.dispatch('apparatusDef/fetchData')
     },
+    mounted() {
+      const id = this.$route.params.id
+      if (id) { // update page
+        this.$apolloProvider.defaultClient.query({
+          query: gqlQuery,
+          variables: { input: this.$route.params.id}
+        })
+          .then(({ data }) => {
+            const apparatusEntity = data.apparatusEntity
+            this.form = {
+              seqId: apparatusEntity.seqId,
+              defId: apparatusEntity.defId,
+              picture: apparatusEntity.picture,
+            }
+            this.imageUrl = `data:image/png;base64,${apparatusEntity.picture.length ? arrayBufferToBase64(apparatusEntity.picture):''}`
+          })
+          .catch(e => {
+            console.log(e)
+          })
 
+      }
+    },
   };
 </script>
 <style>
@@ -161,3 +179,4 @@
     color: #666;
   }
 </style>
+

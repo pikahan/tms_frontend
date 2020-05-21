@@ -1,6 +1,7 @@
 query ($id: Int!){
   user(id:$id) {
     employeeId
+    mail
     userType {
       id
       name

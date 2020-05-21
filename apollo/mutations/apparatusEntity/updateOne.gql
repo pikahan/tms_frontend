@@ -1,5 +1,5 @@
-mutation ($input: ApparatusDefUpdateInput!) {
-  updateApparatusDef(apparatusDef: $input) {
+mutation ($input: ApparatusEntityUpdateInput!) {
+  updateApparatusEntity(apparatusEntity: $input) {
     success
   }
 }

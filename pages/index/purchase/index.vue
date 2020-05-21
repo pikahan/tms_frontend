@@ -28,13 +28,6 @@
     { title: '录入日期', dataIndex: 'recOn', key: 'recOn' },
     { title: '图片', key: 'picture', dataIndex: 'picture', scopedSlots: { customRender: 'picture' } },
     { title: '状态', dataIndex: 'status', key: 'status' },
-    // {
-    //   title: '操作',
-    //   key: 'operation',
-    //   fixed: 'right',
-    //   width: '100px',
-    //   scopedSlots: { customRender: 'action' },
-    // },
   ];
 
 
@@ -58,7 +51,6 @@
         // TODO 划分好权限之后更改
         return {
           approvalPermission: true
-
         }
       }
     },

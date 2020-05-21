@@ -1,0 +1,35 @@
+query($input: Int!){
+  apparatusEntity(id: $input) {
+    id
+    billNo
+    defId
+    def {
+      id
+      code
+      recBy
+      uPL
+      name
+      owner
+      recOn
+      family {
+        id
+        name
+      }
+      models
+      partNos
+      pMPeriod
+      remark
+      workcell {
+        id
+        name
+      }
+    }
+    seqId
+    status
+    location
+    picture
+    regDate
+    status
+
+  }
+}

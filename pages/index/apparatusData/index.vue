@@ -1,10 +1,16 @@
 <template>
   <div>
     <searchPane :search-data="searchData"  :handleData="handleSearchData"  />
+    <nuxt-link to="/apparatusData/add">
+      <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 创建</a-button>
+    </nuxt-link>
     <a-table :columns="columns" :dataSource="apparatusEntityData" :scroll="{ x: 1300 }" rowKey="id">
         <span slot="action" slot-scope="text, data" >
-          <nuxt-link to="/apparatusData/1">
+          <nuxt-link :to="`/apparatusData/${data.id}`">
             查看详情
+          </nuxt-link>
+          <nuxt-link :to="`/apparatusData/update/${data.id}`">
+            修改
           </nuxt-link>
         </span>
     </a-table>
@@ -20,12 +26,11 @@
     { title: '名字', dataIndex: 'name', key: 'name' },
     { title: '库位', dataIndex: 'location', key: 'location'},
     { title: '状态', dataIndex: 'status', key: 'status' },
-    // { title: '图片', dataIndex: 'picture', key: 'picture' },
     {
       title: '操作',
       key: 'operation',
       fixed: 'right',
-      width: '100px',
+      width: '130px',
       scopedSlots: { customRender: 'action' },
     },
   ];
