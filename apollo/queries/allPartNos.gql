@@ -1,5 +1,5 @@
-query($modelId: Int){
-  partNos(modelId: $modelId) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $modelId: Int){
+  partNos(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, modelId: $modelId) {
     payload {
       id
       name

@@ -21,7 +21,7 @@
           v-if="current === steps.length - 1"
           status="success"
           title="成功!"
-          subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+          subTitle="编号: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
         >
           <template v-slot:extra>
             <slot name="ok">

@@ -1,5 +1,5 @@
-query($pageIndex: Int){
-  scrapRecords(pageIndex: $pageIndex) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $applicationTimeFrom: DateTime, $applicationTimeTo: DateTime, $apparatusEntityId: Int, $status: String, $proposer: String, $middleProcessor: String, $middleProcessTimeFrom: DateTime, $middleProcessTimeTo: DateTime, $finalProcessTimeFrom: DateTime, $finalProcessTimeTo: DateTime, $finalProcessor: String){
+  scrapRecords(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, applicationTimeFrom: $applicationTimeFrom, applicationTimeTo: $applicationTimeTo, apparatusEntityId: $apparatusEntityId, status: $status, proposer: $proposer, middleProcessor: $middleProcessor, middleProcessTimeFrom: $middleProcessTimeFrom, middleProcessTimeTo: $middleProcessTimeTo, finalProcessTimeFrom: $finalProcessTimeFrom, finalProcessTimeTo: $finalProcessTimeTo, finalProcessor: $finalProcessor) {
     payload {
       apparatusEntity {
         seqId

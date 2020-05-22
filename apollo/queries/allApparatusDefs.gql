@@ -1,5 +1,5 @@
-query($pageIndex: Int){
-  apparatusDefs(pageIndex: $pageIndex) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $code: String, $name: String, $familyId: Int, $modelNames: [String], $partNoNames: [String] ){
+  apparatusDefs(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, code: $code, name: $name, familyId: $familyId, modelNames: $modelNames, partNoNames: $partNoNames) {
     payload {
       id
       code

@@ -1,5 +1,5 @@
-{
-  workcells {
+query ($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String) {
+  workcells(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType) {
     totalCount
     payload {
       id

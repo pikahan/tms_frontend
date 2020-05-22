@@ -26,11 +26,11 @@
         <div class="header_bar"  style="display: flex;justify-content: space-between">
           <div>
             <a-icon
-              class="trigger"
+              class="trigger trigger-icon"
               :type="collapsed ? 'menu-unfold' : 'menu-fold'"
               @click="()=> collapsed = !collapsed"
             />
-            <a-breadcrumb style="display: inline-block;position: relative;top: -2px;">
+            <a-breadcrumb class="breadcrumb">
               <a-breadcrumb-item >Home</a-breadcrumb-item>
               <a-breadcrumb-item v-for="name of breadcrumb">{{ name }}</a-breadcrumb-item>
             </a-breadcrumb>
@@ -241,10 +241,7 @@
       })
 
       this.menuItemList = router
-      // if (key === '/') { // TODO 之后改成首页
-      //   key = "/" + Object.keys(data)[0]
-      //   // this.$router.push(key)
-      // }
+
     },
     middleware: 'isAuth',
     async fetch() {
@@ -315,13 +312,53 @@
     display: block;
   }
 
-  @media screen and (max-width: 576px) {
+  .breadcrumb {
+    display: inline-block;
+    position: relative;
+    top: -2px;
+  }
+
+  @media screen and (max-width: 575px) {
+
+    .ant-layout-header {
+      height: 46px;
+    }
+
+    .ant-layout-content {
+      margin-top: 56px!important;
+    }
+
     .menu-horizontal {
       display: block;
     }
 
     .menu-inline {
       display: none;
+    }
+
+    .trigger-icon {
+      display: none;
+    }
+
+    .breadcrumb {
+      left: 20px;
+    }
+
+
+    /*一定不能更改!!!*/
+    .ant-col.ant-col-xs-12.ant-col-sm-9.ant-col-md-8.ant-form-item-label {
+      width: auto;
+      line-height: 3;
+      margin-right: 10px;
+    }
+
+    .ant-col.ant-col-xs-12.ant-col-sm-9.ant-col-md-8.ant-form-item-label::after {
+      display: inline-block;
+      content: ": ";
+    }
+
+    .ant-col.ant-col-xs-12.ant-col-sm-15.ant-col-md-16.ant-form-item-control-wrapper {
+      width: auto;
     }
   }
 

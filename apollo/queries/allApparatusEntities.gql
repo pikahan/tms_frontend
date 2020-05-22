@@ -1,5 +1,5 @@
-query($pageIndex: Int, $status: String, $billNo: String, $location: String){
-  apparatusEntities(pageIndex: $pageIndex, billNo: $billNo, status: $status, location: $location) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $status: String, $billNo: String, $location: String, $defId: Int){
+  apparatusEntities(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, billNo: $billNo, status: $status, location: $location, defId: $defId) {
     payload {
       id
       billNo

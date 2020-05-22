@@ -1,5 +1,5 @@
-query($familyId: Int){
-  models(familyId: $familyId) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $familyId: Int){
+  models(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, familyId: $familyId) {
     payload {
       id
       name

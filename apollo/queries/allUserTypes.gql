@@ -1,5 +1,5 @@
-{
-  userTypes {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String){
+  userTypes(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType) {
     payload {
       id
       name

@@ -1,5 +1,5 @@
-query($employeeId: String){
-  users(employeeId: $employeeId) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $employeeId: String, $userTypeId: Int, $workcellId: Int){
+  users(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, employeeId: $employeeId, userTypeId: $userTypeId, workcellId: $workcellId) {
     payload {
       employeeId
       mail

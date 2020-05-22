@@ -1,5 +1,5 @@
-query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $outRecordPerson: String){
-  ioRecords(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, outRecordPerson: $outRecordPerson) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $outRecordPerson: String, $inRecordPerson: String, $outHandlingPerson: String,  $inHandlingPerson: String, $apparatusEntityId: Int, $lineId: Int, $outTimeFrom: DateTime, $outTimeTo: DateTime, $inTimeFrom: DateTime, $inTimeTo: DateTime){
+  ioRecords(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, outRecordPerson: $outRecordPerson, inRecordPerson: $inRecordPerson, outHandlingPerson: $outHandlingPerson, inHandlingPerson: $inHandlingPerson, apparatusEntityId: $apparatusEntityId, lineId: $lineId, outTimeFrom: $outTimeFrom, outTimeTo: $outTimeTo, inTimeFrom: $inTimeFrom, inTimeTo: $inTimeTo) {
     payload {
       id
       apparatusEntity {

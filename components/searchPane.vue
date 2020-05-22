@@ -7,11 +7,11 @@
               v-for="(searchDatum, i) in searchData"
               :key="searchDatum.name"
               :xs="24"
-              :sm="12"
-              :md="6"
+              :sm="24"
+              :md="8"
               :style="{ display: i < count ? 'block' : 'none' }"
             >
-              <a-form-item :label="searchDatum.label" :labelCol="{xs: {span: 1}, sm: {span:1}}" >
+              <a-form-item :label="searchDatum.label" :labelCol="{ xs: 12, sm: 9, md: 8 }"  :wrapperCol="{ xs: 12, sm: 15, md: 16 }" >
                 <a-input
                   v-if="searchDatum.type === 'input'"
                   v-decorator="[

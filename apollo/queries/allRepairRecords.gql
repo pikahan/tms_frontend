@@ -1,5 +1,5 @@
-query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String ,$applicationTimeFrom: DateTime, $applicationTimeTo: DateTime){
-  repairRecords(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, applicationTimeTo: $applicationTimeTo, applicationTimeFrom: $applicationTimeFrom) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $applicationTimeFrom: DateTime, $applicationTimeTo: DateTime, $apparatusEntityId: Int, $status: String, $proposer: String, $acceptor: String, $acceptorTimeFrom: DateTime, $acceptorTimeTo: DateTime, $finishTimeFrom: DateTime, $finishTimeTo: DateTime){
+  repairRecords(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, applicationTimeTo: $applicationTimeTo, applicationTimeFrom: $applicationTimeFrom, apparatusEntityId: $apparatusEntityId, status: $status, proposer: $proposer, acceptor: $acceptor, acceptorTimeFrom: $acceptorTimeFrom, acceptorTimeTo: $acceptorTimeTo, finishTimeFrom: $finishTimeFrom, finishTimeTo: $finishTimeTo) {
     payload {
       acceptor
       acceptorTime

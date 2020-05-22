@@ -1,5 +1,5 @@
-{
-  family {
+query ($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String){
+  family(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType) {
     id
     name
   }
