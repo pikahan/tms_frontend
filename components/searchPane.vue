@@ -1,6 +1,6 @@
 <template>
   <div id="components-form-demo-advanced-search">
-    <a-form class="ant-advanced-search-form" :form="form" @submit="handleSearch">
+    <a-form class="ant-advanced-search-form" :form="form" @submit="handleSearch" >
         <div>
           <a-row>
             <a-col
@@ -21,7 +21,7 @@
                   :placeholder="searchDatum.placeholder"
                 />
                 <a-range-picker
-                  v-else="searchData.type === 'range'"
+                  v-else="searchDatum.type === 'range'"
                   v-decorator="[
                     searchDatum.name,
                     searchDatum.option,
@@ -29,13 +29,13 @@
                   :placeholder="searchDatum.placeholder"
                 />
                 <a-select
-                  v-else="searchData.type === 'select'"
+                  v-else="searchDatum.type === 'select'"
                   v-decorator="[
                     searchDatum.name,
                     searchDatum.option,
                   ]"
                 >
-                  <a-select-option v-for="option in searchData.selectOption" :value="option.value">
+                  <a-select-option v-for="option in searchDatum.selectOption" :value="option.value">
                     {{ option.content }}
                   </a-select-option>
                 </a-select>
@@ -80,7 +80,11 @@
       },
       handleData: {
         type: Function,
-        default: (...data) => (console.log(data))
+        default: (data, storeTarget, ctx) => (ctx.$store.dispatch(storeTarget, { variables: data }))
+      },
+      storeTarget: {
+        type: String,
+        default: ''
       }
     },
     computed: {
@@ -110,7 +114,7 @@
             }
           })
 
-          this.handleData(ret)
+          this.handleData(ret, this.storeTarget, this)
         });
       },
 

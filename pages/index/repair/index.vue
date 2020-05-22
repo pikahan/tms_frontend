@@ -1,6 +1,6 @@
 <template>
   <div>
-    <searchPane :search-data="searchData" :handleData="handleSearchData" />
+    <searchPane :search-data="searchData" storeTarget="repairRecord/fetchData" />
     <nuxt-link to="/repair/submit">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
     </nuxt-link>
@@ -35,17 +35,15 @@
 <script>
   import searchPane from '@/components/searchPane'
   import { mapGetters, mapState } from 'vuex'
-  import permissions from '../../../util/permissions'
   import { arrayBufferToBase64 } from '@/util/helper'
-  import {readWorkbookFromLocalFile, downloadExcel} from '@/util/excel'
-
+  import { readWorkbookFromLocalFile, downloadExcel } from '@/util/excel'
 
   const searchData = [
     {
-      label: '物品代码',
-      name: '物品代码',
+      label: '申请人',
+      name: 'proposer',
       type: 'input',
-      placeholder: '请输入物品代码',
+      placeholder: '请输入申请人',
       option: {}
     },
     {
@@ -54,7 +52,21 @@
       type: 'range',
       placeholder: ['起始时间', '结束时间'],
       option: {}
-    }
+    },
+    {
+      label: '处理人',
+      name: 'acceptor',
+      type: 'input',
+      placeholder: '请输入处理人',
+      option: {}
+    },
+    {
+      label: '处理时间',
+      name: 'acceptorTimeFrom\tacceptorTimeTo',
+      type: 'range',
+      placeholder: ['起始时间', '结束时间'],
+      option: {}
+    },
   ]
 
 
@@ -105,9 +117,6 @@
     },
     methods: {
       arrayBufferToBase64,
-      handleSearchData(data) {
-        this.$store.dispatch('repairRecord/fetchData', {variables: data})
-      },
       handleUploadChange(info) {
         if (info.file.status !== 'uploading') {
           console.log(info.file, info.fileList);

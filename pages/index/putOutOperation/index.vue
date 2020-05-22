@@ -11,8 +11,10 @@
 
 <script>
   import searchPane from '../../../components/searchPane'
-  import { searchData } from '../../../util/testData' //TODO 接口完成之后删除
   import { mapGetters } from 'vuex'
+
+
+
 
   //TODO mock数据,之后替换
   const columns = [
@@ -22,7 +24,38 @@
     { title: '状态', dataIndex: 'status', key: 'status' },
   ];
 
+  const searchData = [
+    {
+      label: '出库经手人',
+      name: 'outHandlingPerson',
+      type: 'input',
+      placeholder: '请输入出库经手人',
+      option: {}
+    },
+    {
+      label: '出库时间',
+      name: 'outTimeFrom\toutTimeTo',
+      type: 'range',
+      placeholder: ['起始时间', '结束时间'],
+      option: {}
+    },
+    {
+      label: '处理人',
+      name: 'acceptor',
+      type: 'input',
+      placeholder: '请输入处理人',
+      option: {}
+    },
+    {
+      label: '处理时间',
+      name: 'acceptorTimeFrom\tacceptorTimeTo',
+      type: 'range',
+      placeholder: ['起始时间', '结束时间'],
+      option: {}
+    },
+  ]
 
+  // selectOption value content
 
   export default {
     components: {
