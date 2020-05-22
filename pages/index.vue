@@ -5,7 +5,7 @@
       <a-menu theme="dark" mode="inline" :selectedKeys="selectedKey" @click="handleMenuClick" >
         <a-menu-item v-for="(menuItem, i) in menuItemList" :key="menuItem.router">
           <nuxt-link :to="menuItem.router">
-            <a-icon type="user" />
+            <a-icon :type="menuItem.icon" />
             <span>{{ menuItem.name }}</span>
           </nuxt-link>
         </a-menu-item>
@@ -18,7 +18,7 @@
         <a-menu theme="dark" mode="horizontal" :selectedKeys="selectedKey" @click="handleMenuClick" class="menu-horizontal" >
           <a-menu-item v-for="(menuItem, i) in menuItemList" :key="menuItem.router">
             <nuxt-link :to="menuItem.router">
-              <a-icon type="user" />
+              <a-icon :type="menuItem.icon" />
               <span>{{ menuItem.name }}</span>
             </nuxt-link>
           </a-menu-item>
@@ -59,7 +59,6 @@
       <a-layout-content
         :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px', overflowY: 'scroll', flex: '1' }"
       >
-
         <div v-if="this.$route.fullPath === '/'">
           <welcome :name="this.$store.state.user.userInfo.employeeId" :info="`还有${listInfo.length}件未处理的消息, 请及时处理。`" />
           <h3>待处理消息</h3>
@@ -90,26 +89,29 @@
   import permissionsIndex from '../util/permissions'
   import welcome from '@/components/welcome'
 
+  const visitorRouter = {
+    home: '主页\thome',
+    apparatusData: '工夹具信息\tfile-search'
+  }
+
   const op1Router = {
-    home: '主页',
-    putInOperation: '入库操作',
-    putOutOperation: '出库操作',
-    repair: '报修',
-    apparatusData: '工夹具信息',
+    putInOperation: '入库操作\tfile-done',
+    putOutOperation: '出库操作\tfile-sync',
+    repair: '报修\ttool',
   }
 
   const op2Router = {
-    purchase: '采购入库',
-    scrapRecord: '报废管理',
-    apparatusDef: '夹具定义',
+    purchase: '采购入库\tshop',
+    scrapRecord: '报废管理\tinbox',
+    apparatusDef: '夹具定义\ttable',
   }
 
   const supervisorRouter = {
-    apparatusTypeManagement: '类别管理',
+    apparatusTypeManagement: '类别管理\tfork',
   }
 
   const adminRouter = {
-    userManagement: '用户管理',
+    userManagement: '用户管理\tuser',
   }
 
   export default {
@@ -218,7 +220,12 @@
       const userInfo = store.get('userInfo')
       this.$store.commit('user/setUserInfo', userInfo)
       let permissions = userInfo.permissions
-      let data = { ...op1Router}
+      let data = { ...visitorRouter}
+
+      if (permissions[permissionsIndex.WarehouseIn].value) {
+        Object.assign(data, op1Router)
+      }
+
       if (permissions[permissionsIndex.RepairApplicationProcess].value) {
         Object.assign(data, op2Router)
       }
@@ -234,9 +241,17 @@
       const router = []
       const keys = Object.keys(data)
       keys.forEach(key => {
+        let [menuValue, icon] = data[key].split('\t')
+
+        if (typeof icon === 'undefined') {
+          icon = 'user'
+        }
+
+
         router.push({
-          name: data[key],
-          router: `/${key !== 'home' ? key : ''}`
+          name: menuValue,
+          router: `/${key !== 'home' ? key : ''}`,
+          icon
         })
       })
 
