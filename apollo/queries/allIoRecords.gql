@@ -19,8 +19,6 @@ query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $
         regDate
         seqId
         status
-        picture
-
       }
       apparatusEntityId
       inHandlingPerson

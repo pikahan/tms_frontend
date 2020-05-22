@@ -43,7 +43,7 @@ export interface UserInfo {
 export interface UserData {
   id?: number
   employeeId: string
-  userType: UserType
+  userType: UserType | string
   workcell: Workcell
   workcellId?: number
   mail: string
@@ -100,40 +100,97 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, 
   actions: {
     async login({ commit }: any, userData: UserData) {
       let client = (this as any).app.apolloProvider.defaultClient
-
+      let storageUserData
       try {
-        let rep = await client.query({
-          query: auth,
-          variables: { ...userData }
-        })
-        if (typeof rep.errors !== 'undefined') {
 
-          // 密码错误
-          return commit('setPasswordState', { message: rep.errors.message, status: 'error' })
-        }
-        const token = rep.data.auth.token
-        await (this as any).app.$apolloHelpers.onLogin(token, undefined, { expires: 1/24 / 1000 / 60 / 60 * EXPIRES })
+        let permissions = [
+          {'name': 'WarehouseIn', 'value': false, '__typename': 'PermissionStatus'},
+          {
+            'name': 'WarehouseOut',
+            'value': false,
+            '__typename': 'PermissionStatus',
+          },
+          {'name': 'TempWarehouseIn', 'value': false, '__typename': 'PermissionStatus'},
+          {
+            'name': 'TempWarehouseOut',
+            'value': false,
+            '__typename': 'PermissionStatus',
+          },
+          {
+            'name': 'RepairApplication',
+            'value': false,
+            '__typename': 'PermissionStatus',
+          }, {
+            'name': 'RepairApplicationProcess',
+            'value': false,
+            '__typename': 'PermissionStatus',
+          }, {
+            'name': 'ClampingApparatusInformationMutation',
+            'value': false,
+            '__typename': 'PermissionStatus',
+          }, {
+            'name': 'DisposalApplication',
+            'value': false,
+            '__typename': 'PermissionStatus',
+          }, {
+            'name': 'DisposalApplicationMiddleProcess',
+            'value': false,
+            '__typename': 'PermissionStatus',
+          }, {
+            'name': 'CategoryMutation',
+            'value': false,
+            '__typename': 'PermissionStatus',
+          }, {
+            'name': 'DisposalApplicationFinalProcess',
+            'value': false,
+            '__typename': 'PermissionStatus',
+          }, {'name': 'SystemManagement', 'value': false, '__typename': 'PermissionStatus'}]
 
-        let userRes = await client.query({
-          query: allUsers,
-          variables: {
-            employeeId: userData.employeeId
+
+        if (userData.userType === '游客') {
+          storageUserData = {
+            employeeId: '游客',
+            typeName: '游客',
+            permissions,
+            workcellId: userData.workcellId
           }
-        })
-        console.log(userRes)
-        let currUserData = userRes.data.users.payload[0]
+        } else {
 
-        const { permission, name: typeName, permissions } = currUserData.userType
+          let rep = await client.query({
+            query: auth,
+            variables: { ...userData }
+          })
+          if (typeof rep.errors !== 'undefined') {
 
-        let storageUserData = {
-          employeeId: userData.employeeId,
-          permission,
-          typeName,
-          permissions,
-          mail: currUserData.mail,
-          id: currUserData.id,
-          workcellId: currUserData.workcellId,
+            // 密码错误
+            return commit('setPasswordState', { message: rep.errors.message, status: 'error' })
+          }
+          const token = rep.data.auth.token
+          await (this as any).app.$apolloHelpers.onLogin(token, undefined, { expires: 1/24 / 1000 / 60 / 60 * EXPIRES })
+
+          let userRes = await client.query({
+            query: allUsers,
+            variables: {
+              employeeId: userData.employeeId
+            }
+          })
+          console.log(userRes)
+          let currUserData = userRes.data.users.payload[0]
+
+          const { permission, name: typeName, permissions } = currUserData.userType
+          console.log(JSON.stringify(permissions))
+          storageUserData = {
+            employeeId: userData.employeeId,
+            permission,
+            typeName,
+            permissions,
+            mail: currUserData.mail,
+            id: currUserData.id,
+            workcellId: currUserData.workcellId,
+          }
         }
+
+
 
         let storage = new MyStorage();
         storage.set('userInfo', storageUserData, EXPIRES)

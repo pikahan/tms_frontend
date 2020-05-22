@@ -61,6 +61,9 @@
         <a class="login-form-forgot" href="">
           忘记密码
         </a>
+        <a class="login-form-visitor" @click="login('游客')">
+          游客登录
+        </a>
         <a-button type="primary" html-type="submit" class="login-form-button">
           登录
         </a-button>
@@ -74,41 +77,50 @@
   import { mapState } from 'vuex'
   export default {
     beforeCreate() {
-      this.form = this.$form.createForm(this, { name: 'normal_login' });
+      this.form = this.$form.createForm(this, {name: 'normal_login'});
     },
     data() {
       return {}
     },
     computed: {
       ...mapState('workcell', {
-      workcellData: 'data'
-    }),
+        workcellData: 'data'
+      }),
       ...mapState('user', ['passwordState'])
     },
     methods: {
       handleSubmit(e) {
         e.preventDefault();
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            const { remember, ...data } = values
+        this.login()
+      },
+      login(type) {
+        if (type === '游客') {
+          let data = {userType: '游客', workcellId: this.form.getFieldValue('workcellId')}
+          this.$store.dispatch('user/login', data).then(() => {
+            console.log('push')
+            this.$router.push('/')
+          })
+        } else {
+          this.form.validateFields((err, values) => {
+            if (err) {
+              return
+            }
+            const {remember, ...data} = values
             this.$store.dispatch('user/login', data)
               .then(() => {
                 if (this.passwordState.status === 'success') {
                   this.$router.push('/')
                 }
               })
-          }
-        });
+          })
+        }
       },
+
     },
     async fetch() {
-      // if (window.localStorage.getItem('token')) {
-      //   // this.$router.push('/')
-      // }
-
       await this.$store.dispatch('workcell/fetchData')
     }
-  };
+  }
 </script>
 <style>
   body {
@@ -137,6 +149,11 @@
 
   .login-form {
     max-width: 400px;
+  }
+
+  .login-form-visitor {
+    float: right;
+    margin-right: 10px;
   }
   .login-form-forgot {
     float: right;
