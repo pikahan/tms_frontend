@@ -5,7 +5,7 @@
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 新增</a-button>
     </nuxt-link>
     <multiplyDownload
-      :uploadCallback="handleUploadCallback"
+      :storeName="user"
       :tipList="[
       { name: '工号', value: 'employeeId', type: '文字', explanation: '用户工号', required: true  },
       { name: 'workcell Id', value: 'workcellId', type: '数字', explanation: 'workcell的id号', required: true },
@@ -66,7 +66,6 @@
       },
       handleUploadCallback(info) {
         this.$store.dispatch('user/createMultipleData', info)
-
       }
     },
     async fetch () {

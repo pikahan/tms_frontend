@@ -79,7 +79,7 @@
         }
         if (info.file.status === 'done') {
           readWorkbookFromLocalFile(info.file.originFileObj, data => {
-            this.$store.uploadCallback(data)
+            this.$store.uploadCallback(data, this.storeName, this)
           }, this)
           this.$message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
@@ -100,7 +100,11 @@
       },
       uploadCallback: {
         type: Function,
-        default: info => console.log(info)
+        default: (info, storeName, ctx) => ctx.$store.dispatch(storeName + '/createMultipleData', info)
+      },
+      storeName: {
+        type: String,
+        default: 'user'
       }
     }
   }
