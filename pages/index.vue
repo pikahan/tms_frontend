@@ -31,14 +31,16 @@
               @click="()=> collapsed = !collapsed"
             />
             <a-breadcrumb class="breadcrumb">
-              <a-breadcrumb-item >Home</a-breadcrumb-item>
-              <a-breadcrumb-item v-for="name of breadcrumb">{{ name }}</a-breadcrumb-item>
+              <a-breadcrumb-item ><nuxt-link to="/">Home</nuxt-link></a-breadcrumb-item>
+              <a-breadcrumb-item v-for="(name, idx) of breadcrumb" :key="name">
+                <nuxt-link :to="'/'+name" v-if="idx != breadcrumb.length - 1">
+                  {{ name }}
+                </nuxt-link>
+                <span v-if="idx == breadcrumb.length - 1">{{name}}</span>
+              </a-breadcrumb-item>
             </a-breadcrumb>
           </div>
           <div class="bar-right">
-            <div class="bell-icon" style="position: relative; top: 2px; display: inline-block">
-              <a-badge dot><a-icon style="font-size: 16px" type="bell" /></a-badge>
-            </div>
             <a-dropdown>
               <a style="position: relative">
                 <a-avatar :size="22" icon="user" />
@@ -49,7 +51,7 @@
                   <a @click="handleLogout">注销</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a href="javascript:;">修改密码</a>
+                  <nuxt-link to="/selfInfoEdit">修改个人信息</nuxt-link>
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
@@ -182,9 +184,6 @@
         return ret
       },
       breadcrumb() {
-        console.log(this.$route.fullPath.split('/').filter(router => {
-          return router !== '' || Number.isNaN(router*1)
-        }))
         return this.$route.fullPath.split('/').filter(router => {
           return router !== '' && Number.isNaN(router*1)
         })
