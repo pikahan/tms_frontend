@@ -41,9 +41,6 @@
             </a-breadcrumb>
           </div>
           <div class="bar-right">
-            <div class="bell-icon" style="position: relative; top: 2px; display: inline-block">
-              <a-badge dot><a-icon style="font-size: 16px" type="bell" /></a-badge>
-            </div>
             <a-dropdown>
               <a style="position: relative">
                 <a-avatar :size="22" icon="user" />
