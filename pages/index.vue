@@ -31,8 +31,13 @@
               @click="()=> collapsed = !collapsed"
             />
             <a-breadcrumb class="breadcrumb">
-              <a-breadcrumb-item >Home</a-breadcrumb-item>
-              <a-breadcrumb-item v-for="name of breadcrumb">{{ name }}</a-breadcrumb-item>
+              <a-breadcrumb-item ><nuxt-link to="/">Home</nuxt-link></a-breadcrumb-item>
+              <a-breadcrumb-item v-for="(name, idx) of breadcrumb" :key="name">
+                <nuxt-link :to="'/'+name" v-if="idx != breadcrumb.length - 1">
+                  {{ name }}
+                </nuxt-link>
+                <span v-if="idx == breadcrumb.length - 1">{{name}}</span>
+              </a-breadcrumb-item>
             </a-breadcrumb>
           </div>
           <div class="bar-right">
@@ -182,9 +187,6 @@
         return ret
       },
       breadcrumb() {
-        console.log(this.$route.fullPath.split('/').filter(router => {
-          return router !== '' || Number.isNaN(router*1)
-        }))
         return this.$route.fullPath.split('/').filter(router => {
           return router !== '' && Number.isNaN(router*1)
         })
