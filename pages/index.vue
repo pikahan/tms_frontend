@@ -222,6 +222,7 @@
     created() {
       const store = new MyStorage()
       const userInfo = store.get('userInfo')
+      console.log(userInfo)
       this.$store.commit('user/setUserInfo', userInfo)
       let permissions = userInfo.permissions
       let data = { ...visitorRouter}

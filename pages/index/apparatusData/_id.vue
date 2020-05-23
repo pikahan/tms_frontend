@@ -132,7 +132,6 @@
     },
     methods: {
       async fetchData() {
-        // let client = this.apolloProvider.defaultClient
         try {
 
           this.$apolloProvider.defaultClient.query({

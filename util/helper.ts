@@ -83,9 +83,7 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
           fetchPolicy: 'network-only',
           ...option
         })
-        console.log(data, "fetch data")
         const allDataName = dataName.endsWith('y') ? dataName.substr(0, dataName.length-1) + 'ies' : dataName + 's';
-        console.log(allDataName)
         commit('setData', data[allDataName].payload)
       } catch (e) {
         console.error(e)

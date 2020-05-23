@@ -15,7 +15,9 @@
       "README_options" : "See the 'Options' section at https://github.com/then/then-request",
       "options" : {
         "headers": {
-          "user-agent" : "JS GraphQL"
+          "user-agent" : "JS GraphQL",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMyIsIldhcmVob3VzZUluIjoiVHJ1ZSIsIldhcmVob3VzZU91dCI6IlRydWUiLCJUZW1wV2FyZWhvdXNlSW4iOiJUcnVlIiwiVGVtcFdhcmVob3VzZU91dCI6IlRydWUiLCJSZXBhaXJBcHBsaWNhdGlvbiI6IlRydWUiLCJSZXBhaXJBcHBsaWNhdGlvblByb2Nlc3MiOiJUcnVlIiwiRGlzcG9zYWxBcHBsaWNhdGlvbiI6IlRydWUiLCJEaXNwb3NhbEFwcGxpY2F0aW9uTWlkZGxlUHJvY2VzcyI6IlRydWUiLCJEaXNwb3NhbEFwcGxpY2F0aW9uRmluYWxQcm9jZXNzIjoiVHJ1ZSIsIkJ1eW9mZkFwcGxpY2F0aW9uIjoiVHJ1ZSIsIkJ1eW9mZkFwcGxpY2F0aW9uTWlkZGxlUHJvY2VzcyI6IlRydWUiLCJCdXlvZmZBcHBsaWNhdGlvbkZpbmFsUHJvY2VzcyI6IlRydWUiLCJDbGFtcGluZ0FwcGFyYXR1c0luZm9ybWF0aW9uTXV0YXRpb24iOiJUcnVlIiwiU3lzdGVtTWFuYWdlbWVudCI6IlRydWUiLCJleHAiOjE1ODk0NDYzODIsImlzcyI6IlRNUyBHb0JpZyBUZWFtIiwiYXVkIjoiamFiaWwifQ.uxskYTj1eNk-I3Ao10_yMQrvpjkfApszVPIPD-jcqi0"
+
         }
       }
     }
@@ -25,8 +27,8 @@
   "README_endpoints": "A list of GraphQL endpoints that can be queried from '.graphql' files in the IDE",
   "endpoints" : [
     {
-      "name": "Default (http://localhost:8080/api/graphql)",
-      "url": "http://localhost:8080/api/graphql",
+      "name": "Default (http://localhost:5000/api/graphql)",
+      "url": "http://localhost:5000/api/graphql",
       "options" : {
         "headers": {
           "user-agent" : "JS GraphQL"

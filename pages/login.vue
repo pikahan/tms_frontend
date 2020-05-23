@@ -97,7 +97,6 @@
         if (type === '游客') {
           let data = {userType: '游客', workcellId: this.form.getFieldValue('workcellId')}
           this.$store.dispatch('user/login', data).then(() => {
-            console.log('push')
             this.$router.push('/')
           })
         } else {

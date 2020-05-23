@@ -1,0 +1,10 @@
+query($workcellId: Int!) {
+  systemSetting(workcellId: $workcellId) {
+      ioInWaste
+      ioOutWaste
+      repairWaste
+      predictSchedule
+      checkRemindSchedule
+      trainSchedule
+  }
+}
