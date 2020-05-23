@@ -54,7 +54,7 @@
                   <a @click="handleLogout">注销</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a href="javascript:;">修改密码</a>
+                  <nuxt-link to="/selfInfoEdit">修改个人信息</nuxt-link>
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
