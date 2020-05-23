@@ -56,7 +56,9 @@
       // await fetchDataFor('apparatusEntity')
     },
     computed: {
-      ...mapGetters('ioRecord', ['processedIoRecordData'])
+      ...mapGetters('ioRecord', ['processedIoRecordData']),
+      ...mapGetters('user', ['permissionMap']),
+
     }
   }
 </script>

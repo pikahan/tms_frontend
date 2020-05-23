@@ -60,9 +60,9 @@
         :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px', overflowY: 'scroll', flex: '1' }"
       >
         <div v-if="this.$route.fullPath === '/'">
-          <welcome :name="this.$store.state.user.userInfo.employeeId" :info="`还有${listInfo.length}件未处理的消息, 请及时处理。`" />
+          <welcome :name="this.$store.state.user.userInfo.employeeId" :info="permissionMap.WarehouseIn ?  `还有${listInfo.length}件未处理的消息, 请及时处理。` : '当前没有新的消息。'" />
           <h3>待处理消息</h3>
-          <a-list item-layout="horizontal" :data-source="listInfo">
+          <a-list item-layout="horizontal" :data-source="listInfo" v-if="permissionMap.WarehouseIn">
             <a-list-item slot="renderItem" slot-scope="item, index">
               <a-list-item-meta
                 :description="item.description"
@@ -77,6 +77,9 @@
               </a-list-item-meta>
             </a-list-item>
           </a-list>
+          <div v-else>
+            您没有查看处理信息的权限, 请先登录
+          </div>
         </div>
         <router-view v-else />
       </a-layout-content>
@@ -127,6 +130,7 @@
     },
     computed: {
       ...mapGetters('homeData', ['processedRepairRecords', 'processedScrapRecords']),
+      ...mapGetters('user', ['permissionMap']),
       listInfo() {
         let ret = []
         if (1) { // TODO 有维修处理权限

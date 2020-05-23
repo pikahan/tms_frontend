@@ -11,11 +11,6 @@
       { name: 'workcell Id', value: 'workcellId', type: '数字', explanation: 'workcell的id号', required: true },
       { name: '用户类别Id', value: 'typeId', type: '数字', explanation: '用户类别的id号', required: true }]"
     />
-
-    <!--<a-col :span="6">{{ data.name }}</a-col>-->
-    <!--<a-col :span="6">{{ data.type }}</a-col>-->
-    <!--<a-col :span="12">{{ data.explanation }}</a-col>-->
-
     <a-table :columns="columns" :dataSource="processedUserData">
       <nuxt-link slot="operation" slot-scope="operation" :to="`/usermanagement/modify/${operation.index}`"><a  href="javascript:;">编辑</a></nuxt-link>
     </a-table>
@@ -54,7 +49,7 @@
         columns,
       }
     },
-    computed: mapGetters('user', ['processedUserData']),
+    computed: mapGetters('user', ['processedUserData', 'permissionMap']),
     methods: {
       handleChange(info) {
         if (info.file.status !== 'uploading') {

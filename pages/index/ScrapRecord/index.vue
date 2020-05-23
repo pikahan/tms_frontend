@@ -81,6 +81,8 @@
     },
     computed: {
       ...mapGetters('scrapRecord', ['processedScrapRecordData']),
+      ...mapGetters('user', ['permissionMap']),
+
       ...mapState('user', ['userInfo']),
       permission() {
         // TODO 划分好权限之后更改

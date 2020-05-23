@@ -6,9 +6,9 @@
             <a-col
               v-for="(searchDatum, i) in searchData"
               :key="searchDatum.name"
-              :xs="24"
               :sm="24"
-              :md="8"
+              :md="12"
+              :lg="8"
               :style="{ display: i < count ? 'block' : 'none' }"
             >
               <a-form-item :label="searchDatum.label" :labelCol="{ xs: 12, sm: 9, md: 8 }"  :wrapperCol="{ xs: 12, sm: 15, md: 16 }" >

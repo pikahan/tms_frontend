@@ -14,7 +14,7 @@
       <div>
         <h4>模板填写说明</h4>
         <div class="model-wrapper">
-          <a-row class="model-row" style="background-color: #f7f8fb;">
+          <a-row class="model-row" style="background-color: #f7f8fb">
             <a-col :span="5">属性名</a-col>
             <a-col :span="5">属性值</a-col>
             <a-col :span="4">类型</a-col>
@@ -29,6 +29,8 @@
               {{ data.explanation }}
             </a-col>
           </a-row>
+
+          <a-button style="margin-top: 12px" type="primary" @click="downloadExcel(excelTitle, '模板.xlsx')">下载模板</a-button>
         </div>
       </div>
       <h3>2.上传文件</h3>
@@ -50,7 +52,7 @@
 
 <script>
   import ACol from 'ant-design-vue/es/grid/Col'
-  import {readWorkbookFromLocalFile} from '@/util/excel'
+  import {readWorkbookFromLocalFile, downloadExcel} from '@/util/excel'
 
   export default {
     name: 'multiplyDownload',
@@ -84,6 +86,12 @@
           this.$message.error(`${info.file.name} file upload failed.`);
         }
       },
+      downloadExcel
+    },
+    computed: {
+      excelTitle() {
+        return [this.tipList.map(item => item.value)]
+      }
     },
     props: {
       tipList: {

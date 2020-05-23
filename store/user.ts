@@ -82,9 +82,16 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, 
           employeeId: userData.employeeId,
           workcell: userData.workcell.name,
           workcellId: <number>userData.workcellId,
-          userType: userData.userType.name,
+          userType: userData.userType.name ,
           userTypeId: userData.userType.id
         })
+      })
+      return ret
+    },
+    permissionMap(state: State<UserData>) {
+      const ret: any = {}
+      state.userInfo.permissions.forEach((permissionObj: {value: boolean, name: string}) => {
+        ret[permissionObj.name] = permissionObj.value
       })
       return ret
     }

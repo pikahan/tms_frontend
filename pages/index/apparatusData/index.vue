@@ -1,7 +1,7 @@
 <template>
   <div>
     <searchPane :search-data="searchData"  :handleData="handleSearchData"  />
-    <nuxt-link to="/apparatusData/add">
+    <nuxt-link to="/apparatusData/add" v-if="permissionMap.ClampingApparatusInformationMutation">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 创建</a-button>
     </nuxt-link>
     <a-table :columns="columns" :dataSource="apparatusEntityData" :scroll="{ x: 1300 }" rowKey="id">
@@ -9,7 +9,7 @@
           <nuxt-link :to="`/apparatusData/${data.id}`">
             查看详情
           </nuxt-link>
-          <nuxt-link :to="`/apparatusData/update/${data.id}`">
+          <nuxt-link :to="`/apparatusData/update/${data.id}`"  v-if="permissionMap.ClampingApparatusInformationMutation">
             修改
           </nuxt-link>
         </span>
@@ -77,7 +77,8 @@
     computed: {
       ...mapGetters('apparatusEntity', {
         apparatusEntityData: 'processedApparatusEntityData'
-      })
+      }),
+      ...mapGetters('user', ['permissionMap'])
     },
     methods: {
       handleSearchData(data) {

@@ -47,6 +47,8 @@
     computed: {
       ...mapGetters('apparatusEntity', ['processedApparatusEntityData']),
       ...mapState('user', ['userInfo']),
+      ...mapGetters('user', ['permissionMap']),
+
       permission() {
         // TODO 划分好权限之后更改
         return {

@@ -71,7 +71,9 @@
       await this.$store.dispatch(`ioRecord/fetchData`)
     },
     computed: {
-      ...mapGetters('ioRecord', ['processedIoRecordData'])
+      ...mapGetters('ioRecord', ['processedIoRecordData']),
+      ...mapGetters('user', ['permissionMap']),
+
     }
   }
 </script>

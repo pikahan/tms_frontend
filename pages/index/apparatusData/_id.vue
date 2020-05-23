@@ -77,6 +77,8 @@
   import queryOne from '@/apollo/queries/apparatusEntity.gql'
   import objectDiff from '@/util/objectDiff'
 
+
+  // TODO 定位
   export default {
     data () {
       this.histogramChartSettings = {

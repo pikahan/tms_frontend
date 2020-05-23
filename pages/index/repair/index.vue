@@ -21,7 +21,7 @@
           </a-popconfirm>
         </div>
         <div v-else>
-          查看详情
+          ------
         </div>
       </a>
       <div slot="finishTime" slot-scope="text">
@@ -101,6 +101,8 @@
     },
     computed: {
       ...mapGetters('repairRecord', ['processedRepairRecordData']),
+      ...mapGetters('user', ['permissionMap']),
+
       ...mapState('user', ['userInfo']),
       permission() {
         // TODO 划分好权限之后更改

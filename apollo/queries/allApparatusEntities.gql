@@ -12,18 +12,12 @@ query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $
         name
         owner
         recOn
-        family {
-          id
-          name
-        }
+
         models
         partNos
         pMPeriod
         remark
-        workcell {
-          id
-          name
-        }
+
       }
       seqId
       status
