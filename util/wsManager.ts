@@ -12,8 +12,8 @@ interface TrainData {
 
 class WsManager {
   readonly instance: WebSocket
-  constructor(address: string) {
-    this.instance = new WebSocket(address);
+  constructor() {
+    this.instance = new WebSocket('ws://'+document.domain+'/ws');
     // 心跳信号
     setInterval(() => {
       this.instance.send('1');
