@@ -1,9 +1,9 @@
 <template>
   <div>
     <list-panel-wrapper>
-      <list-panel :btnClick="handleBtnClick" :spinning="spinning.family" :type="{ title:'family', key: 'family' }" :name-list="formatData(data)" :clickCallback="handleFamilyListClick" :hoverPos="pos[0]" />
-      <list-panel :btnClick="handleBtnClick" :spinning="spinning.model" :type="{ title:'model', key: 'model' }" :name-list="formatData(modelData)" :clickCallback="handleModelListClick" :hoverPos="pos[1]" />
-      <list-panel :btnClick="handleBtnClick" :spinning="spinning.partNo" :type="{ title:'part No', key: 'partNo' }" :name-list="formatData(partNoData)" :hoverPos="pos[2]" :clickCallback="handlePartNoListClick" />
+      <list-panel :btnClick="handleBtnClick" :spinning="spinning.family" :type="{ title:'类', key: 'family' }" :name-list="formatData(data)" :clickCallback="handleFamilyListClick" :hoverPos="pos[0]" />
+      <list-panel :btnClick="handleBtnClick" :spinning="spinning.model" :type="{ title:'模组', key: 'model' }" :name-list="formatData(modelData)" :clickCallback="handleModelListClick" :hoverPos="pos[1]" />
+      <list-panel :btnClick="handleBtnClick" :spinning="spinning.partNo" :type="{ title:'料号', key: 'partNo' }" :name-list="formatData(partNoData)" :hoverPos="pos[2]" :clickCallback="handlePartNoListClick" />
     </list-panel-wrapper>
     <a-modal
       :title="modelTitle"
@@ -148,7 +148,9 @@
       },
       async handleOk() {
         this.confirmLoading = true
+        // await this.$message.loading('等待...')
         await this.callback(...this.callbackArgs, this.inputValue)
+        // await this.$message.loading('等待...')
 
         // TODO bug
         await this.fetchData(this.modelKey)

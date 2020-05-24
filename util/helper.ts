@@ -2,6 +2,8 @@ import {UserCreateQuery,UserUpdateQuery} from '../store/user'
 import {FamilyCreateQuery} from '../store/family'
 import {ModelCreateQuery} from '../store/model'
 import {PartNoCreateQuery} from '../store/partNo'
+import Message from 'ant-design-vue/lib/message';
+
 
 interface StoreTempOptions {
   state?: object
@@ -85,8 +87,11 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
         })
         const allDataName = dataName.endsWith('y') ? dataName.substr(0, dataName.length-1) + 'ies' : dataName + 's';
         commit('setData', data[allDataName].payload)
+
       } catch (e) {
         console.error(e)
+
+
       }
     },
     async createData({ commit }: any, option: CreateDataOption) {
@@ -94,6 +99,9 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
         console.error('no mutation')
         return
       }
+      console.log(Message)
+      await Message.loading({ content: '请等待...', key: 'key' });
+
       let client = (this as any).app.apolloProvider.defaultClient
       console.log(option)
       try {
@@ -102,8 +110,12 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
           mutation: mutation.createOne,
           variables: { input: option }
         })
+        Message.success({ content: '更新', key: 'key' });
+
       } catch (e) {
         console.error(e)
+        Message.error({ content: '创建失败', key: 'key' });
+
       }
       // TODO 错误处理
 
@@ -160,13 +172,18 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
       const id = findIdByState(state, option.index)
       let client = (this as any).app.apolloProvider.defaultClient
       try {
-        let res = await client.mutate({
+
+        await Message.loading({ content: '请等待...', key: 'key' });
+        let { data } = await client.mutate({
           mutation: mutation.deleteOne,
           variables: { input: typeof option.data === 'undefined' ? id : {id, ...option.data }}
         })
-
+        const allDataName = dataName[0].toUpperCase() + dataName.slice(1, dataName.length)
+        if (data['delete'+allDataName].success === false) {
+          await Message.error({ content: '删除失败, 请检查是否删除了此类下所有的模组数据', key: 'key' });
+        }
         // TODO 错误处理
-        console.log('delete res', res)
+        console.log('delete res', data)
       } catch (e) {
         console.log(e, 'delete error')
       }
