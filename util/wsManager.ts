@@ -10,21 +10,26 @@ interface TrainData {
   FailedLogs: FailedLog
 }
 
-class WsManager {
-  readonly instance: WebSocket
+export default class WsManager {
+  instance: WebSocket
   constructor() {
+    console.log('wsManager try to connect ' + 'ws://' + document.domain + '/ws')
     this.instance = new WebSocket('ws://'+document.domain+'/ws');
-    // 心跳信号
+    // 检测断开则重连， 未断开则发送信息维持生命
     setInterval(() => {
-      this.instance.send('1');
+      if(this.instance.readyState === this.instance.CLOSED) {
+        console.log('reconnecting websocket')
+        this.instance = new WebSocket('ws://' + document.domain + '/ws');
+      } else {
+        this.instance.send('1');
+      }
     }, 5000);
   }
 
   addListener(workcellId: number, cb: (data: TrainData) => void) {
     this.instance.addEventListener('message', (ev) => {
       const trainData = JSON.parse(ev.data);
-
-      if(trainData.workcellId === workcellId) {
+      if(trainData.WorkcellId === workcellId) {
         cb(trainData);
       }
     })
