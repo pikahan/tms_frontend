@@ -10,7 +10,7 @@
       <a-input v-model="form.mail" placeholder="请输入邮箱(可选)" />
     </a-form-model-item>
     <a-form-model-item label="密码" prop="password" >
-      <a-input-password v-model="form.password" placeholder="情书输入新的密码(可选)" />
+      <a-input-password v-model="form.password" placeholder="请输入新的密码(可选)" />
     </a-form-model-item>
     <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" @click="onSubmit">
