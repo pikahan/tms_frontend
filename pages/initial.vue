@@ -1,23 +1,40 @@
 <template>
-  <a-carousel ref="initial" :dots="false">
-    <div style="margin-top: 300px">
+  <a-carousel ref="initial" :dots="false" class="intial">
+        <div style="margin-top: 250px">
+      <a-row>
+        <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
+          <a-input-password v-model="initialWorkCellPassword" placeholder="请输入用于workcell初始化的密码" class="intial-input" />
+        </a-col>
+      </a-row>
+      <a-row style="margin-top: 10px">
+        <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
+          <a-button type="primary" @click="checkPassword" :disabled="isIDisabled" class="initial-button">下一步</a-button>
+        </a-col>
+        <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
+          <a-button type="dashed" class="initial-button">
+            <nuxt-link to="/">取消</nuxt-link>
+          </a-button>
+        </a-col>
+      </a-row>
+    </div>
+    <div style="margin-top: 250px">
       <a-row>
         <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
           <a-input v-model="workCellName" placeholder="请输入新的WorkCell名称" class="intial-input" />
         </a-col>
       </a-row>
       <a-row style="margin-top: 10px">
-        <a-col span="2" offset="8">
-          <a-button type="dashed">
+        <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
+          <a-button type="primary" @click="next()" :disabled="isWDisabled" class="initial-button">下一步</a-button>
+        </a-col>
+        <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
+          <a-button type="dashed" class="initial-button">
             <nuxt-link to="/">取消</nuxt-link>
           </a-button>
         </a-col>
-        <a-col span="2" offset="4">
-          <a-button type="primary" @click="next()" :disabled="isWDisabled">下一步</a-button>
-        </a-col>
       </a-row>
     </div>
-    <div style="margin-top: 200px">
+    <div style="margin-top: 150px">
       <a-row>
         <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
           <a-form-item>
@@ -45,16 +62,16 @@
         </a-col>
       </a-row>
       <a-row style="margin-top: 10px">
-        <a-col :xs="{span: 2, offset:4}" :md="{span: 2, offset:8}">
-          <a-button type="dashed">
+        <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
+          <a-button type="dashed" @click="prev()" class="initial-button">上一步</a-button>
+        </a-col>
+        <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
+          <a-button type="dashed" class="initial-button">
             <nuxt-link to="/">取消</nuxt-link>
           </a-button>
         </a-col>
-        <a-col :xs="{span: 2, offset:3}" :md="{span: 2, offset:0}">
-          <a-button type="primary" @click="prev()">上一步</a-button>
-        </a-col>
-        <a-col :xs="{span: 2, offset:4}" :md="{span: 2, offset:0}">
-          <a-button type="primary" @click="createNew" :disabled="isCDisabled">确认创建</a-button>
+        <a-col :md="{span: 8, offset:8}" :xs="{span: 16, offset: 4}">
+          <a-button type="primary" class="initial-button" @click="createNew" :disabled="isCDisabled">确认创建</a-button>
         </a-col>
       </a-row>
     </div>
@@ -62,13 +79,15 @@
 </template>
 <script>
 import gql from "@/apollo/mutations/initial.gql";
+import initialPasswordGql from '@/apollo/queries/initialPassword.gql'
 export default {
   data() {
     return {
       workCellName: "",
       employeeId: "",
       mail: "",
-      password: ""
+      password: "",
+      initialWorkCellPassword: ""
     };
   },
   methods: {
@@ -97,6 +116,27 @@ export default {
         .catch(e => {
           console.error(e);
         });
+    },
+    checkPassword() {
+      const data = this.$apolloProvider.defaultClient
+        .query({
+          query: initialPasswordGql,
+          variables: {
+            password: this.initialWorkCellPassword
+          }
+        })
+        .then(({ data }) => {
+          console.log(data);
+          if(data.initialPassword.success == true) {
+            this.next()
+          } else {
+            this.$message.error("密码错误，请重新输入")
+            this.initialWorkCellPassword = ""
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   },
   computed: {
@@ -112,6 +152,12 @@ export default {
         this.password.trim() !== "" &&
         this.mail.trim() !== ""
       ) {
+        return false;
+      }
+      return true;
+    },
+    isIDisabled() {
+      if (this.initialWorkCellPassword.trim() !== "") {
         return false;
       }
       return true;
@@ -149,5 +195,9 @@ export default {
 }
 .initial-input {
   padding: 0 5em;
+}
+.initial-button {
+  width: 100%;
+  margin-top: 8px
 }
 </style>
