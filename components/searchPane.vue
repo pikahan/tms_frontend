@@ -2,16 +2,15 @@
   <div id="components-form-demo-advanced-search">
     <a-form class="ant-advanced-search-form" :form="form" @submit="handleSearch" >
         <div>
-          <a-row>
+          <a-row :gutter="2">
             <a-col
               v-for="(searchDatum, i) in searchData"
               :key="searchDatum.name"
-              :sm="24"
-              :md="12"
-              :lg="8"
+              :md="{span: 12}"
+              :xs="{span: 24}"
               :style="{ display: i < count ? 'block' : 'none' }"
             >
-              <a-form-item :label="searchDatum.label" :labelCol="{ xs: 12, sm: 9, md: 8 }"  :wrapperCol="{ xs: 12, sm: 15, md: 16 }" >
+              <a-form-item :label="searchDatum.label" :labelCol="{ xs: {span: 5}, md: {span: 5} }"  :wrapperCol="{ xs: {span:24}, md: {span: 16}}" >
                 <a-input
                   v-if="searchDatum.type === 'input'"
                   v-decorator="[
@@ -133,14 +132,6 @@
     background: rgba(0, 0, 0, .02);
     padding: 24px;
     margin-bottom: 16px;
-  }
-
-  .ant-advanced-search-form .ant-form-item {
-    display: flex;
-  }
-
-  .ant-advanced-search-form .ant-form-item-control-wrapper {
-    flex: 1;
   }
 
   #components-form-demo-advanced-search .ant-form {
