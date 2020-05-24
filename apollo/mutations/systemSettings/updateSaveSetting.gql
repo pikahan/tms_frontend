@@ -1,0 +1,5 @@
+mutation($input: SystemSettingUpdateInput!) {
+  updateSystemSetting(systemSetting: $input) {
+    success
+  }
+}

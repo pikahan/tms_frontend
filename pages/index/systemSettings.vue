@@ -4,12 +4,13 @@
       label="任务类型"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
-
     >
       <a-radio-group
+        @change="handleRadioChange"
         v-decorator="[
           'taskName',
           {
+            initialValue: 'predict',
             rules: [
               {
                 required: true,
@@ -161,25 +162,35 @@
       :validate-status="cronStatus"
       :help="help"
     >
-      <a-input-group compact>
+      <a-input-group compact class="bottom-btn">
         <a-input
           v-decorator="[
             'week',
             {
-              initialValue: '*'
+              initialValue: '每',
+              rules: [
+                {
+                validator: cronType,
+                },
+              ]
             },
           ]"
-          style="width: 25%">
+          style="width: 20%">
           <span slot="addonAfter">周</span>
         </a-input>
         <a-input
           v-decorator="[
             'day',
             {
-              initialValue: '*',
+              initialValue: '每',
+              rules: [
+                {
+                validator: cronType,
+                },
+              ]
             },
           ]"
-          style="width: 25%"
+          style="width: 20%"
         >
           <span slot="addonAfter">天</span>
         </a-input>
@@ -187,10 +198,15 @@
           v-decorator="[
             'hour',
             {
-              initialValue: '*',
+              initialValue: '每',
+              rules: [
+                {
+                validator: cronType,
+                },
+              ]
             },
           ]"
-          style="width: 25%"
+          style="width: 20%"
         >
           <span slot="addonAfter">时</span>
         </a-input>
@@ -198,18 +214,26 @@
           v-decorator="[
             'minute',
             {
-              initialValue: '*',
+              initialValue: '0',
+              rules: [
+                {
+                validator: cronType,
+                },
+              ]
             },
           ]"
-          style="width: 25%">
+          style="width: 20%">
           <span slot="addonAfter">分</span>
         </a-input>
+        <a-button style="width: 20%" @click="handleStartTask">
+            提前开始任务
+        </a-button>
+        <div class="bottom-btn-msg">{{msg}}</div>
       </a-input-group>
-
     </a-form-item>
     <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
       <a-button type="primary"  html-type="submit">
-        Submit
+        保存设置
       </a-button>
     </a-form-item>
   </a-form>
@@ -218,6 +242,9 @@
 <script>
   import { mapState } from 'vuex'
   import query from '@/apollo/queries/systemOption.gql'
+  import saveSettingGql from  '@/apollo/mutations/systemSettings/updateSaveSetting.gql'
+  import startTaskGql from  '@/apollo/mutations/systemSettings/startTaskGql.gql'
+
 
   function cronValidate(cronExpression ){
     //返回错误信息用
@@ -656,7 +683,12 @@
       return {
         formLayout: 'horizontal',
         cronStatus: 'validating',
-        help: ''
+        predict: [],
+        train: [],
+        check: [],
+        help: '',
+        msg: '',
+        key: 'predict'
       };
     },
     computed: {
@@ -687,38 +719,61 @@
         this.cronStatus = 'validating'
         this.help = ''
       },
+      handleRadioChange(e) {
+        let week = this.form.getFieldValue('week')
+        let day = this.form.getFieldValue('day')
+        let hour = this.form.getFieldValue('hour')
+        let minute = this.form.getFieldValue('minute')
+        let temp = this[e.target.value]
+        this.form.setFieldsValue({
+          week: temp[0],
+          day: temp[1],
+          hour: temp[2],
+          minute: temp[3],
+        });
+        this[this.key] = [week, day, hour, minute]
+        this.key = e.target.value
+
+      },
       handleSubmit(e) {
         e.preventDefault();
         this.form.validateFields((err, values) => {
-
           if (!err) {
             let getHours = (hours, minutes, seconds) => {
               return hours + (seconds / 60 + minutes) / 60
             }
-
-
             console.log('Received values of form: ', values);
-            const { ioInHours, ioInMinutes, ioInSeconds, ioOutHours, ioOutMinutes, ioOutSeconds, repairHours, repairMinutes, repairSeconds, minute, hour, week, day } = values
-            console.log(minute, hour, week, day)
-            let msg = cronValidate(cron)
-            if (msg !== true) {
-              console.log('cronStatus error')
-              this.cronStatus = 'error'
-              this.help = msg
-              return
-            }
+            const { ioInHours, ioInMinutes, ioInSeconds, ioOutHours, ioOutMinutes, ioOutSeconds, repairHours, repairMinutes, repairSeconds, minute, hour, week, day, taskName } = values
+            this[taskName] = [week, day, hour, minute]
+            let cron = this.formatCronArr([week, day, hour, minute])
             const ioInWaste = getHours(ioInHours, ioInMinutes, ioInSeconds)
             const ioOutWaste = getHours(ioOutHours, ioOutMinutes, ioOutSeconds)
             const repairWaste = getHours(repairHours, repairMinutes, repairSeconds)
+
+
+            let { check: checkRemindSchedule, predict: predictSchedule, train: trainSchedule } = this
+            checkRemindSchedule = taskName !== 'check' ? this.formatCronArr(checkRemindSchedule) : cron
+            predictSchedule = taskName !== 'predict' ? this.formatCronArr(predictSchedule) : cron
+            trainSchedule = taskName !== 'train' ? this.formatCronArr(trainSchedule) : cron
             const workcellId = this.userInfo.workcellId
-            this.submitSettingData(ioInWaste, ioOutWaste)
+            this.submitSettingData(saveSettingGql, { input: {ioInWaste, ioOutWaste, repairWaste, checkRemindSchedule, predictSchedule, trainSchedule, workcellId}})
           }
         });
       },
 
-      submitSettingData(input) {
+      formatCronArr(arr) {
+        return [0, arr[3] === '每' ? '*' : arr[3], arr[2] === '每' ? '*' : arr[2], arr[1] === '每' ? '*' : arr[1], '*', arr[0] === '每' ? '*' : arr[0], '?'].join(' ')
+      },
+      handleStartTask() {
+        const workcellId = this.userInfo.workcellId
+        let taskName = this.form.getFieldValue('taskName')
+        this.submitSettingData(startTaskGql, { taskName, workcellId })
+      },
+
+      submitSettingData(mutation, input) {
         try {
-          this.$apolloProvider.defaultClient.mutation({
+          console.log(input)
+          this.$apolloProvider.defaultClient.mutate({
             mutation,
             variables: { ...input }
           }).then(({ data }) => {
@@ -726,6 +781,20 @@
           })
         } catch (e) {
           console.error(e)
+        }
+      },
+      cronType(rule, value, callback) {
+
+        if (value !== '每' &&  Number.isNaN(value * 1) && value !== '?' ) {
+          console.log(value)
+          // this.form.validateFields([rule.field], { force: true });
+          callback()
+          this.msg = "请输入数字、\"?\"\"每\""
+        }
+        else {
+          callback()
+          this.msg = ""
+
         }
       }
 
@@ -744,6 +813,13 @@
           let ioInWaste = formatHours(data.systemSetting.ioInWaste)
           let ioOutWaste = formatHours(data.systemSetting.ioOutWaste)
           let repairWaste = formatHours(data.systemSetting.repairWaste)
+          let { checkRemindSchedule, predictSchedule, trainSchedule, id } = data.systemSetting
+          console.log(data)
+          this.id = id
+          let temp = formatCron(predictSchedule)
+          this.check = formatCron(checkRemindSchedule)
+          this.predict = formatCron(predictSchedule)
+          this.train = formatCron(trainSchedule)
 
           this.form.setFieldsValue({
             ioInHours: ioInWaste[0],
@@ -754,9 +830,12 @@
             ioOutSeconds: ioOutWaste[2],
             repairHours: repairWaste[0],
             repairMinutes: repairWaste[1],
-            repairSeconds: repairWaste[2]
+            repairSeconds: repairWaste[2],
+            week: temp[0],
+            day: temp[1],
+            hour: temp[2],
+            minute: temp[3],
           });
-
         })
       } catch (e) {
         console.error(e)
@@ -764,6 +843,15 @@
     }
   };
 
+  function formatCron(cronStr) {
+    let [second, minute, hour, day, month, week] = cronStr.split(' ')
+    let ret = []
+    ret.push(week === '*' ? '每' : week)
+    ret.push(day === '*' ? '每' : day)
+    ret.push(hour === '*' ? '每' : hour)
+    ret.push(minute === '*' ? '每' : minute)
+    return ret
+  }
 
   function formatHours(doubleTypeHours) {
     let ret = [0, 0, 0]
@@ -785,3 +873,20 @@
     return ret
   }
 </script>
+
+
+<style>
+  .bottom-btn {
+    position: relative;
+  }
+
+  .bottom-btn-msg {
+    position: absolute;
+    left: 0;
+    bottom: -24px;
+    color: red;
+  }
+
+
+
+</style>

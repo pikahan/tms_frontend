@@ -422,17 +422,4 @@
       width: 25%;
     }
   }
-
-  @media screen and (max-width: 900px) {
-    .chart_list {
-      flex-wrap: wrap;
-
-      > .chart_item {
-        flex: 0 0 100%;
-        width: 100%;
-      }
-    }
-  }
-
-
 </style>

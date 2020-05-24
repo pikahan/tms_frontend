@@ -113,6 +113,7 @@
 
   const supervisorRouter = {
     apparatusTypeManagement: '类别管理\tfork',
+    systemSettings: '系统设置\tsetting'
   }
 
   const adminRouter = {

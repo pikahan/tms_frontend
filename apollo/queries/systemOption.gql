@@ -1,5 +1,6 @@
 query($workcellId: Int!) {
   systemSetting(workcellId: $workcellId) {
+      id
       ioInWaste
       ioOutWaste
       repairWaste

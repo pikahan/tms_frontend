@@ -1,0 +1,5 @@
+mutation($taskName: String!, $workcellId: Int!) {
+  emitTask(taskName: $taskName, workcellId: $workcellId) {
+    success
+  }
+}
