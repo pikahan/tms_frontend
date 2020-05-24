@@ -151,7 +151,7 @@
         保存设置
       </a-button>
       <a-button style="margin-left: 12px" @click="handleStartTask">
-        开始任务
+        立即执行
       </a-button>
     </a-form-item>
 
