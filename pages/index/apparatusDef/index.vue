@@ -1,6 +1,6 @@
 <template>
   <div>
-    <searchPane :search-data="searchData" />
+    <searchPane :search-data="searchData" storeTarget="apparatusDef/fetchData" />
     <nuxt-link to="/apparatusDef/submit">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 创建</a-button>
     </nuxt-link>

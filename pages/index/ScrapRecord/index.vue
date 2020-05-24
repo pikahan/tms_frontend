@@ -1,6 +1,6 @@
 <template>
   <div>
-    <searchPane :search-data="searchData" />
+    <searchPane :search-data="searchData" storeTarget="scrapRecord/fetchData" />
     <nuxt-link to="/scrapRecord/submit">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
     </nuxt-link>
@@ -46,7 +46,6 @@
   import searchPane from '@/components/searchPane'
   import { mapGetters, mapState } from 'vuex'
   import permissions from '../../../util/permissions'
-  import { searchData } from '@/util/testData' //TODO 接口完成之后删除
   import { arrayBufferToBase64 } from '@/util/helper'
 
   const columns = [
@@ -68,6 +67,37 @@
     },
   ];
 
+
+  const searchData = [
+    {
+      label: '申请人',
+      name: 'proposer',
+      type: 'input',
+      placeholder: '请输入申请人',
+      option: {}
+    },
+    {
+      label: '申请时间',
+      name: 'applicationTimeFrom\tapplicationTimeTo',
+      type: 'range',
+      placeholder: ['起始时间', '结束时间'],
+      option: {}
+    },
+    {
+      label: '处理人',
+      name: 'acceptor',
+      type: 'input',
+      placeholder: '请输入处理人',
+      option: {}
+    },
+    {
+      label: '处理时间',
+      name: 'acceptorTimeFrom\tacceptorTimeTo',
+      type: 'range',
+      placeholder: ['起始时间', '结束时间'],
+      option: {}
+    },
+  ]
 
   export default {
     components: {

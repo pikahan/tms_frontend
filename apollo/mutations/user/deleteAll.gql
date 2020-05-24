@@ -1,0 +1,5 @@
+mutation ($input: [Int]!) {
+  deleteUsers(ids: $input) {
+    success
+  }
+}

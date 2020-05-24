@@ -1,6 +1,6 @@
 <template>
     <div>
-      <searchPane :search-data="searchData" />
+      <searchPane :search-data="searchData" storeTarget="ioRecord/fetchData" />
       <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }">
         <span slot="action" slot-scope="text, data" >
           <nuxt-link :to="`/putInOperation/update/${data.id}`" v-if="data.status === '线上'">

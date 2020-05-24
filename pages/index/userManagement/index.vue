@@ -1,6 +1,6 @@
 <template>
   <div>
-    <searchPane :search-data="searchData" />
+    <searchPane :search-data="searchData" storeTarget="user/fetchData" />
     <nuxt-link to="/userManagement/add">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 新增</a-button>
     </nuxt-link>

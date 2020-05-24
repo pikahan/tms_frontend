@@ -1,6 +1,6 @@
 <template>
   <div>
-    <searchPane :search-data="searchData"  :handleData="handleSearchData"  />
+    <searchPane :search-data="searchData" storeTarget="apparatusEntity/fetchData" />
     <nuxt-link to="/apparatusData/add" v-if="permissionMap.ClampingApparatusInformationMutation">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 添加工夹具</a-button>
     </nuxt-link>

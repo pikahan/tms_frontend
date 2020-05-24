@@ -159,7 +159,7 @@
       :wrapperCol="formItemLayout.wrapperCol"
       label="任务计划">
       <a-cron ref="innerVueCron" v-decorator="['cronExpression', {'initialValue':'0 0 0 2 * ?',rules:
-  [t ]}]" @change="setCorn"></a-cron>
+  []}]" @change="setCorn"></a-cron>
     </a-form-item>
     <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
       <a-button type="primary" html-type="submit">
