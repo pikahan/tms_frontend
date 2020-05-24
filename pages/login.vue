@@ -67,6 +67,9 @@
         <a-button type="primary" html-type="submit" class="login-form-button">
           登录
         </a-button>
+        <a-button html-type="submit" class="login-form-button">
+          <nuxt-link to="/initial">创建新的WorkCell</nuxt-link>
+        </a-button>
       </a-form-item>
     </a-form>
   </div>
