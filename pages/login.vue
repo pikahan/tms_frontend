@@ -47,17 +47,6 @@
       </a-form-item>
       <div class="error_message" v-if="passwordState.status === 'error'">{{ passwordState.message }}</div>
       <a-form-item>
-        <a-checkbox
-          v-decorator="[
-          'remember',
-          {
-            valuePropName: 'checked',
-            initialValue: true,
-          },
-        ]"
-        >
-          记住密码
-        </a-checkbox>
         <a class="login-form-forgot" href="">
           忘记密码
         </a>
@@ -66,6 +55,9 @@
         </a>
         <a-button type="primary" html-type="submit" class="login-form-button">
           登录
+        </a-button>
+        <a-button html-type="submit" class="login-form-button">
+          <nuxt-link to="/initial">创建新的WorkCell</nuxt-link>
         </a-button>
       </a-form-item>
     </a-form>
@@ -151,7 +143,7 @@
   }
 
   .login-form-visitor {
-    float: right;
+    float: left;
     margin-right: 10px;
   }
   .login-form-forgot {

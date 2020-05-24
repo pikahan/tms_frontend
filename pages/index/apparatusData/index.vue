@@ -2,9 +2,9 @@
   <div>
     <searchPane :search-data="searchData"  :handleData="handleSearchData"  />
     <nuxt-link to="/apparatusData/add" v-if="permissionMap.ClampingApparatusInformationMutation">
-      <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 创建</a-button>
+      <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 添加工夹具</a-button>
     </nuxt-link>
-    <a-table :columns="columns" :dataSource="apparatusEntityData" :scroll="{ x: 1300 }" rowKey="id">
+    <a-table :columns="columns" :dataSource="apparatusEntityData"  rowKey="id">
         <span slot="action" slot-scope="text, data" >
           <nuxt-link :to="`/apparatusData/${data.id}`">
             查看详情
