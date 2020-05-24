@@ -47,17 +47,6 @@
       </a-form-item>
       <div class="error_message" v-if="passwordState.status === 'error'">{{ passwordState.message }}</div>
       <a-form-item>
-        <a-checkbox
-          v-decorator="[
-          'remember',
-          {
-            valuePropName: 'checked',
-            initialValue: true,
-          },
-        ]"
-        >
-          记住密码
-        </a-checkbox>
         <a class="login-form-forgot" href="">
           忘记密码
         </a>
@@ -155,7 +144,7 @@
   }
 
   .login-form-visitor {
-    float: right;
+    float: left;
     margin-right: 10px;
   }
   .login-form-forgot {
