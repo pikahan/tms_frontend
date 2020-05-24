@@ -53,9 +53,10 @@
      {
        label: '物品状态',
        name: 'status',
-       type: 'input',
+       type: 'select',
        placeholder: '请输入夹具状态',
-       option: {}
+       option: {},
+       selectOption: [{content: '在库', value: '在库'}, {content: '线上', value: '线上'}, {content: '临时领出', value: '临时领出'}, {content: '报废', value: '报废'}, {content: '维修', value: '维修'}, ]
      }
   ]
 

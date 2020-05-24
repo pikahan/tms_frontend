@@ -19,25 +19,27 @@
                   ]"
                   :placeholder="searchDatum.placeholder"
                 />
+
+                <a-select
+                  v-else-if="searchDatum.type === 'select'"
+                  v-decorator="[
+                    searchDatum.name,
+                    searchDatum.option,
+                  ]"
+                  :placeholder="searchDatum.placeholder"
+                >
+                  <a-select-option v-for="option in searchDatum.selectOption" :value="option.value">
+                    {{ option.content }}
+                  </a-select-option>
+                </a-select>
                 <a-range-picker
-                  v-else="searchDatum.type === 'range'"
+                  v-else-if="searchDatum.type === 'range'"
                   v-decorator="[
                     searchDatum.name,
                     searchDatum.option,
                   ]"
                   :placeholder="searchDatum.placeholder"
                 />
-                <a-select
-                  v-else="searchDatum.type === 'select'"
-                  v-decorator="[
-                    searchDatum.name,
-                    searchDatum.option,
-                  ]"
-                >
-                  <a-select-option v-for="option in searchDatum.selectOption" :value="option.value">
-                    {{ option.content }}
-                  </a-select-option>
-                </a-select>
               </a-form-item>
             </a-col>
           </a-row>

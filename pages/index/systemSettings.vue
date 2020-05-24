@@ -1,11 +1,16 @@
 <template>
   <a-form :layout="formLayout" @submit="handleSubmit" :form="form">
     <a-form-item
-      label="入库时间消耗"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
 
     >
+      <span slot="label">
+        入库时间消耗
+        <a-tooltip title="工夹具入库记录时间与实际下线时间的差值">
+          <a-icon type="question-circle-o" />
+        </a-tooltip>
+      </span>
       <a-input-group compact>
         <a-input-number
           v-decorator="[
@@ -40,11 +45,16 @@
       </a-input-group>
     </a-form-item>
     <a-form-item
-      label="出库时间消耗"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
 
     >
+       <span slot="label">
+        出库时间消耗
+        <a-tooltip title="工夹具出库记录时间与实际上线时间的差值">
+          <a-icon type="question-circle-o" />
+        </a-tooltip>
+      </span>
       <a-input-group compact>
         <a-input-number
           v-decorator="[
@@ -82,11 +92,16 @@
 
     </a-form-item>
     <a-form-item
-      label="维修时间消耗"
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
 
     >
+       <span slot="label">
+        维修时间消耗
+        <a-tooltip title="工夹具在线上实际发生故障时间与送修申请发起时间的差值">
+          <a-icon type="question-circle-o" />
+        </a-tooltip>
+      </span>
       <a-input-group compact>
         <a-input-number
           v-decorator="[
@@ -144,7 +159,7 @@
       :wrapperCol="formItemLayout.wrapperCol"
       label="任务计划">
       <a-cron ref="innerVueCron" v-decorator="['cronExpression', {'initialValue':'0 0 0 2 * ?',rules:
-  [{ required: true, message: '请输入cron表达式!' }]}]" @change="setCorn"></a-cron>
+  [t ]}]" @change="setCorn"></a-cron>
     </a-form-item>
     <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
       <a-button type="primary" html-type="submit">
