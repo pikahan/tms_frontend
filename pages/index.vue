@@ -366,20 +366,20 @@
 
 
     /*一定不能更改!!!*/
-    /*.ant-col.ant-col-xs-12.ant-col-sm-9.ant-col-md-8.ant-form-item-label {*/
-      /*width: auto;*/
-      /*line-height: 3;*/
-      /*margin-right: 10px;*/
-    /*}*/
+    .ant-col.ant-col-xs-12.ant-col-sm-9.ant-col-md-8.ant-form-item-label {
+      width: auto;
+      line-height: 3;
+      margin-right: 10px;
+    }
 
-    /*.ant-col.ant-col-xs-12.ant-col-sm-9.ant-col-md-8.ant-form-item-label::after {*/
-      /*display: inline-block;*/
-      /*content: ": ";*/
-    /*}*/
+    .ant-col.ant-col-xs-12.ant-col-sm-9.ant-col-md-8.ant-form-item-label::after {
+      display: inline-block;
+      content: ": ";
+    }
 
-    /*.ant-col.ant-col-xs-12.ant-col-sm-15.ant-col-md-16.ant-form-item-control-wrapper {*/
-      /*width: auto;*/
-    /*}*/
+    .ant-col.ant-col-xs-12.ant-col-sm-15.ant-col-md-16.ant-form-item-control-wrapper {
+      width: auto;
+    }
   }
 
 
