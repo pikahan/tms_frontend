@@ -1,0 +1,5 @@
+mutation ($workCellName: String!, $password: String!, $employeeId: String!, $mail: String!) {
+  initial(workCellName: $workCellName, password: $password, employeeId: $employeeId, mail: $mail) {
+    success
+  }
+}
