@@ -11,8 +11,9 @@
             查看详情
           </nuxt-link>
         </span>
-        <!--<nuxt-link :to="">-->
-        <!--</nuxt-link>-->
+        <div slot="inTime" slot-scope="text">
+          {{ text.slice(0, 4) !== '0001' ? (new Date(Date.parse(text))).toLocaleString() : '-----' }}
+        </div>
       </a-table>
     </div>
 </template>
@@ -24,7 +25,8 @@
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code'},
     { title: '名字', dataIndex: 'apparatusDefName', key: 'apparatusDefName' },
-    { title: '入库时间', dataIndex: 'inTime', key: 'inTime', sorter: true },
+    { title: '入库时间', dataIndex: 'inTime', key: 'inTime', sorter: true, scopedSlots: { customRender: 'inTime' } },
+
     { title: '入库经手人', dataIndex: 'inHandlingPerson', key: 'inHandlingPerson', sorter: true },
     { title: '入库记录人', dataIndex: 'inRecordPerson', key: 'inRecordPerson', sorter: true },
     { title: '库位', dataIndex: 'location', key: 'location', sorter: true},

@@ -4,12 +4,12 @@
       <a-radio-button value="training">正在训练</a-radio-button>
       <a-radio-button value="history">历史训练记录</a-radio-button>
     </a-radio-group>
-    <div v-show="mode == 'training'">
+    <div v-show="mode === 'training'">
       <h1>当前进度</h1>
       <a-tooltip :title="title">
         <a-progress :percent="trainPercent" :success-percent="trainSuccessPercent" status="active" />
       </a-tooltip>
-      <h1 style="line-height: 30px">失败的工夹具定义及其原因</h1>
+      <h1 style="line-height: 30px; margin-top: 20px">失败的工夹具定义及其原因</h1>
       <a-list item-layout="horizontal" :data-source="failedLogs">
         <a-list-item slot="renderItem" slot-scope="item">
           <a-list-item-meta
@@ -20,7 +20,17 @@
         </a-list-item>
       </a-list>
     </div>
-    <div v-show="mode == 'history'"></div>
+    <div v-show="mode === 'history'">
+      <a-table :columns="columns" :dataSource="tableData" rowKey="id"  >
+        <div slot="StartTime" slot-scope="text">
+          {{ (new Date(Date.parse(text))).toLocaleString() }}
+        </div>
+        <div slot="FinshTime" slot-scope="text">
+          {{ (new Date(Date.parse(text))).toLocaleString() }}
+        </div>
+      </a-table>
+
+    </div>
   </div>
 </template>
 
@@ -28,6 +38,15 @@
 import Vue from "vue";
 import TrainProcessManager from "@/util/trainProcessManager.ts";
 import { mapState } from "vuex";
+import query from '@/apollo/queries/allLogs.gql'
+
+const columns = [
+  { title: 'ID', dataIndex: 'id', key: 'id'},
+  { title: '开始时间', dataIndex: 'StartTime', key: 'StartTime', sorter: true, scopedSlots: { customRender: 'StartTime' }  },
+  { title: '结束时间', dataIndex: 'FinshTime', key: 'FinshTime', sorter: true , scopedSlots: { customRender: 'FinshTime' }  },
+  { title: '训练轮数', dataIndex: 'TotalToTrain', key: 'TotalToTrain', sorter: true },
+
+];
 export default Vue.extend({
   data() {
     return {
@@ -36,10 +55,13 @@ export default Vue.extend({
       trainPercent: 0,
       trainSuccessPercent: 0,
       title: "0 success / 0 failed / 0 to train",
-      failedLogs: []
+      failedLogs: [],
+      data: [],
+      columns
     };
   },
   created() {
+    this.fetchData()
     let ws = new TrainProcessManager();
     ws.addListener(this.userInfo.workcellId, data => {
       console.log(data);
@@ -69,8 +91,28 @@ export default Vue.extend({
     });
     this.ws = ws;
   },
+  methods: {
+    fetchData() {
+      this.$apolloProvider.defaultClient.query({
+        query: query,
+        variables: { type: "train"}
+      }).then(({data}) => {
+        console.log(data.trainLogs.payload)
+        this.data = data.trainLogs.payload
+      })
+    }
+  },
   computed: {
-    ...mapState("user", ["userInfo"])
+    ...mapState("user", ["userInfo"]),
+    tableData() {
+      return this.data.map(datum => {
+        let detail = JSON.parse(datum.detail)
+        return {
+          id: datum.id,
+          ...detail
+        }
+      })
+    }
   }
 });
 </script>

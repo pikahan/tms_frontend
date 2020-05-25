@@ -24,13 +24,18 @@
           ------
         </div>
       </a>
+      <div slot="applicationTime" slot-scope="text">
+        {{ text.slice(0, 4) !== '0001' ? (new Date(Date.parse(text))).toLocaleString() : '-----' }}
+      </div>
       <div slot="finishTime" slot-scope="text">
-        {{ text.slice(0, 4) !== '0001' ? text : '-----' }}
+        {{ text.slice(0, 4) !== '0001' ? (new Date(Date.parse(text))).toLocaleString() : '-----' }}
       </div>
       <img class="thumbnail" slot="picture" slot-scope="picture"  :src="`data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`" alt="img">
     </a-table>
   </div>
 </template>
+
+
 
 <script>
   import searchPane from '@/components/searchPane'
@@ -72,7 +77,7 @@
 
   const columns = [
     { title: '物品代码', dataIndex: 'code', key: 'code', sorter: true,},
-    { title: '申请时间', dataIndex: 'applicationTime', key: 'applicationTime', sorter: true, },
+    { title: '申请时间', dataIndex: 'applicationTime', key: 'applicationTime', sorter: true, scopedSlots: { customRender: 'applicationTime' }},
     { title: '修复结果时间', dataIndex: 'finishTime', key: 'finishTime', scopedSlots: { customRender: 'finishTime' } },
     { title: '图片', dataIndex: 'picture', key: 'picture', scopedSlots: { customRender: 'picture' }},
     { title: '故障描述', dataIndex: 'description', key: 'description' },

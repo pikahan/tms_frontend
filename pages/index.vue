@@ -152,7 +152,8 @@
   const op2Router = {
     purchase: "采购入库\tshop",
     scrapRecord: "报废管理\tinbox",
-    apparatusDef: "夹具定义\ttable"
+    apparatusDef: "夹具定义\ttable",
+    trainProcessTrace: '训练进度\tbox-plot'
   };
 
   const supervisorRouter = {

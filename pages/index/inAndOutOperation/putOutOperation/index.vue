@@ -5,6 +5,9 @@
         <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交出库记录</a-button>
       </nuxt-link>
       <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }" rowKey='id' @change="handleTableChange">
+        <div slot="outTime" slot-scope="text">
+          {{ text.slice(0, 4) !== '0001' ? (new Date(Date.parse(text))).toLocaleString() : '-----' }}
+        </div>
       </a-table>
     </div>
 </template>
@@ -20,7 +23,7 @@
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code'},
     { title: '名字', dataIndex: 'apparatusDefName', key: 'apparatusDefName' },
-    { title: '出库时间', dataIndex: 'outTime', key: 'outTime', sorter: true },
+    { title: '出库时间', dataIndex: 'outTime', key: 'outTime', sorter: true, scopedSlots: { customRender: 'outTime' } },
     { title: '出库经手人', dataIndex: 'outHandlingPerson', key: 'outHandlingPerson', sorter: true },
     { title: '出库记录人', dataIndex: 'outRecordPerson', key: 'outRecordPerson', sorter: true },
     { title: '库位', dataIndex: 'location', key: 'location'},

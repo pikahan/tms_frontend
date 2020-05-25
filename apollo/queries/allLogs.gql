@@ -1,0 +1,12 @@
+query($type: String) {
+  trainLogs(type: $type) {
+    payload {
+      id
+      type
+
+      relevantId
+      detail
+    }
+
+  }
+}
