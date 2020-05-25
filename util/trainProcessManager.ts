@@ -6,7 +6,7 @@ interface TrainData {
   TotalToTrain: number,
   CurrentTrained: number,
   Status: string,
-  FailedIds: Array<number>,
+  FailedIds: Array<string>,
   FailedLogs: FailedLog
 }
 

@@ -41,10 +41,9 @@ import { mapState } from "vuex";
 import query from '@/apollo/queries/allLogs.gql'
 
 const columns = [
-  { title: 'ID', dataIndex: 'id', key: 'id'},
   { title: '开始时间', dataIndex: 'StartTime', key: 'StartTime', sorter: true, scopedSlots: { customRender: 'StartTime' }  },
   { title: '结束时间', dataIndex: 'FinshTime', key: 'FinshTime', sorter: true , scopedSlots: { customRender: 'FinshTime' }  },
-  { title: '共计训练工夹具定义', dataIndex: 'TotalToTrain', key: 'TotalToTrain', sorter: true },
+  { title: '共计训练工夹具种类', dataIndex: 'TotalToTrain', key: 'TotalToTrain', sorter: true },
 
 ];
 export default Vue.extend({
@@ -77,7 +76,7 @@ export default Vue.extend({
       let currentLogs = []
       for (const key in data.FailedLogs) {
         currentLogs.push({
-          title: "工夹具定义Id-"+key,
+          title: key,
           description: data.FailedLogs[key]
         });
       }

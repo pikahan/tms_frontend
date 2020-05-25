@@ -4,7 +4,7 @@
     <p>{{ detail.TotalToTrain }}</p>
     <h1>训练起始时间</h1>
     <p>{{ (new Date(Date.parse(detail.StartTime))).toLocaleString() }} - {{ (new Date(Date.parse(detail.finishTime))).toLocaleString() }}</p>
-    <h1 style="line-height: 30px">训练失败的工夹具定义及其原因</h1>
+    <h1 style="line-height: 30px">训练失败的工夹具种类及其原因</h1>
     <a-list item-layout="horizontal" :data-source="failedLogs">
       <a-list-item slot="renderItem" slot-scope="item">
         <a-list-item-meta :description="item.description">
@@ -41,7 +41,7 @@ export default {
         this.detail = JSON.parse(data.trainLog.detail);
         for (const key in this.detail.FailedLogs) {
           this.failedLogs.push({
-            title: "工夹具定义Id-"+key,
+            title: key,
             description: this.detail.FailedLogs[key]
           })
         }
