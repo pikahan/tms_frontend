@@ -23,7 +23,7 @@
                   v-decorator="[
                         searchDatum.name,
                         searchDatum.option,
-                  ]"
+              ]"
                   v-else-if="searchDatum.type === 'selectInput'" :searchDatum="searchDatum"
                 />
 
