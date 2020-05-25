@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="cron表达式"
+    title="设置任务执行计划"
     :width="modalWidth"
     :visible="visible"
     :confirmLoading="confirmLoading"
