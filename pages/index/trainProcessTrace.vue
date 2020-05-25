@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import WsManager from "@/util/wsManager.ts";
+import TrainProcessManager from "@/util/trainProcessManager.ts";
 import { mapState } from "vuex";
 export default Vue.extend({
   data() {
@@ -40,7 +40,7 @@ export default Vue.extend({
     };
   },
   created() {
-    let ws = new WsManager();
+    let ws = new TrainProcessManager();
     ws.addListener(this.userInfo.workcellId, data => {
       console.log(data);
       this.trainPercent = Number.parseFloat(
