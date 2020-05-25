@@ -88,7 +88,8 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
         })
         const allDataName = dataName.endsWith('y') ? dataName.substr(0, dataName.length-1) + 'ies' : dataName + 's';
         commit('setData', data[allDataName].payload)
-
+        console.log('featch data')
+        console.log(data)
       } catch (e) {
         console.error(e)
 
@@ -221,6 +222,8 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
         if (data['delete'+allDataName + 's'].success === false) {
           await Message.error({ content: '删除失败, 请检查是否删除了此类下所有的模组数据', key: 'key' });
         }
+        await Message.success({ content: '删除成功!', key: 'key' });
+
         console.log('delete res', data)
       } catch (e) {
         console.log(e, 'delete error')

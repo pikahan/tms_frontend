@@ -80,7 +80,7 @@ function charToAscii(char) {
   return char.charCodeAt(0)
 }
 
-function formatExcelData(workbook) {
+async function formatExcelData(workbook) {
   const sheetNames = Object.keys( workbook.Sheets)
   const ret = []
   sheetNames.forEach(sheetName => {
@@ -162,20 +162,22 @@ function sheet2blob(sheet, sheetName) {
   return blob;
 }
 
-export const readWorkbookFromLocalFile = (file, callback, ctx) => {
+export const readWorkbookFromLocalFile = (file, callback, ctx, finalFn) => {
   const reader = new FileReader()
-  reader.onload =  (e) => {
+  reader.onload = async (e) => {
     const data = e.target.result
     const workbook = XLSX.read(data, {type: 'binary'})
 
-    const formattedData = formatExcelData(workbook)
+    const formattedData = await formatExcelData(workbook)
     if (callback) callback.call(ctx, formattedData)
+    console.log(finalFn)
+    await finalFn.call(ctx)
   }
   reader.readAsBinaryString(file)
 }
 
 
-export const  readWorkbookFromLocalFileAsync = (file, callback, ctx) => {
+export const  readWorkbookFromLocalFileAsync = (file, callback, ctx, finalFn) => {
   const reader = new FileReader()
   reader.onload =  async (e) => {
     console.log(e)
@@ -183,6 +185,7 @@ export const  readWorkbookFromLocalFileAsync = (file, callback, ctx) => {
     const workbook = XLSX.read(data, {type: 'binary'})
 
     await formatExcelDataAsync(workbook, callback.bind(ctx))
+    await finalFn.call(ctx)
   }
   reader.readAsBinaryString(file)
 }

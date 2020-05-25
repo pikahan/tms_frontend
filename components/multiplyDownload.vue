@@ -93,7 +93,7 @@
         if (info.file.status === 'done') {
           readWorkbookFromLocalFile(info.file.originFileObj, data => {
             this.uploadCallback(data, this.storeName, this, this.type)
-          }, this)
+          }, this, async () => { await this.finalFn(); this.visible = false})
         } else if (info.file.status === 'error') {
           this.$message.error(`${info.file.name} file upload failed.`);
         }
@@ -105,7 +105,7 @@
         if (info.file.status === 'done') {
           await readWorkbookFromLocalFileAsync(info.file.originFileObj, async (uploadedData, index) => {
             this.analysisUploadCallback(uploadedData, index, this, this.type)
-          }, this)
+          }, this, async () => { await this.finalFn(); this.visible = false})
         } else if (info.file.status === 'error') {
           this.$message.error(`${info.file.name} file upload failed.`);
         }
@@ -132,7 +132,7 @@
       },
       uploadCallback: {
         type: Function,
-        default: (info, storeName, ctx, type='create') => {ctx.$store.dispatch(`${storeName}${type === 'create' ? '/createMultipleData' : '/updateMultipleData'}`, info)}
+        default: (info, storeName, ctx, type='create') => {console.log(`${storeName}${type === 'create' ? '/createMultipleData' : '/updateMultipleData'}`);console.log(info);ctx.$store.dispatch(`${storeName}${type === 'create' ? '/createMultipleData' : '/updateMultipleData'}`, info)}
       },
       analysisUploadCallback: {
         type: Function,
@@ -149,6 +149,12 @@
       updateData: {
         type: Array,
         default: () => []
+      },
+      finalFn: {
+        type: Function,
+        default: () => {
+          this.$message.success(`成功`);
+        }
       }
     }
   }

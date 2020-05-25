@@ -9,14 +9,16 @@
     <multiplyDownload
       storeName="user"
       :analysisUploadCallback="mulAddCb"
+      :finalFn="finalCb"
       :tipList="[
       { name: '工号', value: 'employeeId', type: '文本', explanation: '用户工号', required: true  },
       { name: '密码', value: 'password', type: '文本', explanation: '用户密码', required: true  },
       { name: 'workcell Id', value: 'workcellId', type: '数字', explanation: 'workcell的id号', required: true },
-      { name: '用户类别Id', value: 'uesrTypeId', type: '数字', explanation: '用户类别的id号', required: true },
+      { name: '用户类别Id', value: 'userTypeId', type: '数字', explanation: '用户类别的id号', required: true },
       { name: '邮箱', value: 'mail', type: '邮箱格式', explanation: '用户邮箱', required: true }]"
     />
     <multiplyDownload
+      :finalFn="finalCb"
       storeName="user"
       type="update"
       :updateData="dataMapper"
@@ -84,8 +86,6 @@
 
   ]
 
-
-
   export default {
     components: {
       searchPane,
@@ -143,7 +143,7 @@
       },
       async handleDelete() {
         await this.$store.dispatch('user/deleteAllData', this.selectedRowKeys)
-
+        await this.$store.dispatch('user/fetchData')
       },
       handleTableChange(pagination, filters, sorter) {
         const pager = { ...this.pagination };
@@ -183,6 +183,15 @@
         } catch (e) {
           this.$message.error({ content: `第${index-1}条数据更新失败, 所在位置为第${index}行`  })
         }
+      },
+
+      async finalCb() {
+        await this.$message.success({content: '成功!'})
+        await this.fetch()
+      },
+
+      async fetch() {
+        await this.$store.dispatch('user/fetchData')
       }
     },
     async fetch () {
