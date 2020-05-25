@@ -4,7 +4,7 @@
     <nuxt-link to="/userManagement/add">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 新增</a-button>
     </nuxt-link>
-    <a-button type="primary" :style="{ margin: '0px 0px 10px' }" @click="handleDelete">- 删除</a-button>
+    <a-button type="primary" :style="{ margin: '0px 0px 10px' }" @click="handleDelete" :disabled="selectedRowKeys.length === 0">- 删除</a-button>
 
     <multiplyDownload
       storeName="user"

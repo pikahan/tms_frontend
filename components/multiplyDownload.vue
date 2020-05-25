@@ -1,7 +1,7 @@
 <template>
   <div :style="{display: 'inline-block'}">
     <a-button @click="showModal">
-      <a-icon type="download" />{{ type === 'update' ? '批量修改' : '批量新增' }}
+      <a-icon type="upload" />{{ type === 'update' ? '批量修改' : '批量新增' }}
     </a-button>
     <a-modal
       title="批量上传"

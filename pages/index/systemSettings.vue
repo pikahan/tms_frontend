@@ -1,6 +1,47 @@
 <template>
   <a-form :layout="formLayout" @submit="handleSubmit" :form="form">
     <a-form-item
+      :labelCol="formItemLayout.labelCol"
+      :wrapperCol="formItemLayout.wrapperCol"
+
+      label="工夹具定位模式">
+      <a-radio-group
+        @change="changeMode"
+        v-decorator="[
+            'modeForLocation',
+              {
+                initialValue: 'null',
+              },
+            ]"
+      >
+        <a-radio-button value="null">
+          无
+        </a-radio-button>
+        <a-radio-button value="mqtt">
+          mqtt
+        </a-radio-button>
+        <a-radio-button value="ws">
+          websocket
+        </a-radio-button>
+      </a-radio-group>
+    </a-form-item>
+    <a-form-item
+      :labelCol="formItemLayout.labelCol"
+      :wrapperCol="formItemLayout.wrapperCol"
+      label="定位接口">
+      <a-input
+        :disabled="disabled"
+        v-decorator="[
+            'urlForLocation',
+              {
+                initialValue: '',
+              },
+            ]"
+      >
+
+      </a-input>
+    </a-form-item>
+    <a-form-item
       :label-col="formItemLayout.labelCol"
       :wrapper-col="formItemLayout.wrapperCol"
 
@@ -161,6 +202,7 @@
       <a-cron ref="innerVueCron" v-decorator="['cronExpression', {'initialValue':'0 0 0 2 * ?',rules:
   []}]" @change="setCorn"></a-cron>
     </a-form-item>
+
     <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
       <a-button type="primary" html-type="submit">
         保存设置
@@ -188,7 +230,7 @@
 
   export default {
     components: {
-      ACron
+      ACron,
     },
     data() {
       return {
@@ -205,7 +247,8 @@
         hour: false,
         minute: false,
         visible: false,
-        testValueIndex: 1
+        testValueIndex: 1,
+        disabled: false
       };
     },
     computed: {
@@ -229,6 +272,16 @@
       ...mapState('user', ['userInfo'])
     },
     methods: {
+      changeMode(s) {
+        console.log(s)
+        let value = s.target.value
+        console.log(value)
+        if (value === 'null') {
+          this.disabled = false
+        } else {
+          this.disabled =  true
+        }
+      },
       changeValue() {
         let value = ['0 1 0 2 * ?', '1 0 0 2 * ?', '0 4 0 2 * ?']
         let index = this.testValueIndex
