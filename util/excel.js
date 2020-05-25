@@ -101,8 +101,38 @@ function formatExcelData(workbook) {
       ret.push(data)
     }
   })
+  return ret
+}
 
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
 
+async function formatExcelDataAsync(workbook, callback) {
+  const sheetNames = Object.keys( workbook.Sheets)
+  const ret = []
+  sheetNames.forEach(async sheetName => {
+    const currSheet = workbook.Sheets[sheetName]
+    const cells = currSheet[`!ref`].split(':')
+    const [endChar, rowLength] = cells[1]
+    const Aascii = charToAscii('A')
+    const endCharAscii = charToAscii(endChar)
+    const columnLength = endCharAscii - Aascii + 1
+
+    for (let i = 2; i <= rowLength; i++) {
+      const data = {}
+      console.log(currSheet)
+      for (let j = 0; j < columnLength; j++) {
+        const columnName = currSheet[asciiToChar(Aascii+j) + '1'].v
+        data[columnName] = currSheet[asciiToChar(Aascii+j) + i].v
+      }
+
+      await callback(data, i)
+      ret.push(data)
+    }
+  })
   return ret
 }
 
@@ -143,11 +173,23 @@ export const readWorkbookFromLocalFile = (file, callback, ctx) => {
   reader.readAsBinaryString(file)
 }
 
+
+export const  readWorkbookFromLocalFileAsync = (file, callback, ctx) => {
+  const reader = new FileReader()
+  reader.onload =  async (e) => {
+    console.log(e)
+    const data = e.target.result
+    const workbook = XLSX.read(data, {type: 'binary'})
+
+    await formatExcelDataAsync(workbook, callback.bind(ctx))
+  }
+  reader.readAsBinaryString(file)
+}
+
 function arrayToExcel(arr) {
   const sheet = XLSX.utils.aoa_to_sheet(arr)
   return sheet2blob(sheet)
 }
-
 
 function openDownloadDialog(url, saveName) {
   if(typeof url == 'object' && url instanceof Blob) {
@@ -155,7 +197,7 @@ function openDownloadDialog(url, saveName) {
   }
   var aLink = document.createElement('a');
   aLink.href = url;
-  aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+  aLink.download = saveName || '' // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
   var event;
   if(window.MouseEvent) {
     event = new MouseEvent('click')

@@ -23,6 +23,7 @@ interface GQLMutation {
   createOne?: Object
   updateOne?: Object
   deleteOne?: Object
+  deleteAll?: Object
   create?: Object
 }
 
@@ -78,7 +79,6 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
   const actions = {
     async fetchData({ commit }: any, option: any) {
       let client = (this as any).app.apolloProvider.defaultClient
-      console.log(option)
       try {
         const { data } = await client.query({
           query: query.allData,
@@ -105,17 +105,13 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
       let client = (this as any).app.apolloProvider.defaultClient
       console.log(option)
       try {
-
         let { data } = await client.mutate({
           mutation: mutation.createOne,
           variables: { input: option }
         })
         Message.success({ content: '更新', key: 'key' });
-
       } catch (e) {
-        console.error(e)
         Message.error({ content: '创建失败', key: 'key' });
-
       }
       // TODO 错误处理
 
@@ -183,6 +179,28 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
           await Message.error({ content: '删除失败, 请检查是否删除了此类下所有的模组数据', key: 'key' });
         }
         // TODO 错误处理
+        console.log('delete res', data)
+      } catch (e) {
+        console.log(e, 'delete error')
+      }
+    },
+
+    async deleteAllData({ commit, state }: any, option: any) {
+      if (mutation === null) {
+        return
+      }
+      let client = (this as any).app.apolloProvider.defaultClient
+      try {
+        console.log(mutation.deleteAll)
+        await Message.loading({ content: '请等待...', key: 'key' });
+        let { data } = await client.mutate({
+          mutation: mutation.deleteAll,
+          variables: { input: option }
+        })
+        const allDataName = dataName[0].toUpperCase() + dataName.slice(1, dataName.length)
+        if (data['delete'+allDataName + 's'].success === false) {
+          await Message.error({ content: '删除失败, 请检查是否删除了此类下所有的模组数据', key: 'key' });
+        }
         console.log('delete res', data)
       } catch (e) {
         console.log(e, 'delete error')

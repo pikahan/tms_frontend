@@ -3,7 +3,7 @@ import allUsers from '@/apollo/queries/allUsers.gql'
 // @ts-ignore
 import createOne from '@/apollo/mutations/user/createOne.gql'
 import create from '@/apollo/mutations/user/create.gql'
-
+import deleteAll from '@/apollo/mutations/user/deleteAll.gql'
 // @ts-ignore
 import updateOne from '@/apollo/mutations/user/updateOne.gql'
 // @ts-ignore
@@ -53,6 +53,7 @@ export interface UserData {
 const EXPIRES = 1000 * 60 * 60
 
 interface ProcessedUserData {
+  id: number
   index: number
   key: number
   mail: string
@@ -63,7 +64,7 @@ interface ProcessedUserData {
   userTypeId: number
 }
 
-export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, create }, {
+export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, create, deleteAll }, {
   state: {
     passwordState: {
       message: '',
@@ -75,6 +76,7 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, 
     processedUserData: (state: State<UserData>) => {
       const ret = <Array<ProcessedUserData>>[]
       state.data.forEach((userData, i) => {
+        console.log(userData)
         ret.push({
           index: i,
           key: userData.id ? userData.id : 0,
@@ -83,7 +85,8 @@ export default storeTemp('user', { allData: allUsers }, { createOne, updateOne, 
           workcell: userData.workcell.name,
           workcellId: <number>userData.workcellId,
           userType: userData.userType.name ,
-          userTypeId: userData.userType.id
+          userTypeId: userData.userType.id,
+          id: userData.id ? userData.id : 0,
         })
       })
       return ret

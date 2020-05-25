@@ -36,10 +36,19 @@
       <h3>2.上传文件</h3>
       <p>文件格式支持.xlsx .xls .csv ; 每个工作表的数据都会被读取, 注意保持文件格式正确</p>
       <a-upload
+        class="inline-btn"
         name="file"
         @change="handleUploadChange"
       >
         <a-button  :style="{ margin: '0px 0px 10px' }"> <a-icon type="upload" />批量新增 </a-button>
+      </a-upload>
+      <a-upload
+        name="file"
+        class="inline-btn"
+
+        @change="handleUploadChangeWithAnalysis"
+      >
+        <a-button  :style="{ margin: '0px 10px 10px' }"> <a-icon type="upload" />分析上传模式 </a-button>
       </a-upload>
       <template slot="footer">
         <a-button key="back" @click="handleCancel">
@@ -52,7 +61,8 @@
 
 <script>
   import ACol from 'ant-design-vue/es/grid/Col'
-  import {readWorkbookFromLocalFile, downloadExcel} from '@/util/excel'
+  import mutation from '@/apollo/mutations/user/createOne.gql'
+  import {readWorkbookFromLocalFile, downloadExcel, readWorkbookFromLocalFileAsync} from '@/util/excel'
 
   export default {
     name: 'multiplyDownload',
@@ -79,7 +89,29 @@
         }
         if (info.file.status === 'done') {
           readWorkbookFromLocalFile(info.file.originFileObj, data => {
-            this.$store.uploadCallback(data, this.storeName, this)
+            this.uploadCallback(data, this.storeName, this)
+          }, this)
+          this.$message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+          this.$message.error(`${info.file.name} file upload failed.`);
+        }
+      },
+      async handleUploadChangeWithAnalysis(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          await readWorkbookFromLocalFileAsync(info.file.originFileObj, async (uploadedData, index) => {
+            try {
+              console.log(uploadedData)
+              let { data } = await this.$apolloProvider.defaultClient.mutate({
+                mutation,
+                variables: { input: uploadedData}
+              })
+            } catch (e) {
+              this.$message.error({ content: `第${index-1}条数据创建失败, 所在位置为第${index}行`  })
+            }
+
           }, this)
           this.$message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
@@ -131,6 +163,10 @@
     &:last-child {
       border-right: none;
     }
+  }
+
+  .inline-btn {
+    display: inline-block;
   }
 
 </style>

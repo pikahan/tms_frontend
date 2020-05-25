@@ -15,8 +15,33 @@
   import searchPane from '@/components/searchPane'
   import { mapGetters, mapState } from 'vuex'
   import permissions from '../../../util/permissions'
-  import { searchData } from '@/util/testData' // TODO 接口完成之后删除
   import { arrayBufferToBase64 } from '@/util/helper'
+
+
+  const searchData = [
+    {
+      label: '采购单据号',
+      name: 'billNo',
+      type: 'input',
+      placeholder: '请输入采购单据号',
+      option: {}
+    },
+    {
+      label: '位置',
+      name: 'location',
+      type: 'input',
+      placeholder: '请输入位置',
+      option: {}
+    },
+    {
+      label: '状态',
+      name: 'status',
+      type: 'select',
+      placeholder: '请选择状态',
+      option: {},
+      selectOption: [{content: '在库', value: '在库'}, {content: '线上', value: '线上'}, {content: '临时领出', value: '临时领出'}, {content: '维修', value: '维修'}, {content: '报废', value: '报废'}]
+    }
+  ]
 
   const columns = [
     { title: '采购单据号', dataIndex: 'billNo', key: 'billNo'},

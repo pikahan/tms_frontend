@@ -72,10 +72,8 @@
                 <nuxt-link :to="item.router" slot="title">
                   {{ item.title }}
                 </nuxt-link>
-                <a-avatar
-                  slot="avatar"
-                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                />
+                <a-icon slot="avatar" :type="item.iconName" :style="{ fontSize: '40px'}" />
+
               </a-list-item-meta>
             </a-list-item>
           </a-list>
@@ -143,7 +141,9 @@
               ret.push({
                 title: '新的维修处理待批准',
                 router: '/repair',
-                description: `夹具名${record.name}, 申请时间${record.applicationTime}`
+                description: `夹具名${record.name}, 申请时间${record.applicationTime}`,
+                iconName: 'tool'
+
               })
             }
           })
@@ -157,7 +157,8 @@
               ret.push({
                 title: '新的报废处理待批准',
                 router: '/scrapRecord',
-                description: `夹具名${record.name}, 申请时间${record.applicationTime}`
+                description: `夹具名${record.name}, 申请时间${record.applicationTime}`,
+                iconName: 'inbox'
 
               })
             }
@@ -173,7 +174,8 @@
             ret.push({
               title: '点检提醒',
               router: '/apparatusData',
-              description: `名字${name}, 序列号${seqId}的夹具离点检日期还有${day}天`
+              description: `名字${name}, 序列号${seqId}的夹具离点检日期还有${day}天`,
+              iconName: 'time'
             })
           })
         }

@@ -4,14 +4,22 @@
     <nuxt-link to="/userManagement/add">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 新增</a-button>
     </nuxt-link>
+    <a-button type="primary" :style="{ margin: '0px 0px 10px' }" @click="handleDelete">- 删除</a-button>
+
     <multiplyDownload
       :storeName="user"
       :tipList="[
-      { name: '工号', value: 'employeeId', type: '文字', explanation: '用户工号', required: true  },
+      { name: '工号', value: 'employeeId', type: '文本', explanation: '用户工号', required: true  },
+      { name: '密码', value: 'password', type: '文本', explanation: '用户密码', required: true  },
       { name: 'workcell Id', value: 'workcellId', type: '数字', explanation: 'workcell的id号', required: true },
-      { name: '用户类别Id', value: 'typeId', type: '数字', explanation: '用户类别的id号', required: true }]"
+      { name: '用户类别Id', value: 'uesrTypeId', type: '数字', explanation: '用户类别的id号', required: true },
+      { name: '邮箱', value: 'mail', type: '邮箱格式', explanation: '用户邮箱', required: true }]"
     />
-    <a-table :columns="columns" :dataSource="processedUserData">
+    <a-table :columns="columns"
+             :dataSource="processedUserData"
+             rowKey="id"
+             :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+    >
       <nuxt-link slot="operation" slot-scope="operation" :to="`/usermanagement/modify/${operation.index}`"><a  href="javascript:;">编辑</a></nuxt-link>
     </a-table>
   </div>
@@ -19,9 +27,8 @@
 
 <script>
   import searchPane from '@/components/searchPane'
-  import { searchData } from '@/util/testData' //TODO 接口完成之后删除
   import { mapGetters } from 'vuex'
-  import { readWorkbookFromLocalFile } from '@/util/excel'
+  import { readWorkbookFromLocalFile, readWorkbookFromLocalFileAsync } from '@/util/excel'
   import multiplyDownload from '@/components/multiplyDownload'
 
   const columns = [
@@ -38,6 +45,27 @@
     },
   ];
 
+  const searchData = [
+    {
+      label: '工号',
+      name: 'employeeId',
+      type: 'input',
+      placeholder: '请输入工号',
+      option: {}
+    },
+
+    {
+      label: '用户级别',
+      name: 'userTypeId',
+      type: 'select',
+      placeholder: '请选择用户级别',
+      option: {},
+      selectOption: [{content: 'Operator I', value: 1}, {content: 'Operator II', value: 2}, {content: 'Admin', value: 3}, {content: 'Supervisor', value: 4}, {content: 'Manager', value: 5}]
+    }
+  ]
+
+
+
   export default {
     components: {
       searchPane,
@@ -47,6 +75,7 @@
       return {
         searchData,
         columns,
+        selectedRowKeys: [],
       }
     },
     computed: mapGetters('user', ['processedUserData', 'permissionMap']),
@@ -64,8 +93,16 @@
           this.$message.error(`${info.file.name} file upload failed.`);
         }
       },
+      onSelectChange(selectedRowKeys) {
+        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        this.selectedRowKeys = selectedRowKeys;
+      },
       handleUploadCallback(info) {
         this.$store.dispatch('user/createMultipleData', info)
+      },
+      async handleDelete() {
+        await this.$store.dispatch('user/deleteAllData', this.selectedRowKeys)
+
       }
     },
     async fetch () {
