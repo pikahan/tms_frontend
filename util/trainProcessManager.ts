@@ -10,7 +10,7 @@ interface TrainData {
   FailedLogs: FailedLog
 }
 
-export default class WsManager {
+export default class TrainProcessManager {
   instance: WebSocket
   constructor() {
     console.log('wsManager try to connect ' + 'ws://' + document.domain + '/ws')

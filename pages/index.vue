@@ -44,7 +44,7 @@
             <a-breadcrumb class="breadcrumb">
               <a-breadcrumb-item ><nuxt-link to="/">Home</nuxt-link></a-breadcrumb-item>
               <a-breadcrumb-item v-for="(name, idx) of breadcrumb" :key="name">
-                <nuxt-link :to="'/'+name" v-if="idx != breadcrumb.length - 1">
+                <nuxt-link :to="'/'+name" v-if="idx != breadcrumb.length - 1 && name !== 'inAndOutOperation'">
                   {{ name }}
                 </nuxt-link>
                 <span v-if="idx == breadcrumb.length - 1">{{name}}</span>
