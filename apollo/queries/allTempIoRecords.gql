@@ -1,0 +1,30 @@
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $outRecordPerson: String, $inRecordPerson: String, $outHandlingPerson: String,  $inHandlingPerson: String, $apparatusEntityId: Int, $outTimeFrom: DateTime, $outTimeTo: DateTime, $inTimeFrom: DateTime, $inTimeTo: DateTime){
+  tempIoRecords(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, outRecordPerson: $outRecordPerson, inRecordPerson: $inRecordPerson, outHandlingPerson: $outHandlingPerson, inHandlingPerson: $inHandlingPerson, apparatusEntityId: $apparatusEntityId, outRecordTimeFrom: $outTimeFrom, outRecordTimeTo: $outTimeTo, inRecordTimeFrom: $inTimeFrom, inRecordTimeTo: $inTimeTo) {
+    payload {
+      id
+      apparatusEntity {
+        def {
+          name
+          code
+          familyId
+          models
+          partNos
+        }
+        defId
+        location
+        regDate
+        seqId
+        status
+      }
+      apparatusEntityId
+      inHandlingPerson
+      inRecordPerson
+      outHandlingPerson
+      outRecordPerson
+      position
+      remark
+    }
+    totalCount
+  }
+}
+

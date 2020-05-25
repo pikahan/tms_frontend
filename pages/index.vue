@@ -100,6 +100,9 @@
   const op1Router = {
     putInOperation: '入库操作\tfile-done',
     putOutOperation: '出库操作\tfile-sync',
+    tempPutInOperation: '临时入库\thdd',
+    tempPutOutOperation: '临时出库\tdatabase',
+
     repair: '报修\ttool',
   }
 

@@ -1,0 +1,5 @@
+mutation ($input: TempIoRecordUpdateInput!) {
+  updateTempIoRecord(tempIoRecord: $input) {
+    success
+  }
+}

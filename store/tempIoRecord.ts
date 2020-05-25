@@ -1,39 +1,34 @@
 // @ts-ignore
-import allIoRecords from '@/apollo/queries/allIoRecords.gql'
-import createOne from '@/apollo/mutations/ioRecord/createOne.gql'
-import updateOne from '@/apollo/mutations/ioRecord/updateOne.gql'
-import deleteOne from '@/apollo/mutations/ioRecord/deleteOne.gql'
+import allIoRecords from '@/apollo/queries/allTempIoRecords.gql'
+import createOne from '@/apollo/mutations/tempIoRecord/createOne.gql'
+import updateOne from '@/apollo/mutations/tempIoRecord/updateOne.gql'
+import deleteOne from '@/apollo/mutations/tempIoRecord/deleteOne.gql'
 
 import { storeTemp } from '@/util/helper'
 import {ApparatusEntityData, ApparatusEntityStatus} from './apparatusEntity'
-import {LineData} from './line'
 import {State} from '../util/helper'
-import {ApparatusDefData} from './apparatusDef'
-import {FamilyData} from './family'
+
 
 
 export interface FamilyCreateQuery {
   name: string
 }
 
-export interface IoRecordData {
+export interface TempIoRecordData {
   apparatusEntity: ApparatusEntityData
   apparatusEntityId: number
   id: number
   inHandlingPerson: string
   inRecordPerson: string
-  inTime: string
-  line: LineData
-  lineId: number
+  position: string
+  remark: string
   outHandlingPerson: string
   outRecordPerson: string
-  outTime: string
 }
 
-interface ProcessedIoRecordData {
+interface ProcessedTempIoRecordData {
   billNo: String
   code: string
-  familyName: string
   models: string
   apparatusDefName: string
   owner: string
@@ -41,13 +36,10 @@ interface ProcessedIoRecordData {
   pMPeriod: number
   recBy: string
   recOn: string
-  remark: string
   uPL: string
   defId: number
   seqId: number
   status: ApparatusEntityStatus
-  lineName: string
-  workcellId: number
   location: string
   picture: Array<number>
   regDate: string
@@ -55,28 +47,24 @@ interface ProcessedIoRecordData {
   id: number
   inHandlingPerson: string
   inRecordPerson: string
-  inTime: string
-  lineId: number
   outHandlingPerson: string
   outRecordPerson: string
-  outTime: string
+  position: string
+  remark: string
 }
 
-export default storeTemp('ioRecord', { allData: allIoRecords }, { createOne, updateOne, deleteOne }, {
+export default storeTemp('tempIoRecord', { allData: allIoRecords }, { createOne, updateOne, deleteOne }, {
   getters: {
-    processedIoRecordData: (state: State<IoRecordData>) => {
-      const ret = <Array<ProcessedIoRecordData>>[]
+    processedIoRecordData: (state: State<TempIoRecordData>) => {
+      const ret = <Array<ProcessedTempIoRecordData>>[]
       state.data.forEach((ioRecordData, i) => {
-        const { apparatusEntity, line, ...otherData } = ioRecordData
+        const { apparatusEntity, ...otherData } = ioRecordData
         const { def, ...data } = apparatusEntity
         const { family, name, ...otherDefData } = def
         ret.push({
-          familyName: family.name,
           apparatusDefName: name,
           ...otherDefData,
           ...data,
-          lineName: line.name,
-          workcellId: line.workcellId,
           ...otherData
         })
       })

@@ -1,0 +1,5 @@
+mutation ($input: TempIoRecordCreateInput!) {
+  createTempIoRecord(tempIoRecord: $input) {
+    success
+  }
+}
