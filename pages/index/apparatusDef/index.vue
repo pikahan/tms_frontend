@@ -4,7 +4,7 @@
     <nuxt-link to="/apparatusDef/submit">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 创建</a-button>
     </nuxt-link>
-    <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1300 }" rowKey="id">
+    <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1300 }" rowKey="id" @change="handleTableChange">
       <a slot="action" slot-scope="text, data" href="javascript:;">
         <div>
           查看详情
@@ -24,13 +24,13 @@
   import { arrayBufferToBase64 } from '@/util/helper'
 
   const columns = [
-    { title: '物品代码', dataIndex: 'code', key: 'code'},
+    { title: '物品代码', dataIndex: 'code', key: 'code', sorter: true},
     { title: '物品名称', dataIndex: 'name', key: 'name'},
     { title: '模具', dataIndex: 'models', key: 'models' },
     { title: '料号', dataIndex: 'partNos', key: 'partNos' },
-    { title: '产线配数', dataIndex: 'uPL', key: 'uPL'},
+    { title: '产线配数', dataIndex: 'uPL', key: 'uPL', sorter: true},
     { title: '用途', dataIndex: 'usedFor', key: 'usedFor' },
-    { title: '点检周期', dataIndex: 'pMPeriod', key: 'pMPeriod' },
+    { title: '点检周期', dataIndex: 'pMPeriod', key: 'pMPeriod' , sorter: true},
     { title: '责任人', dataIndex: 'owner', key: 'owner' },
     { title: '用途', dataIndex: 'recBy', key: 'recBy' },
     { title: '备注', dataIndex: 'remark', key: 'remark', scopedSlots: { customRender: 'remark' } },
@@ -68,7 +68,28 @@
       await this.$store.dispatch(`apparatusDef/fetchData`)
     },
     methods: {
-      arrayBufferToBase64
+      arrayBufferToBase64,
+      handleTableChange(pagination, filters, sorter) {
+        const pager = { ...this.pagination };
+        pager.current = pagination.current;
+        this.pagination = pager;
+        this.$store.dispatch('apparatusDef/fetchData', {variables: {
+            pageSize: pagination.pageSize,
+            pageIndex: pagination.current,
+            orderBy: sorter.field,
+            orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+            ...filters,
+          }})
+
+        console.log({
+          pageSize: pagination.pageSize,
+          pageIndex: pagination.current,
+          orderBy: sorter.field,
+          orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+          ...filters,
+        });
+
+      },
     },
 
   }

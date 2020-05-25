@@ -4,7 +4,7 @@
     <nuxt-link to="/apparatusData/add" v-if="permissionMap.ClampingApparatusInformationMutation">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 添加工夹具</a-button>
     </nuxt-link>
-    <a-table :columns="columns" :dataSource="apparatusEntityData"  rowKey="id">
+    <a-table :columns="columns" :dataSource="apparatusEntityData"  rowKey="id" @change="handleTableChange">
         <span slot="action" slot-scope="text, data" >
           <nuxt-link :to="`/apparatusData/${data.id}`">
             查看详情
@@ -22,10 +22,10 @@
   import { mapGetters } from 'vuex'
 
   const columns = [
-    { title: '编号', dataIndex: 'code', key: 'code'},
-    { title: '名字', dataIndex: 'name', key: 'name' },
-    { title: '库位', dataIndex: 'location', key: 'location'},
-    { title: '状态', dataIndex: 'status', key: 'status' },
+    { title: '编号', dataIndex: 'code', key: 'code', sorter: true},
+    { title: '名字', dataIndex: 'name', key: 'name'},
+    { title: '库位', dataIndex: 'location', key: 'location', sorter: true},
+    { title: '状态', dataIndex: 'status', key: 'status', sorter: true },
     {
       title: '操作',
       key: 'operation',
@@ -84,7 +84,28 @@
     methods: {
       handleSearchData(data) {
         this.$store.dispatch('apparatusEntity/fetchData', {variables: data})
-      }
+      },
+      handleTableChange(pagination, filters, sorter) {
+        const pager = { ...this.pagination };
+        pager.current = pagination.current;
+        this.pagination = pager;
+        this.$store.dispatch('apparatusEntity/fetchData', {variables: {
+            pageSize: pagination.pageSize,
+            pageIndex: pagination.current,
+            orderBy: sorter.field,
+            orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+            ...filters,
+          }})
+
+        console.log({
+          pageSize: pagination.pageSize,
+          pageIndex: pagination.current,
+          orderBy: sorter.field,
+          orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+          ...filters,
+        });
+
+      },
     }
   }
 </script>

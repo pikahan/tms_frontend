@@ -19,6 +19,7 @@
              :dataSource="processedUserData"
              rowKey="id"
              :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+             @change="handleTableChange"
     >
       <nuxt-link slot="operation" slot-scope="operation" :to="`/usermanagement/modify/${operation.index}`"><a  href="javascript:;">编辑</a></nuxt-link>
     </a-table>
@@ -103,7 +104,28 @@
       async handleDelete() {
         await this.$store.dispatch('user/deleteAllData', this.selectedRowKeys)
 
-      }
+      },
+      handleTableChange(pagination, filters, sorter) {
+        const pager = { ...this.pagination };
+        pager.current = pagination.current;
+        this.pagination = pager;
+        this.$store.dispatch('user/fetchData', {variables: {
+            pageSize: pagination.pageSize,
+            pageIndex: pagination.current,
+            orderBy: sorter.field,
+            orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+            ...filters,
+          }})
+
+        console.log({
+          pageSize: pagination.pageSize,
+          pageIndex: pagination.current,
+          orderBy: sorter.field,
+          orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+          ...filters,
+        });
+
+      },
     },
     async fetch () {
       await this.$store.dispatch('user/fetchData')

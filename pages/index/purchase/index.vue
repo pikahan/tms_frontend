@@ -4,7 +4,7 @@
     <nuxt-link to="/purchase/submit">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
     </nuxt-link>
-    <a-table :columns="columns" :dataSource="processedApparatusEntityData" :scroll="{ x: 1300 }" rowKey="id">
+    <a-table :columns="columns" :dataSource="processedApparatusEntityData" :scroll="{ x: 1300 }" rowKey="id" @change="handleTableChange">
       <!--<a slot="action" slot-scope="text, data" href="javascript:;">{{ data.status === '' }}</a>-->
         <img class="thumbnail" slot="picture" slot-scope="picture"  :src="`data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`" alt="img">
     </a-table>
@@ -44,15 +44,15 @@
   ]
 
   const columns = [
-    { title: '采购单据号', dataIndex: 'billNo', key: 'billNo'},
+    { title: '采购单据号', dataIndex: 'billNo', key: 'billNo', sorter: true},
     { title: '编号', dataIndex: 'code', key: 'code'},
     { title: '责任人', dataIndex: 'owner', key: 'owner' },
     { title: '大类', dataIndex: 'familyName', key: 'familyName' },
     { title: '模组', dataIndex: 'models', key: 'models' },
     { title: '料号', dataIndex: 'partNos', key: 'partNos' },
-    { title: '录入日期', dataIndex: 'recOn', key: 'recOn' },
+    { title: '录入日期', dataIndex: 'recOn', key: 'recOn' , sorter: true},
     { title: '图片', key: 'picture', dataIndex: 'picture', scopedSlots: { customRender: 'picture' } },
-    { title: '状态', dataIndex: 'status', key: 'status' },
+    { title: '状态', dataIndex: 'status', key: 'status' , sorter: true},
   ];
 
 
@@ -68,6 +68,27 @@
     },
     methods: {
       arrayBufferToBase64,
+      handleTableChange(pagination, filters, sorter) {
+        const pager = { ...this.pagination };
+        pager.current = pagination.current;
+        this.pagination = pager;
+        this.$store.dispatch('apparatusEntity/fetchData', {variables: {
+            pageSize: pagination.pageSize,
+            pageIndex: pagination.current,
+            orderBy: sorter.field,
+            orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+            ...filters,
+          }})
+
+        console.log({
+          pageSize: pagination.pageSize,
+          pageIndex: pagination.current,
+          orderBy: sorter.field,
+          orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+          ...filters,
+        });
+
+      },
     },
     computed: {
       ...mapGetters('apparatusEntity', ['processedApparatusEntityData']),

@@ -4,7 +4,7 @@
     <nuxt-link to="/scrapRecord/submit">
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交申请</a-button>
     </nuxt-link>
-    <a-table :columns="columns" :dataSource="processedScrapRecordData" :scroll="{ x: 1300 }">
+    <a-table :columns="columns" :dataSource="processedScrapRecordData" :scroll="{ x: 1300 }" @change="handleTableChange">
       <div slot="action" slot-scope="text, data" >
         <a v-if="permission.BuyoffApplicationMiddleProcess && data.status === '申请中'">
           <a-popconfirm placement="topRight" ok-text="同意" cancel-text="拒绝" @confirm="processingApplication(data.id, 'firstOk')" @cancel="processingApplication(data.id, 'firstReject')">
@@ -154,6 +154,27 @@
             console.log(type)
         }
         this.$store.dispatch('scrapRecord/updateData', { id, status, [timeKey]: (new Date).toISOString(), [proposerKey]: this.$store.state.user.userInfo.employeeId })
+      },
+      handleTableChange(pagination, filters, sorter) {
+        const pager = { ...this.pagination };
+        pager.current = pagination.current;
+        this.pagination = pager;
+        this.$store.dispatch('scrapRecord/fetchData', {variables: {
+            pageSize: pagination.pageSize,
+            pageIndex: pagination.current,
+            orderBy: sorter.field,
+            orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+            ...filters,
+          }})
+
+        console.log({
+          pageSize: pagination.pageSize,
+          pageIndex: pagination.current,
+          orderBy: sorter.field,
+          orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
+          ...filters,
+        });
+
       },
     }
   }
