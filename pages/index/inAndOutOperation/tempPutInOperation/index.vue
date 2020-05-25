@@ -3,11 +3,11 @@
       <searchPane :search-data="searchData" storeTarget="tempIoRecord/fetchData" />
       <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }" @change="handleTableChange">
         <span slot="action" slot-scope="text, data" >
-          <nuxt-link :to="`update/${data.id}`" v-if="data.status === '线上'">
+          <nuxt-link :to="`tempPutInOperation/update/${data.id}`" v-if="data.status === '线上'">
             入库
           </nuxt-link>
           <!--TODO 之后更改to的地址-->
-          <nuxt-link to="/putInOperation/submit" v-else>
+          <nuxt-link to="tempPutInOperation/submit" v-else>
             查看详情
           </nuxt-link>
         </span>

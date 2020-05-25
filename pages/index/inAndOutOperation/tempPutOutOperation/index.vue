@@ -1,7 +1,7 @@
 <template>
     <div>
       <searchPane :search-data="searchData" storeTarget="ioRecord/fetchData" />
-      <nuxt-link to="submit">
+      <nuxt-link to="tempPutOutOperation/submit">
         <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交出库记录</a-button>
       </nuxt-link>
       <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }" rowKey='id' @change="handleTableChange">
