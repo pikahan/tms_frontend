@@ -7,13 +7,21 @@
     <a-button type="primary" :style="{ margin: '0px 0px 10px' }" @click="handleDelete">- 删除</a-button>
 
     <multiplyDownload
-      :storeName="user"
+      storeName="user"
+      :analysisUploadCallback="mulAddCb"
       :tipList="[
       { name: '工号', value: 'employeeId', type: '文本', explanation: '用户工号', required: true  },
       { name: '密码', value: 'password', type: '文本', explanation: '用户密码', required: true  },
       { name: 'workcell Id', value: 'workcellId', type: '数字', explanation: 'workcell的id号', required: true },
       { name: '用户类别Id', value: 'uesrTypeId', type: '数字', explanation: '用户类别的id号', required: true },
       { name: '邮箱', value: 'mail', type: '邮箱格式', explanation: '用户邮箱', required: true }]"
+    />
+    <multiplyDownload
+      storeName="user"
+      type="update"
+      :updateData="dataMapper"
+      :analysisUploadCallback="mulUpDateCb"
+      :tipList="updateTipList"
     />
     <a-table :columns="columns"
              :dataSource="processedUserData"
@@ -31,6 +39,9 @@
   import { mapGetters } from 'vuex'
   import { readWorkbookFromLocalFile, readWorkbookFromLocalFileAsync } from '@/util/excel'
   import multiplyDownload from '@/components/multiplyDownload'
+  import mutation from '@/apollo/mutations/user/createOne.gql'
+  import mulUpDateGql from '@/apollo/mutations/user/updateOne.gql'
+
 
   const columns = [
     { title: '工号', dataIndex: 'employeeId', key: 'employeeId'},
@@ -77,9 +88,30 @@
         searchData,
         columns,
         selectedRowKeys: [],
+        selectedRowRows: [],
+        updateTipList: [
+          { name: 'ID', value: 'id', type: '数字', explanation: '用户ID', required: true },
+          { name: '工号', value: 'employeeId', type: '文本', explanation: '用户工号' },
+          { name: '密码', value: 'password', type: '文本', explanation: '用户密码' },
+          { name: 'workcell Id', value: 'workcellId', type: '数字', explanation: 'workcell的id号' },
+          { name: '用户类别Id', value: 'userTypeId', type: '数字', explanation: '用户类别的id号'},
+          { name: '邮箱', value: 'mail', type: '邮箱格式', explanation: '用户邮箱' }]
       }
     },
-    computed: mapGetters('user', ['processedUserData', 'permissionMap']),
+    computed: {
+      ...mapGetters('user', ['processedUserData', 'permissionMap']),
+      dataMapper() {
+
+        return this.selectedRowRows.map(rows => {
+          let ret = []
+          this.updateTipList.forEach(data => {
+            const key = data.value
+            ret.push(rows[key])
+          })
+          return ret
+        })
+      }
+    },
     methods: {
       handleChange(info) {
         if (info.file.status !== 'uploading') {
@@ -89,14 +121,14 @@
           readWorkbookFromLocalFile(info.file.originFileObj, data => {
             this.$store.dispatch('user/createMultipleData', data)
           }, this)
-          this.$message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
           this.$message.error(`${info.file.name} file upload failed.`);
         }
       },
-      onSelectChange(selectedRowKeys) {
+      onSelectChange(selectedRowKeys, selectedRowRows) {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.selectedRowKeys = selectedRowKeys;
+        this.selectedRowRows = selectedRowRows
       },
       handleUploadCallback(info) {
         this.$store.dispatch('user/createMultipleData', info)
@@ -116,16 +148,34 @@
             orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
             ...filters,
           }})
-
-        console.log({
-          pageSize: pagination.pageSize,
-          pageIndex: pagination.current,
-          orderBy: sorter.field,
-          orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
-          ...filters,
-        });
-
       },
+      async mulAddCb(uploadedData, index) {
+        try {
+          console.log(uploadedData)
+          let { data } = await this.$apolloProvider.defaultClient.mutate({
+            mutation,
+            variables: { input: uploadedData}
+          })
+        } catch (e) {
+          this.$message.error({ content: `第${index-1}条数据创建失败, 所在位置为第${index}行`  })
+        }
+      },
+      async mulUpDateCb(uploadedData, index) {
+        try {
+          console.log(uploadedData)
+          let { data } = await this.$apolloProvider.defaultClient.mutate({
+            mutation: mulUpDateGql,
+            variables: { input: uploadedData}
+          })
+          if(data.updateUser.success === false) {
+            this.$message.error({ content: `第${index-1}条数据更新失败, 所在位置为第${index}行`  })
+          } else {
+            this.$message.success({ content: `第${index-1}条数据更新成功, 所在位置为第${index}行`  })
+          }
+        } catch (e) {
+          this.$message.error({ content: `第${index-1}条数据更新失败, 所在位置为第${index}行`  })
+        }
+      }
     },
     async fetch () {
       await this.$store.dispatch('user/fetchData')

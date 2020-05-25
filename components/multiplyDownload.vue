@@ -1,7 +1,7 @@
 <template>
   <div :style="{display: 'inline-block'}">
     <a-button @click="showModal">
-      <a-icon type="download" />批量新增
+      <a-icon type="download" />{{ type === 'update' ? '批量修改' : '批量新增' }}
     </a-button>
     <a-modal
       title="批量上传"
@@ -30,7 +30,7 @@
             </a-col>
           </a-row>
 
-          <a-button style="margin-top: 12px" type="primary" @click="downloadExcel(excelTitle, '模板.xlsx')">下载模板</a-button>
+          <a-button style="margin-top: 12px" type="primary" @click="download">下载模板</a-button>
         </div>
       </div>
       <h3>2.上传文件</h3>
@@ -39,14 +39,15 @@
         class="inline-btn"
         name="file"
         @change="handleUploadChange"
+        :showUploadList="false"
       >
-        <a-button  :style="{ margin: '0px 0px 10px' }"> <a-icon type="upload" />批量新增 </a-button>
+        <a-button  :style="{ margin: '0px 0px 10px' }"> <a-icon type="upload" />{{ type === 'update' ? '批量修改' : '批量新增' }}</a-button>
       </a-upload>
       <a-upload
         name="file"
         class="inline-btn"
-
         @change="handleUploadChangeWithAnalysis"
+        :showUploadList="false"
       >
         <a-button  :style="{ margin: '0px 10px 10px' }"> <a-icon type="upload" />分析上传模式 </a-button>
       </a-upload>
@@ -61,7 +62,6 @@
 
 <script>
   import ACol from 'ant-design-vue/es/grid/Col'
-  import mutation from '@/apollo/mutations/user/createOne.gql'
   import {readWorkbookFromLocalFile, downloadExcel, readWorkbookFromLocalFileAsync} from '@/util/excel'
 
   export default {
@@ -76,7 +76,10 @@
     },
     methods: {
       showModal() {
-        console.log('visible')
+        if (this.type === 'update' && this.updateData.length === 0) {
+          this.$message.error({ content: '请在点击需要修改的项前面的多选框' })
+          return
+        }
         this.visible = true;
       },
       handleCancel(e) {
@@ -89,9 +92,8 @@
         }
         if (info.file.status === 'done') {
           readWorkbookFromLocalFile(info.file.originFileObj, data => {
-            this.uploadCallback(data, this.storeName, this)
+            this.uploadCallback(data, this.storeName, this, this.type)
           }, this)
-          this.$message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
           this.$message.error(`${info.file.name} file upload failed.`);
         }
@@ -102,23 +104,21 @@
         }
         if (info.file.status === 'done') {
           await readWorkbookFromLocalFileAsync(info.file.originFileObj, async (uploadedData, index) => {
-            try {
-              console.log(uploadedData)
-              let { data } = await this.$apolloProvider.defaultClient.mutate({
-                mutation,
-                variables: { input: uploadedData}
-              })
-            } catch (e) {
-              this.$message.error({ content: `第${index-1}条数据创建失败, 所在位置为第${index}行`  })
-            }
-
+            this.analysisUploadCallback(uploadedData, index, this, this.type)
           }, this)
-          this.$message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
           this.$message.error(`${info.file.name} file upload failed.`);
         }
       },
-      downloadExcel
+      download() {
+        console.log(this.type)
+        if (this.type === 'update') {
+          console.log([...this.excelTitle, ...this.updateData], '模板.xlsx')
+          downloadExcel([...this.excelTitle, ...this.updateData], '模板.xlsx')
+        } else {
+          downloadExcel(this.excelTitle, '模板.xlsx')
+        }
+      }
     },
     computed: {
       excelTitle() {
@@ -132,11 +132,23 @@
       },
       uploadCallback: {
         type: Function,
-        default: (info, storeName, ctx) => ctx.$store.dispatch(storeName + '/createMultipleData', info)
+        default: (info, storeName, ctx, type='create') => {ctx.$store.dispatch(`${storeName}${type === 'create' ? '/createMultipleData' : '/updateMultipleData'}`, info)}
+      },
+      analysisUploadCallback: {
+        type: Function,
+        default: (info, index, ctx, type='create') => ctx.$store.dispatch(`${storeName}${type === 'create' ? '/createData' : '/updateData'}`, info)
       },
       storeName: {
         type: String,
         default: 'user'
+      },
+      type: {
+        type: String,
+        default: 'create'
+      },
+      updateData: {
+        type: Array,
+        default: () => []
       }
     }
   }

@@ -1,0 +1,5 @@
+mutation ($input: [UserUpdateInput]!){
+  updateUsers(users: $input) {
+    success
+  }
+}

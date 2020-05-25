@@ -126,7 +126,8 @@ async function formatExcelDataAsync(workbook, callback) {
       console.log(currSheet)
       for (let j = 0; j < columnLength; j++) {
         const columnName = currSheet[asciiToChar(Aascii+j) + '1'].v
-        data[columnName] = currSheet[asciiToChar(Aascii+j) + i].v
+        const itemData = currSheet[asciiToChar(Aascii+j) + i]
+        data[columnName] = typeof itemData !== 'undefined' ? itemData.v : undefined
       }
 
       await callback(data, i)

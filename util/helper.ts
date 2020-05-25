@@ -25,6 +25,7 @@ interface GQLMutation {
   deleteOne?: Object
   deleteAll?: Object
   create?: Object
+  update?: Object
 }
 
 interface StateData {
@@ -127,6 +128,25 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
 
         let { data } = await client.mutate({
           mutation: mutation.create,
+          variables: { input: option }
+        })
+      } catch (e) {
+        console.error(e)
+      }
+      // TODO 错误处理
+
+    },
+    async updateMultipleData({ commit }: any, option: UpdateDataOption<UpdateDataQuery>) {
+      if (mutation === null) {
+        console.error('no mutation')
+        return
+      }
+      let client = (this as any).app.apolloProvider.defaultClient
+      console.log(option)
+      try {
+
+        let { data } = await client.mutate({
+          mutation: mutation.update,
           variables: { input: option }
         })
       } catch (e) {

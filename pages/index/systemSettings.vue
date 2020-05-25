@@ -144,13 +144,13 @@
         default-value="predict"
       >
         <a-radio-button value="predict">
-        工夹具剩余寿命预测
+        夹具剩余寿命预测
       </a-radio-button>
       <a-radio-button value="train">
-        工夹具寿命模型训练
+        夹具寿命模型训练
       </a-radio-button>
       <a-radio-button value="check">
-      工夹具点检提醒
+      夹具点检提醒
     </a-radio-button>
     </a-radio-group>
     </a-form-item>
