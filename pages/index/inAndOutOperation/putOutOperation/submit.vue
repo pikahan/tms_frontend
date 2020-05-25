@@ -1,5 +1,5 @@
 <template>
-  <application :formData="formData" :form="form" :rules="rules" :handleSubmit="handleSubmit"  goBackUrl="/putOutOperation">
+  <application :formData="formData" :form="form" :rules="rules" :handleSubmit="handleSubmit"  goBackUrl="/inAndOutOption/putOutOperation">
     <template v-slot:first>
       <a-form-model-item  label="出库记录人" prop="outRecordPerson" >
         <a-input

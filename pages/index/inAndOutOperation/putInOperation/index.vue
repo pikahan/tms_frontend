@@ -1,66 +1,63 @@
 <template>
     <div>
       <searchPane :search-data="searchData" storeTarget="ioRecord/fetchData" />
-      <nuxt-link to="/putOutOperation/submit">
-        <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交出库记录</a-button>
-      </nuxt-link>
-      <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }" rowKey='id' @change="handleTableChange">
+      <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }" @change="handleTableChange">
+        <span slot="action" slot-scope="text, data" >
+          <nuxt-link :to="`putInOperation/update/${data.id}`" v-if="data.status === '线上'">
+            入库
+          </nuxt-link>
+          <!--TODO 之后更改to的地址-->
+          <nuxt-link to="submit" v-else>
+            查看详情
+          </nuxt-link>
+        </span>
+        <!--<nuxt-link :to="">-->
+        <!--</nuxt-link>-->
       </a-table>
     </div>
 </template>
 
 <script>
-  import searchPane from '../../../components/searchPane'
+  import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
 
-
-
-
-  //TODO mock数据,之后替换
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code'},
     { title: '名字', dataIndex: 'apparatusDefName', key: 'apparatusDefName' },
-    { title: '出库时间', dataIndex: 'outTime', key: 'outTime', sorter: true },
-    { title: '出库经手人', dataIndex: 'outHandlingPerson', key: 'outHandlingPerson', sorter: true },
-    { title: '出库记录人', dataIndex: 'outRecordPerson', key: 'outRecordPerson', sorter: true },
-    { title: '库位', dataIndex: 'location', key: 'location'},
+    { title: '入库时间', dataIndex: 'inTime', key: 'inTime', sorter: true },
+    { title: '入库经手人', dataIndex: 'inHandlingPerson', key: 'inHandlingPerson', sorter: true },
+    { title: '入库记录人', dataIndex: 'inRecordPerson', key: 'inRecordPerson', sorter: true },
+    { title: '库位', dataIndex: 'location', key: 'location', sorter: true},
     { title: '状态', dataIndex: 'status', key: 'status' },
+    // { title: '图片', dataIndex: 'picture', key: 'picture' },
+    {
+      title: '操作',
+      key: 'operation',
+      fixed: 'right',
+      width: '100px',
+      scopedSlots: { customRender: 'action' },
+    },
   ];
 
   const searchData = [
     {
-      label: '出库经手人',
-      name: 'outHandlingPerson',
+      label: '入库经手人',
+      name: 'inHandlingPerson',
       type: 'input',
-      placeholder: '请输入出库经手人',
+      placeholder: '请输入入库经手人',
       option: {}
     },
     {
-      label: '出库时间',
-      name: 'outTimeFrom\toutTimeTo',
+      label: '入库时间',
+      name: 'inTimeFrom\tinTimeTo',
       type: 'range',
       placeholder: ['起始时间', '结束时间'],
       option: {}
-    },
-    {
-      label: '处理人',
-      name: 'acceptor',
-      type: 'input',
-      placeholder: '请输入处理人',
-      option: {}
-    },
-    {
-      label: '处理时间',
-      name: 'acceptorTimeFrom\tacceptorTimeTo',
-      type: 'range',
-      placeholder: ['起始时间', '结束时间'],
-      option: {}
-    },
+    }
   ]
 
-  // selectOption value content
-
   export default {
+    name: 'putInOper',
     components: {
       searchPane,
     },
@@ -71,7 +68,10 @@
       }
     },
     async fetch() {
+      // const fetchDataFor = fetchDataIn(this)
+      // console.log('dasfasdf2222')
       await this.$store.dispatch(`ioRecord/fetchData`)
+      // await fetchDataFor('apparatusEntity')
     },
     computed: {
       ...mapGetters('ioRecord', ['processedIoRecordData']),

@@ -1,7 +1,7 @@
 <template>
     <div>
       <searchPane :search-data="searchData" storeTarget="ioRecord/fetchData" />
-      <nuxt-link to="/putOutOperation/submit">
+      <nuxt-link to="putOutOperation/submit">
         <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交出库记录</a-button>
       </nuxt-link>
       <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }" rowKey='id' @change="handleTableChange">
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import searchPane from '../../../components/searchPane'
+  import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
 
 
@@ -20,11 +20,11 @@
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code'},
     { title: '名字', dataIndex: 'apparatusDefName', key: 'apparatusDefName' },
+    { title: '出库时间', dataIndex: 'outTime', key: 'outTime', sorter: true },
     { title: '出库经手人', dataIndex: 'outHandlingPerson', key: 'outHandlingPerson', sorter: true },
     { title: '出库记录人', dataIndex: 'outRecordPerson', key: 'outRecordPerson', sorter: true },
-    { title: '领用地点', dataIndex: 'position', key: 'position', sorter: true},
+    { title: '库位', dataIndex: 'location', key: 'location'},
     { title: '状态', dataIndex: 'status', key: 'status' },
-    { title: '备注', dataIndex: 'remark', key: 'remark' },
   ];
 
   const searchData = [
@@ -71,10 +71,10 @@
       }
     },
     async fetch() {
-      await this.$store.dispatch(`tempIoRecord/fetchData`)
+      await this.$store.dispatch(`ioRecord/fetchData`)
     },
     computed: {
-      ...mapGetters('tempIoRecord', ['processedIoRecordData']),
+      ...mapGetters('ioRecord', ['processedIoRecordData']),
       ...mapGetters('user', ['permissionMap']),
 
     },
@@ -83,7 +83,7 @@
         const pager = { ...this.pagination };
         pager.current = pagination.current;
         this.pagination = pager;
-        this.$store.dispatch('tempIoRecord/fetchData', {variables: {
+        this.$store.dispatch('ioRecord/fetchData', {variables: {
             pageSize: pagination.pageSize,
             pageIndex: pagination.current,
             orderBy: sorter.field,

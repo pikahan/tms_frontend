@@ -3,12 +3,23 @@
     <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="height: 100%" class="height100 menu-inline" >
       <div class="logo" />
       <a-menu theme="dark" mode="inline" :selectedKeys="selectedKey" @click="handleMenuClick" >
-        <a-menu-item v-for="(menuItem, i) in menuItemList" :key="menuItem.router">
-          <nuxt-link :to="menuItem.router">
-            <a-icon :type="menuItem.icon" />
-            <span>{{ menuItem.name }}</span>
-          </nuxt-link>
-        </a-menu-item>
+        <template v-for="(menuItem, i) in menuItemList" >
+          <a-menu-item v-if="typeof menuItem.subRouter === 'undefined'" :key="menuItem.router">
+            <nuxt-link :to="menuItem.router" >
+              <a-icon :type="menuItem.icon" />
+              <span>{{ menuItem.name }}</span>
+            </nuxt-link>
+          </a-menu-item>
+          <a-sub-menu v-else :key="menuItem.router">
+            <span slot="title"><a-icon :type="menuItem.icon" /><span>{{ menuItem.name }}</span></span>
+            <a-menu-item  v-for="(subMenuItem, i) in menuItem.subRouter"  :key="subMenuItem.router">
+              <nuxt-link :to="subMenuItem.router" >
+                <a-icon :type="subMenuItem.icon" />
+                <span>{{ subMenuItem.name }}</span>
+              </nuxt-link>
+            </a-menu-item>
+          </a-sub-menu>
+        </template>
       </a-menu>
     </a-layout-sider>
     <a-layout
@@ -91,6 +102,7 @@
   import MyStorage from '@/util/storage'
   import permissionsIndex from '../util/permissions'
   import welcome from '@/components/welcome'
+  import ASubMenu from 'ant-design-vue/es/menu/SubMenu'
 
   const visitorRouter = {
     home: '主页\thome',
@@ -98,10 +110,15 @@
   }
 
   const op1Router = {
-    putInOperation: '入库操作\tfile-done',
-    putOutOperation: '出库操作\tfile-sync',
-    tempPutInOperation: '临时入库\thdd',
-    tempPutOutOperation: '临时出库\tdatabase',
+    inAndOutOperation: {
+      str: '出入库操作\twallet',
+      subRouter: {
+        putInOperation: '入库操作\tfile-done',
+        putOutOperation: '出库操作\tfile-sync',
+        tempPutInOperation: '临时入库\thdd',
+        tempPutOutOperation: '临时出库\tdatabase',
+      }
+    },
 
     repair: '报修\ttool',
   }
@@ -123,6 +140,7 @@
 
   export default {
     components: {
+      ASubMenu,
       welcome
     },
     data() {
@@ -204,7 +222,9 @@
         this.selectedKeys = [key]
       },
       getSelectedKey(path) {
-        return `/${path.split('/')[1]}`
+        return '/' + path.split('/').filter(route => {
+          return route !== 'add' && route !== 'update' && route !== 'submit' && route !== 'modify' && Number.isNaN(route*1)
+        }).join('/')
       },
       handleLogout(e) {
         e.preventDefault()
@@ -251,18 +271,59 @@
       const router = []
       const keys = Object.keys(data)
       keys.forEach(key => {
-        let [menuValue, icon] = data[key].split('\t')
 
-        if (typeof icon === 'undefined') {
-          icon = 'user'
+        if (typeof data[key] === 'string') {
+          let [menuValue, icon] = data[key].split('\t')
+
+          if (typeof icon === 'undefined') {
+            icon = 'user'
+          }
+
+
+          router.push({
+            name: menuValue,
+            router: `/${key !== 'home' ? key : ''}`,
+            icon
+          })
+        } else { // 嵌套menu
+          let [menuValue, icon] = data[key].str.split('\t')
+
+          if (typeof icon === 'undefined') {
+            icon = 'user'
+          }
+
+          let subRouter = data[key].subRouter
+
+          const ret = []
+          const subRouterKeys = Object.keys(subRouter)
+          const route = `/${key !== 'home' ? key : ''}`
+          subRouterKeys.forEach(subkey => {
+            if (typeof subRouter[subkey] === 'string') {
+              let [menuValue, subIcon] = subRouter[subkey].split('\t')
+
+              if (typeof subIcon === 'undefined') {
+                icon = 'user'
+              }
+
+
+              ret.push({
+                name: menuValue,
+                router: `${route}/${subkey !== 'home' ? subkey : ''}`,
+                icon: subIcon
+              })
+            }
+          })
+          router.push({
+            name: menuValue,
+            subRouter: ret,
+            router: route,
+            icon
+          })
+
+
         }
 
 
-        router.push({
-          name: menuValue,
-          router: `/${key !== 'home' ? key : ''}`,
-          icon
-        })
       })
 
       this.menuItemList = router
