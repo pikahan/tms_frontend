@@ -1,0 +1,7 @@
+query($employeeId: String){
+  users(employeeId: $employeeId) {
+    payload {
+      employeeId
+    }
+  }
+}

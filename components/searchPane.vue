@@ -19,6 +19,13 @@
                   ]"
                   :placeholder="searchDatum.placeholder"
                 />
+                <han-search
+                  v-decorator="[
+                        searchDatum.name,
+                        searchDatum.option,
+                  ]"
+                  v-else-if="searchDatum.type === 'selectInput'" :searchDatum="searchDatum"
+                />
 
                 <a-select
                   v-else-if="searchDatum.type === 'select'"
@@ -63,8 +70,10 @@
 </template>
 <script>
   import ACol from 'ant-design-vue/es/grid/Col'
+  import hanSearch from './hanSearch'
   export default {
-    components: {ACol},
+    components: {hanSearch, ACol},
+    name: 'searchPane',
     data() {
       return {
         expand: false,
@@ -103,7 +112,7 @@
           const keys = Object.keys(values)
           keys.forEach(key => {
             const value = values[key]
-            console.log(values[key])
+            console.log(values)
             if (Array.isArray(value)) {
               const startTime = value[0].toISOString()
               const endTime = value[1].toISOString()
@@ -126,8 +135,49 @@
       toggle() {
         this.expand = !this.expand;
       },
+
+
+      handleRemoteSearch(value, fn) {
+        fetch(value, fn, this,  data => (this.data = data))
+      },
+      handleChange(value, fn) {
+        this.value = value
+        fetch(value, fn, this,  data => (this.data = data))
+      }
+
     },
   };
+
+
+  let timeout;
+  let currentValue;
+  function fetch(value, fetchFn, ctx,  callback) {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+    currentValue = value;
+
+    function fake() {
+      fetchFn.call(ctx, value)
+        .then(d => {
+          console.log(d)
+          if (currentValue === value) {
+            const result = d.result;
+            const data = [];
+            result.forEach(r => {
+              data.push({
+                value: r,
+                text: r,
+              });
+            });
+            callback(data);
+          }
+        });
+    }
+
+    timeout = setTimeout(fake, 300);
+  }
 </script>
 <style scoped>
   .ant-advanced-search-form {

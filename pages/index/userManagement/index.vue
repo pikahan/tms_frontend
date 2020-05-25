@@ -41,6 +41,7 @@
   import multiplyDownload from '@/components/multiplyDownload'
   import mutation from '@/apollo/mutations/user/createOne.gql'
   import mulUpDateGql from '@/apollo/mutations/user/updateOne.gql'
+  import GQLemployee from '@/apollo/queries/GQLemployee.gql'
 
 
   const columns = [
@@ -61,11 +62,17 @@
     {
       label: '工号',
       name: 'employeeId',
-      type: 'input',
+      type: 'selectInput',
       placeholder: '请输入工号',
-      option: {}
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: GQLemployee,
+          variables: { employeeId: value}
+        })
+        return {result: data.users.payload.map(item => item.employeeId)}
+      }
     },
-
     {
       label: '用户级别',
       name: 'userTypeId',
@@ -73,7 +80,8 @@
       placeholder: '请选择用户级别',
       option: {},
       selectOption: [{content: 'Operator I', value: 1}, {content: 'Operator II', value: 2}, {content: 'Admin', value: 3}, {content: 'Supervisor', value: 4}, {content: 'Manager', value: 5}]
-    }
+    },
+
   ]
 
 
@@ -181,6 +189,9 @@
       await this.$store.dispatch('user/fetchData')
     }
   }
+
+
+
 </script>
 
 <style scoped>

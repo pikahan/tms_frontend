@@ -47,6 +47,7 @@
   import { mapGetters, mapState } from 'vuex'
   import permissions from '../../../util/permissions'
   import { arrayBufferToBase64 } from '@/util/helper'
+  import GQLemployee from '@/apollo/queries/allScrapRecords.gql'
 
   const columns = [
     { title: '物品代码', dataIndex: 'code', key: 'code'},
@@ -69,12 +70,20 @@
 
 
   const searchData = [
+
     {
       label: '申请人',
       name: 'proposer',
-      type: 'input',
+      type: 'selectInput',
       placeholder: '请输入申请人',
-      option: {}
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: GQLemployee,
+          variables: { proposer: value}
+        })
+        return {result: data.scrapRecords.payload.map(item => item.proposer)}
+      }
     },
     {
       label: '申请时间',
@@ -98,6 +107,8 @@
       option: {}
     },
   ]
+
+
 
   export default {
     components: {

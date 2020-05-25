@@ -234,7 +234,6 @@
         this.$router.push('/login')
       },
       async fetchCheckRound() {
-
         let { data } = await this.$apolloProvider.defaultClient.query({
           query: checkRoundlQuery,
           variables: { input: this.$store.state.user.userInfo}
@@ -319,11 +318,7 @@
             router: route,
             icon
           })
-
-
         }
-
-
       })
 
       this.menuItemList = router
