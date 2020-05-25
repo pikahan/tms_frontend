@@ -9,7 +9,7 @@
       <a-tooltip :title="title">
         <a-progress :percent="trainPercent" :success-percent="trainSuccessPercent" status="active" />
       </a-tooltip>
-      <h1 style="line-height: 30px">失败原因</h1>
+      <h1 style="line-height: 30px">失败的工夹具定义及其原因</h1>
       <a-list item-layout="horizontal" :data-source="failedLogs">
         <a-list-item slot="renderItem" slot-scope="item">
           <a-list-item-meta
