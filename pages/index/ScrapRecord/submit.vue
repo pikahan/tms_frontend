@@ -72,8 +72,33 @@
     },
     methods: {
       async handleSubmit(data, next) {
-        const date = (new Date).toISOString()
-        await this.$store.dispatch('scrapRecord/createData', {...data, applicationTime: date, status: '申请中'})
+        let status = '申请中'
+        let time = (new Date).toISOString()
+        let person = this.$store.state.user.userInfo.employeeId
+        let map = {
+          applicationTime: time,
+        }
+
+        console.log(this.permission)
+
+        if (this.permission.DisposalApplicationMiddleProcess && !this.permission.DisposalApplicationFinalProcess) {
+          status = '初审通过'
+          Object.assign(map, {
+            middleProcessTime: time,
+            middleProcessor: person
+          })
+        } else if (this.permission.DisposalApplicationFinalProcess) {
+          status = '终审通过'
+          Object.assign(map, {
+            middleProcessTime: time,
+            middleProcessor: person,
+            finalProcessTime: time,
+            finalProcessor: person
+          })
+        }
+        console.log({...data, ...map, status})
+
+        await this.$store.dispatch('scrapRecord/createData', {...data, ...map, status})
         next()
 
       },
@@ -83,11 +108,18 @@
           option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
         );
       },
-
     },
     computed: {
-      // ...mapState('apparatusDef', ['data']),
-      ...mapGetters('apparatusEntity', ['filterApparatusEntityData'])
+      ...mapGetters('apparatusEntity', ['filterApparatusEntityData']),
+      permission() {
+        // TODO 划分好权限之后更改
+        const ret = {}
+        this.$store.state.user.userInfo.permissions.forEach(permission => {
+          ret[permission.name] = permission.value
+        })
+        console.log(ret)
+        return ret
+      },
     },
     async fetch() {
       await this.$store.dispatch('apparatusEntity/fetchData')

@@ -81,7 +81,12 @@ export default storeTemp('ioRecord', { allData: allIoRecords }, { createOne, upd
         })
       })
       console.log(ret)
-      return ret
+      return ret.sort((a, b) => {
+        let states = ['线上']
+        let aStatus = states.indexOf(a.status)
+        let bStatus = states.indexOf(b.status)
+        return -aStatus + bStatus
+      })
     },
   }
 })

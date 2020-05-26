@@ -42,13 +42,19 @@ export default storeTemp('scrapRecord', { allData: allScrapRecords }, { createOn
       state.data.forEach((scrapRecordData, i) => {
         const { apparatusEntity, id: key} = scrapRecordData
         const { id: defId, code } = apparatusEntity.def
+
         ret.push({
           code,
           ...scrapRecordData,
           key
         })
       })
-      return ret
+      return ret.sort((a, b) => {
+        let states = ['申请中','初审通过']
+        let aStatus = states.indexOf(a.status)
+        let bStatus = states.indexOf(b.status)
+        return aStatus - bStatus
+      })
     },
   }
 })

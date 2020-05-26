@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div>
       <h1>夹具基础数据</h1>
       <div style="margin-bottom: 20px">
@@ -34,91 +33,17 @@
         </a-descriptions>
       </div>
     </div>
-    <div>
-      <h1>夹具数据统计</h1>
-      <div class="chart_list">
-        <div class="chart_item">
-          <h2 class="chart_title">寿命预测</h2>
-          <ve-histogram :data="histogramChartData" :settings="histogramChartSettings"></ve-histogram>
-        </div>
-        <div class="chart_item">
-          <h2 class="chart_title">维修原因统计</h2>
 
-          <ve-funnel :data="funnelChartData"></ve-funnel>
-        </div>
-      </div>
-      <div class="chart_list">
-        <div class="chart_item">
-          <h2 class="chart_title">工作状况</h2>
-
-          <ve-ring :data="ringChartData"></ve-ring>
-
-        </div>
-        <div class="chart_item">
-          <h2 class="chart_title">健康度</h2>
-          <ve-pie :data="pieChartData"></ve-pie>
-        </div>
-      </div>
-    </div>
-    <div>
-      <h1>时间线</h1>
-      <a-timeline style="margin: 30px 30px 0">
-        <a-timeline-item :color="getColor(timelineItem.type)" v-for="timelineItem in timeline">
-          <a-icon slot="dot" type="clock-circle-o" style="font-size: 16px;" v-if="hasClockCircle(timelineItem.type)" />
-          {{ `${formatTime(timelineItem.time)} ${ timelineItem.type } ${typeof timelineItem.proposer !== 'undefined' ? '操作人: ' + timelineItem.proposer : ''}` }}
-        </a-timeline-item>
-      </a-timeline>
-    </div>
-  </div>
 </template>
 
 <script>
-  import gqlQuery from '@/apollo/queries/timeline.gql'
-  import queryOne from '@/apollo/queries/apparatusEntity.gql'
-  import objectDiff from '@/util/objectDiff'
-
+  import queryOne from '@/apollo/queries/repairRecord.gql'
 
   // TODO 定位
   export default {
     data () {
-      this.histogramChartSettings = {
-        metrics: ['预计最大寿命', '预计最小寿命', '平均寿命'],
-        dimension: ['寿命']
-      }
       return {
-        timeline: [],
-        histogramChartData: {
-          columns: ['寿命', '预计最大寿命', '预计最小寿命', '平均寿命'],
-          rows: [
-            { '寿命': '夹具寿命', '预计最大寿命': 900, '预计最小寿命': 560, '平均寿命': 640},
-
-          ]
-        },
-        funnelChartData: {
-          columns: ['状态', '数值'],
-          rows: [
-            { '状态': '螺丝磨损', '数值': 42 },
-            { '状态': '生锈', '数值': 30 },
-            { '状态': '破裂', '数值': 18 },
-            { '状态': '其他', '数值': 12 }
-          ]
-        },
-        pieChartData: {
-          columns: ['状态', '数值'],
-          rows: [
-            { '状态': '剩余健康度', '数值': 42 },
-            { '状态': '消耗健康度', '数值': 30 },
-          ]
-        },
-        ringChartData: {
-          columns: ['工作时间', '时间(小时)'],
-          rows: [
-            { '工作时间': '正常工作时间', '时间(小时)': 3530 },
-            { '工作时间': '异常时间', '时间(小时)': 90 },
-
-          ]
-        },
-        apparatusEntityData: {
+        repairRecordData: {
           billNo: '',
           seqId: '',
           familyName: '',
@@ -139,8 +64,8 @@
             variables: { input: this.$route.params.id}
           })
             .then(({ data }) => {
-              const apparatusEntity = data.apparatusEntity
-              console.log(apparatusEntity)
+              const repairRecord = data.repairRecord
+              console.log(repairRecord)
               const { seqId, billNo, location, status } = apparatusEntity
               this.apparatusEntityData = {
                 billNo,

@@ -47,7 +47,12 @@ export default storeTemp('repairRecord', { allData: allRepairRecords }, { create
           key
         })
       })
-      return ret
+      return ret.sort((a, b) => {
+        let states = ['申请中']
+        let aStatus = states.indexOf(a.status)
+        let bStatus = states.indexOf(b.status)
+        return -aStatus + bStatus
+      })
     },
   }
 })

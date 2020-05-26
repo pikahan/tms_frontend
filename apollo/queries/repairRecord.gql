@@ -1,0 +1,20 @@
+query($id: Int!){
+  repairRecord(id: $id) {
+    acceptor
+    acceptorTime
+    apparatusEntity {
+      seqId
+      def {
+        code
+      }
+    }
+    apparatusEntityId
+    applicationTime
+    description
+    finishTime
+    id
+    picture
+    proposer
+    status
+  }
+}

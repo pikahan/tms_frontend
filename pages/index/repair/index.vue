@@ -142,8 +142,12 @@
         let status = '维修中'
         if (type === 'cancel') {
           status = '拒绝申请'
+        } else if (type === 'confirm') {
+          status = '维修中'
         }
-        this.$store.dispatch('repairRecord/updateData', {id, status: '拒绝申请'})
+        this.$store.dispatch('repairRecord/updateData', {id, status}).then(() => {
+          this.$store.dispatch(`repairRecord/fetchData`)
+        })
       },
       handleTableChange(pagination, filters, sorter) {
         const pager = { ...this.pagination };
@@ -174,5 +178,4 @@
 </script>
 
 <style scoped>
-
 </style>
