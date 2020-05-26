@@ -110,9 +110,16 @@
           <h3>待处理消息</h3>
           <a-list item-layout="horizontal" :data-source="listInfo" v-if="permissionMap.WarehouseIn">
             <a-list-item slot="renderItem" slot-scope="item, index">
-              <a-list-item-meta :description="item.description">
+              <a-list-item-meta :description="item.description" v-if="typeof item.download === 'undefined'">
                 <nuxt-link :to="item.router" slot="title">{{ item.title }}</nuxt-link>
                 <a-icon slot="avatar" :type="item.iconName" :style="{ fontSize: '40px'}" />
+              </a-list-item-meta>
+              <a-list-item-meta v-else >
+                <nuxt-link :to="item.router" slot="title">{{ item.title }}</nuxt-link>
+                <a-icon slot="avatar" :type="item.iconName" :style="{ fontSize: '40px'}" />
+                <div    slot="description">
+                  {{item.description}}<a><a-icon type="file"></a-icon></a>
+                </div>
               </a-list-item-meta>
             </a-list-item>
           </a-list>
@@ -129,6 +136,7 @@
   import permissionsIndex from "../util/permissions";
   import welcome from "@/components/welcome";
   import ASubMenu from "ant-design-vue/es/menu/SubMenu";
+  import Pagination from 'ant-design-vue/es/vc-pagination/Pagination'
 
   const visitorRouter = {
     home: "主页\thome",
@@ -167,6 +175,7 @@
 
   export default {
     components: {
+      Pagination,
       ASubMenu,
       welcome
     },
@@ -195,11 +204,34 @@
               ret.push({
                 title: "新的维修处理待批准",
                 router: `/repair/${id}?target=home`,
-                description: `夹具名${record.name}, 申请时间${record.applicationTime}`,
+                description: `夹具名${record.name}, 申请时间${(new Date(Date.parse(record.applicationTime))).toLocaleString()}`,
                 iconName: "tool"
               });
             }
           });
+          const fakeData = () => {
+            ret.push(
+              {
+                title: "点检提醒",
+                router: `/apparatusData/2?target=home`,
+                description: `名字testname, 序列号3的夹具离点检日期还有2天`,
+                iconName: "bell"
+              }
+            )
+
+            ret.push({
+              title: "即将报废的工夹具预测",
+              router: `/apparatusData/2?target=home`,
+              description: `有以下工夹具需要被点检, 详情请下载附件`,
+              iconName: "dashboard",
+              download: 'test' // TODO download
+            })
+          }
+          if (this.processedRepairRecords.length === 0) {} else {
+
+            fakeData()
+          }
+
         }
 
         if (1) {
@@ -212,12 +244,24 @@
               ret.push({
                 title: "新的报废处理待批准",
                 router: `/scrapRecord/${id}?target=home`,
-                description: `夹具名${record.name}, 申请时间${record.applicationTime}`,
+                description: `夹具名${record.name}, 申请时间${(new Date(Date.parse(record.applicationTime))).toLocaleString()}`,
                 iconName: "inbox"
               });
             }
           });
         }
+
+
+        // const fakeData = () => {
+        //   ret.push([
+        //     {
+        //       title: "点检提醒",
+        //       router: `/apparatusData/2?target=home`,
+        //       description: `名字${name}, 序列号${seqId}的夹具离点检日期还有2天`,
+        //       iconName: "time"
+        //     }
+        //   ])
+        // }
 
         if (1) {
           // TODO 点检提醒
