@@ -22,8 +22,10 @@
             审批
           </a-popconfirm>
         </a>
-        <div v-else>
-          -----
+        <div>
+          <nuxt-link :to="`scrapRecord/${data.id}`">
+            查看详情
+          </nuxt-link>
         </div>
       </div>
       <div slot="middleProcessor" slot-scope="text">

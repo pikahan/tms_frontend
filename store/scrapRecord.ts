@@ -53,7 +53,7 @@ export default storeTemp('scrapRecord', { allData: allScrapRecords }, { createOn
         let states = ['申请中','初审通过']
         let aStatus = states.indexOf(a.status)
         let bStatus = states.indexOf(b.status)
-        return aStatus - bStatus
+        return -aStatus + bStatus
       })
     },
   }

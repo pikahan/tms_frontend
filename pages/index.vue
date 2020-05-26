@@ -240,7 +240,7 @@
       },
       breadcrumb() {
         return this.$route.fullPath.split("/").filter(router => {
-          return router !== "" && Number.isNaN(router * 1);
+          return router !== "" && Number.isNaN(router * 1) && router[0] !== '?';
         });
       },
       selectedKey() {

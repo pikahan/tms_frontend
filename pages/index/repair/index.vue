@@ -20,8 +20,10 @@
             审批
           </a-popconfirm>
         </div>
-        <div v-else>
-          ------
+        <div>
+          <nuxt-link :to="`repair/${data.id}`">
+            查看详情
+          </nuxt-link>
         </div>
       </a>
       <div slot="applicationTime" slot-scope="text">
@@ -168,7 +170,6 @@
           orderByType: sorter.order === 'ascend' ? 'asc' : 'desc',
           ...filters,
         });
-
       },
       downloadExcel
 

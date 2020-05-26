@@ -3,6 +3,7 @@ query($id: Int!){
     apparatusEntity {
       seqId
       def {
+        name
         code
       }
     }

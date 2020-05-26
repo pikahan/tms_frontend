@@ -1,36 +1,56 @@
 <template>
     <div>
-      <h1>夹具基础数据</h1>
+      <h1>详细数据</h1>
       <div style="margin-bottom: 20px">
         <a-descriptions
           bordered
           :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }"
         >
           <a-descriptions-item label="名字">
-            {{ apparatusEntityData.name }}
+            {{ processRepairRecordData.name }}
           </a-descriptions-item>
-          <a-descriptions-item label="采购单号">
-            {{ apparatusEntityData.billNo }}
+          <a-descriptions-item label="编号">
+            {{ processRepairRecordData.code }}
           </a-descriptions-item>
           <a-descriptions-item label="序列号">
-            {{ apparatusEntityData.seqId }}
+            {{ processRepairRecordData.seqId }}
           </a-descriptions-item>
-          <a-descriptions-item label="类">
-            {{ apparatusEntityData.familyName }}
+          <a-descriptions-item label="处理人">
+            {{ processRepairRecordData.acceptor }}
           </a-descriptions-item>
-          <a-descriptions-item label="模组">
-            {{ apparatusEntityData.model }}
+          <a-descriptions-item label="处理时间">
+            {{ processRepairRecordData.acceptorTime }}
           </a-descriptions-item>
-          <a-descriptions-item label="料号">
-            {{ apparatusEntityData.partNo }}
+          <a-descriptions-item label="申请时间">
+            {{ processRepairRecordData.applicationTime }}
           </a-descriptions-item>
-          <a-descriptions-item label="库位">
-            {{ apparatusEntityData.location }}
+          <a-descriptions-item label="申请人">
+            {{ processRepairRecordData.proposer }}
           </a-descriptions-item>
           <a-descriptions-item label="状态">
-            {{ apparatusEntityData.status }}
+            {{ processRepairRecordData.status }}
+          </a-descriptions-item>
+          <a-descriptions-item label="描述">
+            {{ processRepairRecordData.description }}
+          </a-descriptions-item>
+          <a-descriptions-item label="图片">
+            <img class="thumbnail" :src="processRepairRecordData.imgSrc" >
           </a-descriptions-item>
         </a-descriptions>
+
+        <div style="text-align: center;margin-top: 30px;">
+          <!--<a-button type="primary" >审批</a-button>-->
+
+            <a-popconfirm v-if="permission.RepairApplicationProcess && data.status === '申请中'" placement="topRight" ok-text="同意" cancel-text="拒绝" @confirm="processingApplication(data.id, 'confirm')" @cancel="processingApplication(data.id, 'cancel')">
+              <template slot="title">
+                <p>是否同意申请?</p>
+              </template>
+              <a-button type="primary">审批</a-button>
+            </a-popconfirm>
+
+          <a-button ><nuxt-link to="/repair">返回</nuxt-link></a-button>
+        </div>
+
       </div>
     </div>
 
@@ -38,286 +58,109 @@
 
 <script>
   import queryOne from '@/apollo/queries/repairRecord.gql'
+  import { arrayBufferToBase64 } from '@/util/helper'
 
   // TODO 定位
   export default {
     data () {
       return {
-        repairRecordData: {
-          billNo: '',
-          seqId: '',
-          familyName: '',
-          partNo: '',
-          model: '',
-          location: '',
-          status: '',
-          name: ''
+        data: {
+
         }
       }
     },
     methods: {
+      arrayBufferToBase64,
       async fetchData() {
         try {
-
-          this.$apolloProvider.defaultClient.query({
-            query: queryOne,
-            variables: { input: this.$route.params.id}
-          })
-            .then(({ data }) => {
-              const repairRecord = data.repairRecord
-              console.log(repairRecord)
-              const { seqId, billNo, location, status } = apparatusEntity
-              this.apparatusEntityData = {
-                billNo,
-                seqId,
-                location,
-                status,
-                name: apparatusEntity.def.name,
-                familyName: apparatusEntity.def.family.name,
-                partNo: apparatusEntity.def.partNos,
-                model: apparatusEntity.def.models
-              }
-            })
-            .catch(e => {
-              console.log(e)
-            })
-
-
-
           let { data } = await this.$apolloProvider.defaultClient.query({
-            query: gqlQuery,
-            variables: { input: this.$route.params.id*1}
+            query: queryOne,
+            variables: { id: this.$route.params.id}
           })
-
-          let { apparatusEntity, ...timeLIneData } = data
-          this.processTimeline(timeLIneData)
-          this.processApparatusEntity(apparatusEntity)
-
-          // TODO 错误处理
+          this.data = data.repairRecord
           console.log('', data)
         } catch (e) {
           console.log(e, 'fetch error')
           console.log({ input: this.$route.params.id})
         }
       },
-      processApparatusEntity(data) {
-
-      },
-      processTimeline(data) {
-        let obj = JSON.parse(data.trainLogs.payload[0].detail)
-        let trainLogsData = data.trainLogs.payload.map(data => {
-          console.log(data)
-          let detail = JSON.parse(data.detail)
-
-          return {
-            operator: detail.Operator,
-            change: objectDiff.diff(detail.Before, detail.After).value,
-            time: detail.Time
-          }
-        })
-        console.log(obj)
-        console.log(objectDiff.diff(obj.Before, obj.After))
-        this.timeline = [
-          ...processIoRecords(data.ioRecords.payload),
-          ...processRepairRecords(data.repairRecords.payload),
-          ...processScrapRecords(data.scrapRecords.payload),
-          ...processTrainLogsRecords(trainLogsData)
-        ].sort((a, b) => {
-          const aTime = Date.parse(a.time)
-          const bTime = Date.parse(b.time)
-          if (aTime < bTime) {
-            return 1
-          } else if (aTime > bTime) {
-            return -1
-          } else {
-            const timePriority = ['维修申请', '维修申请审核', '维修结束', '报废申请', '报废申请审核', '报废初审审核', '报废终审审核']
-            const aType = a.type
-            const bType = b.type
-            const priorityValue = timePriority.indexOf(aType) - timePriority.indexOf(bType)
-            if (priorityValue > 0) {
-              return -1
-            } else if (priorityValue < 0) {
-              return 1
-            }
-            return 0
-          }
-        })
-      },
-      getColor(str) {
-        console.log(str)
-        const last2Char = str.slice(-2, str.length)
-
-        let ret = 'blue'
-        switch (last2Char) {
-          case '入库':
-          case '申请':
-            ret = 'green'
-            break
-          case '出库':
-          case '结束':
-            ret = 'red'
-            break
-          default:
-            ret = 'blue'
+      processingApplication(id, type) {
+        let status = '维修中'
+        if (type === 'cancel') {
+          status = '拒绝申请'
+        } else if (type === 'confirm') {
+          status = '维修中'
         }
-        return ret
+        this.$store.dispatch('repairRecord/updateData', {id, status}).then(() => {
+          this.$message.success({ content: '操作成功' })
+          if (typeof this.$route.query.target !== 'undefined' ) {
+            this.$router.push(this.$route.query.target === 'home' ? '/' : '/' + this.$route.query.target)
+          } else {
+            this.$router.go(-1)
+          }
+        })
       },
-      hasClockCircle(str) {
-        const last2Char = str.slice(-2, str.length)
-        return last2Char === '申请' || last2Char === '审核'
-      },
-      formatTime(time) {
-        const date = new Date(Date.parse(time))
-        return date.toLocaleString()
-      }
+
+
     },
     created() {
       this.fetchData()
+    },
+    computed: {
+      processRepairRecordData() {
+        let data = this.data
+
+        if (Object.keys(data).length === 0) {
+          return {}
+        }
+        let { apparatusEntity, acceptorTime, acceptor, applicationTime, finishTime, proposer, picture, ...otherData } = data
+        let { def, ...otherApparatusEntity } = apparatusEntity
+        let imgSrc = `data:image/png;base64,${picture.length ? arrayBufferToBase64(picture):''}`
+
+        return {
+          ...otherData,
+          ...otherApparatusEntity,
+          ...def,
+          imgSrc,
+          acceptorTime: formatTime(acceptorTime),
+          applicationTime: formatTime(applicationTime),
+          finishTime: formatTime(finishTime),
+          acceptor: acceptor ? formatTime(acceptorTime) : '暂无',
+          proposer: proposer ? formatTime(acceptorTime) : '暂无',
+        }
+      },
+      permission() {
+        // TODO 划分好权限之后更改
+        const ret = {}
+        this.$store.state.user.userInfo.permissions.forEach(permission => {
+          ret[permission.name] = permission.value
+        })
+        console.log(ret)
+        return ret
+      },
     }
   }
 
+  function flatten(data) {
 
+  }
+
+  function formatTime(time) {
+    if (time.slice(0, 4) === '0001') {
+      return '暂无'
+    }
+
+    const date = new Date(Date.parse(time))
+    return date.toLocaleString()
+  }
 
   function isVaildDate(dateStr) {
     return typeof dateStr !== 'undefined' && dateStr.slice(0, 4) !== '0001' &&  dateStr !== ''
   }
 
-  function processIoRecords(data) {
-    return processHelper(data, [
-      {
-        dateAttrName: 'outTime',
-        proposerAttrName: 'outRecordPerson',
-        type: '出库'
-      },
-      {
-        dateAttrName: 'inTime',
-        proposerAttrName: 'inRecordPerson',
-        type: '入库'
-      }
-    ])
-  }
-
-  function processRepairRecords(data) {
-    return processHelper(data, [
-      {
-        dateAttrName: 'finishTime',
-        type: '维修结束'
-      },
-      {
-        dateAttrName: 'acceptorTime',
-        proposerAttrName: 'acceptor',
-        type: '维修申请审核'
-      },
-      {
-        dateAttrName: 'applicationTime',
-        proposerAttrName: 'proposer',
-        type: '维修申请'
-      },
-    ])
-  }
-
-  function processScrapRecords(data) {
-    return processHelper(data, [
-      {
-        dateAttrName: 'finalProcessTime',
-        proposerAttrName: 'finalProcessor',
-        type: '报废终审审核'
-      },
-      {
-        dateAttrName: 'middleProcessTime',
-        proposerAttrName: 'middleProcessor',
-        type: '报废初审审核'
-      },
-      {
-        dateAttrName: 'acceptorTime',
-        proposerAttrName: 'acceptor',
-        type: '报废申请审核'
-      },
-      {
-        dateAttrName: 'applicationTime',
-        proposerAttrName: 'proposer',
-        type: '报废申请'
-      },
-    ])
-  }
-
-  function processTrainLogsRecords(data) {
-    console.log(data)
-    return processHelper(data, [
-      {
-        dateAttrName: 'time',
-        proposerAttrName: 'operator',
-        type: data => {
-          let ret = '工夹具实体修改: '
-          console.log('process')
-          console.log(data)
 
 
-          let changeKeys = Object.keys(data.change)
-          changeKeys.forEach(key => {
-            const nameMap = {
-              BillNo: '料号',
-              DefId: '夹具定义',
-              Location: '库位',
-              Picture: '夹具图片',
-              RegDate: '入库日期',
-              SeqId: '序列号',
-              Status: '夹具状态'
-            }
 
-            let changeValue = data.change[key]
-            if (changeValue.changed !== 'equal' && changeValue.added) {
-              console.log(changeValue)
-              if (key === 'Picture') {
-
-              } else if (typeof changeValue.added === 'string' && changeValue.added.slice(0, 4) === '0001') {
-                // console.log('hello')
-              }
-              else {
-                ret += `${nameMap[key]} ${changeValue.removed} -> ${changeValue.added}, `
-              }
-            }
-          })
-
-          console.log('process end')
-          return ret
-        }
-      }
-    ])
-  }
-  function timelineRecord(obj, option, callback) {
-    let { dateAttrName, type } = option
-
-    if (isVaildDate(obj[dateAttrName])) {
-
-      if (typeof type === 'function') {
-        type = type(obj)
-      }
-
-      const callbackArgs = {
-        time: obj[dateAttrName],
-        type
-      }
-      if (typeof option.proposerAttrName !== 'undefined') {
-        Object.assign(callbackArgs, {
-          proposer: obj[option.proposerAttrName],
-        })
-      }
-      callback(callbackArgs)
-    }
-  }
-
-  function processHelper(data, optionList) {
-    const ret = []
-    const cb = data => ret.push(data)
-
-    data.forEach(datum => {
-      optionList.forEach(option => {
-        timelineRecord(datum, option, cb)
-      })
-    })
-    return ret
-  }
 
 </script>
 
