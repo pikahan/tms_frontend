@@ -189,10 +189,12 @@
           // TODO 有维修处理权限
           this.processedRepairRecords.forEach(record => {
             let status = record.status;
+            let id = record.id
+
             if (status === "申请中") {
               ret.push({
                 title: "新的维修处理待批准",
-                router: "/repair",
+                router: `/repair/${id}?target=home`,
                 description: `夹具名${record.name}, 申请时间${record.applicationTime}`,
                 iconName: "tool"
               });
@@ -203,12 +205,13 @@
         if (1) {
           // TODO 有报废处理权限
           this.processedScrapRecords.forEach(record => {
-            let status = record.status;
-            console.log(record);
+            let status = record.status
+            console.log(record)
+            let id = record.id
             if (status === "申请中" || status === "终审通过") {
               ret.push({
                 title: "新的报废处理待批准",
-                router: "/scrapRecord",
+                router: `/scrapRecord/${id}?target=home`,
                 description: `夹具名${record.name}, 申请时间${record.applicationTime}`,
                 iconName: "inbox"
               });
@@ -219,13 +222,14 @@
         if (1) {
           // TODO 点检提醒
           this.processedCheckRemindData.forEach(record => {
-            const { apparatusEntity } = record;
-            const name = apparatusEntity.def.name;
-            const seqId = apparatusEntity.seqId;
-            const day = record.time;
+            const { apparatusEntity } = record
+            const name = apparatusEntity.def.name
+            const seqId = apparatusEntity.seqId
+            let id = record.id
+            const day = record.time
             ret.push({
               title: "点检提醒",
-              router: "/apparatusData",
+              router: `/apparatusData${id}?target=home`,
               description: `名字${name}, 序列号${seqId}的夹具离点检日期还有${day}天`,
               iconName: "time"
             });
@@ -240,7 +244,7 @@
       },
       breadcrumb() {
         return this.$route.fullPath.split("/").filter(router => {
-          return router !== "" && Number.isNaN(router * 1) && router[0] !== '?';
+          return router !== "" && Number.isNaN(router * 1) && router.indexOf('?') === -1;
         });
       },
       selectedKey() {

@@ -64,7 +64,7 @@
             </template>
             <a-button type="primary">审批</a-button>
           </a-popconfirm>
-        <a-button ><nuxt-link to="/scrapRecord">返回</nuxt-link></a-button>
+        <a-button @click="$router.go(-1)">返回</a-button>
       </div>
     </div>
   </div>
