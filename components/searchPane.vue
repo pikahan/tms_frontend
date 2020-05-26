@@ -46,6 +46,8 @@
                     searchDatum.option,
                   ]"
                   :placeholder="searchDatum.placeholder"
+                  :show-time="{ format: 'HH:mm' }"
+                  format="YYYY-MM-DD HH:mm"
                 />
               </a-form-item>
             </a-col>
