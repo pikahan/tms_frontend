@@ -421,9 +421,9 @@
     height: 100%;
   }
 
-  #__layout > * {
+  /* #__layout > * {
     height: 100%;
-  }
+  } */
 
   .menu-horizontal {
     display: none;
