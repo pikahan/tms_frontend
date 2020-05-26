@@ -12,6 +12,8 @@ interface TrainData {
 
 export default class TrainProcessManager {
   instance: WebSocket
+  workcellId: number
+  callback: (data: TrainData) => void
   constructor() {
     console.log('wsManager try to connect ' + 'ws://' + document.domain + '/ws')
     this.instance = new WebSocket('ws://'+document.domain+'/ws');
@@ -20,6 +22,12 @@ export default class TrainProcessManager {
       if(this.instance.readyState === this.instance.CLOSED) {
         console.log('reconnecting websocket')
         this.instance = new WebSocket('ws://' + document.domain + '/ws');
+        this.instance.addEventListener('message', (ev) => {
+          const trainData = JSON.parse(ev.data);
+          if (trainData.WorkcellId === this.workcellId) {
+            this.callback(trainData);
+          }
+        })
       } else {
         this.instance.send('1');
       }
@@ -27,6 +35,8 @@ export default class TrainProcessManager {
   }
 
   addListener(workcellId: number, cb: (data: TrainData) => void) {
+    this.workcellId = workcellId
+    this.callback = cb;
     this.instance.addEventListener('message', (ev) => {
       const trainData = JSON.parse(ev.data);
       if(trainData.WorkcellId === workcellId) {

@@ -21,6 +21,8 @@
       </a-list>
     </div>
     <div v-show="mode === 'history'">
+      <!--TODO 之后该storeTarget-->
+      <searchPane :search-data="searchData" storeTarget="ioRecord/fetchData" />
       <a-table :columns="columns" :dataSource="tableData" rowKey="id"  >
         <div slot="StartTime" slot-scope="text">
           {{ (new Date(Date.parse(text))).toLocaleString() }}
@@ -28,6 +30,9 @@
         <div slot="FinshTime" slot-scope="text">
           {{ (new Date(Date.parse(text))).toLocaleString() }}
         </div>
+        <nuxt-link to="/trainProcessTrace/2"  slot="action">
+          查看详情
+        </nuxt-link>
       </a-table>
 
     </div>
@@ -39,14 +44,33 @@ import Vue from "vue";
 import TrainProcessManager from "@/util/trainProcessManager.ts";
 import { mapState } from "vuex";
 import query from '@/apollo/queries/allLogs.gql'
+import searchPane from '@/components/searchPane'
 
 const columns = [
   { title: '开始时间', dataIndex: 'StartTime', key: 'StartTime', sorter: true, scopedSlots: { customRender: 'StartTime' }  },
   { title: '结束时间', dataIndex: 'FinshTime', key: 'FinshTime', sorter: true , scopedSlots: { customRender: 'FinshTime' }  },
   { title: '共计训练工夹具种类', dataIndex: 'TotalToTrain', key: 'TotalToTrain', sorter: true },
+  { title: '操作', dataIndex: 'action', key: 'action', scopedSlots: { customRender: 'action' } }
 
 ];
+
+
+const searchData = [
+
+  {
+    label: '运行时间范围',
+    name: 'applicationTimeFrom\tapplicationTimeTo',
+    type: 'range',
+    placeholder: ['起始时间', '结束时间'],
+    option: {}
+  }
+
+]
+
 export default Vue.extend({
+  components: {
+    searchPane
+  },
   data() {
     return {
       ws: null,
@@ -56,7 +80,8 @@ export default Vue.extend({
       title: "0 success / 0 failed / 0 to train",
       failedLogs: [],
       data: [],
-      columns
+      columns,
+      searchData
     };
   },
   created() {
