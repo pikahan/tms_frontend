@@ -150,7 +150,8 @@
         putInOperation: "入库操作\tfile-done",
         putOutOperation: "出库操作\tfile-sync",
         tempPutInOperation: "临时入库\thdd",
-        tempPutOutOperation: "临时出库\tdatabase"
+        tempPutOutOperation: "临时出库\tdatabase",
+        inAndOutData: "进出库记录查询\tsearch",
       }
     },
     application: '申请信息\tprofile',
