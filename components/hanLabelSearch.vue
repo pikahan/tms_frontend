@@ -1,6 +1,7 @@
 <template>
   <a-select
-    show-search
+    mode="multiple"
+    label-in-value
     :placeholder="searchDatum.placeholder"
     :value="hanValue"
     :default-active-first-option="false"
@@ -21,7 +22,7 @@
     name: 'hanSearch',
     props: {
       searchDatum: Object,
-      value: String,
+      value: Array,
       advancedSearch: Function
     },
     data() {
@@ -32,18 +33,19 @@
     },
     methods: {
       handleSearch(value, fn) {
-        fetch(value, fn, this,  data => (this.data = data))
+        fetch(value, fn, this,  data => {
+          console.log(data)
+          this.data = data
+        })
       },
       handleChange(value, fn) {
         this.hanValue = value
-        if (typeof this.advancedSearch !== 'undefined') {
-          this.advancedSearch(value)
-        }
-        fetch(value, fn, this,  data => {this.data = data; this.$emit('change', this.hanValue) })
+        fetch(value, fn, this,  data => {this.data = data;
+        this.$emit('change', this.hanValue )})
       }
     },
     watch: {
-      value(val = '') {
+      value(val) {
         this.hanValue = val
       }
     }
@@ -61,11 +63,14 @@
     function fake() {
       fetchFn.call(ctx, value)
         .then(d => {
-          console.log(d)
           if (currentValue === value) {
             const result = d.result;
+            // if (result.length === 0) {
+            //   return
+            // }
             const data = [];
             result.forEach(r => {
+
               if (typeof r.text !== 'undefined') {
                 console.log('ehe')
                 data.push({
@@ -79,6 +84,8 @@
                 });
               }
             });
+            console.log('fake')
+            console.log(data)
             callback(data);
           }
         });

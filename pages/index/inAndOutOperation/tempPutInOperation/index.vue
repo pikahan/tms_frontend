@@ -4,6 +4,17 @@
     <nuxt-link :to="`tempPutInOperation/add?id=[${selectedRowKeys}]`" v-if="permissionMap.ClampingApparatusInformationMutation" >
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }" :disabled="selectedRowKeys.length === 0">+ 入库</a-button>
     </nuxt-link>
+    <multiplyDownload
+      storeName="user"
+      :analysisUploadCallback="mulAddCb"
+      :finalFn="finalCb"
+      :tipList="[
+      { name: '工号', value: 'employeeId', type: '文本', explanation: '用户工号', required: true  },
+      { name: '密码', value: 'password', type: '文本', explanation: '用户密码', required: true  },
+      { name: 'workcell Id', value: 'workcellId', type: '数字', explanation: 'workcell的id号', required: true },
+      { name: '用户类别Id', value: 'userTypeId', type: '数字', explanation: '用户类别的id号', required: true },
+      { name: '邮箱', value: 'mail', type: '邮箱格式', explanation: '用户邮箱', required: true }]"
+    />
     <a-table
       :columns="columns"
       :dataSource="apparatusEntityData"
@@ -26,6 +37,8 @@
 <script>
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
+  import multiplyDownload from '@/components/multiplyDownload'
+
 
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code', sorter: true},
@@ -71,6 +84,7 @@
   export default {
     components: {
       searchPane,
+      multiplyDownload
     },
     data() {
       return {

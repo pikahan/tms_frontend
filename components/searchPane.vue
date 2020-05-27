@@ -49,6 +49,18 @@
                   :show-time="{ format: 'HH:mm' }"
                   format="YYYY-MM-DD HH:mm"
                 />
+
+                <han-label-search
+                  v-decorator="[
+                        searchDatum.name,
+                        searchDatum.option,
+              ]"
+                  v-else-if="searchDatum.type === 'selectLabelInput'" :searchDatum="searchDatum"
+
+
+                />
+
+
               </a-form-item>
             </a-col>
           </a-row>
@@ -73,8 +85,12 @@
 <script>
   import ACol from 'ant-design-vue/es/grid/Col'
   import hanSearch from './hanSearch'
+  import hanLabelSearch from './hanLabelSearch'
+
+
+
   export default {
-    components: {hanSearch, ACol},
+    components: { hanSearch, ACol, hanLabelSearch },
     name: 'searchPane',
     data() {
       return {
@@ -90,9 +106,16 @@
         type: Number,
         default: 7
       },
+      option: {
+        type: Object,
+        default: {}
+      },
       handleData: {
         type: Function,
-        default: (data, storeTarget, ctx) => (ctx.$store.dispatch(storeTarget, { variables: data }))
+        default: async (data, storeTarget, ctx) => {
+
+          ctx.$store.dispatch(storeTarget, { variables: data })
+        }
       },
       storeTarget: {
         type: String,
@@ -108,25 +131,28 @@
       handleSearch(e) {
         e.preventDefault();
         this.form.validateFields((error, values) => {
-
-
           const ret = {}
           const keys = Object.keys(values)
           keys.forEach(key => {
-            const value = values[key]
-            console.log(values)
-            if (Array.isArray(value)) {
+            let value = values[key]
+            if (Array.isArray(value && typeof value[0].toISOString !==  'undefined')) {
               const startTime = value[0].toISOString()
               const endTime = value[1].toISOString()
               const dataNames = key.split('\t')
               ret[dataNames[0]] = startTime
               ret[dataNames[1]] = endTime
             } else if (typeof value !== 'undefined') {
+
+              if (key === 'modelNames' || key === 'partNoNames') {
+                console.log(value)
+                value = value.map(item => item.key)
+              }
+
               ret[key] = value
             }
           })
-
-          this.handleData(ret, this.storeTarget, this)
+          console.log({...ret, ...this.option})
+          this.handleData({...ret, ...this.option}, this.storeTarget, this)
         });
       },
 
@@ -137,8 +163,6 @@
       toggle() {
         this.expand = !this.expand;
       },
-
-
       handleRemoteSearch(value, fn) {
         fetch(value, fn, this,  data => (this.data = data))
       },

@@ -4,6 +4,17 @@
     <nuxt-link :to="`putOutOperation/add?id=[${selectedRowKeys}]`" v-if="permissionMap.ClampingApparatusInformationMutation" >
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }" :disabled="selectedRowKeys.length === 0">+ 出库</a-button>
     </nuxt-link>
+    <multiplyDownload
+      storeName="user"
+      :analysisUploadCallback="mulAddCb"
+      :finalFn="finalCb"
+      :tipList="[
+      { name: '工号', value: 'employeeId', type: '文本', explanation: '用户工号', required: true  },
+      { name: '密码', value: 'password', type: '文本', explanation: '用户密码', required: true  },
+      { name: 'workcell Id', value: 'workcellId', type: '数字', explanation: 'workcell的id号', required: true },
+      { name: '用户类别Id', value: 'userTypeId', type: '数字', explanation: '用户类别的id号', required: true },
+      { name: '邮箱', value: 'mail', type: '邮箱格式', explanation: '用户邮箱', required: true }]"
+    />
     <a-table
       :columns="columns"
       :dataSource="apparatusEntityData"
@@ -26,6 +37,8 @@
 <script>
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
+  import multiplyDownload from '@/components/multiplyDownload'
+
 
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code', sorter: true},
@@ -50,20 +63,79 @@
       option: {}
     },
     {
+      label: '大类',
+      name: 'familyId',
+      type: 'selectInput',
+      placeholder: '请输入大类',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: familyGql,
+          variables: { name: value }
+        })
+        console.log(data)
+
+        return {
+          result: data.families.payload.map(item => {
+              return { value: item.id, text: item.name }
+            }
+          )}
+      }
+    },
+    {
+      label: '模组',
+      name: 'modelNames',
+      type: 'selectLabelInput',
+      placeholder: '请选择模组',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: modelGql,
+          variables: { name: value }
+        })
+        console.log(data)
+
+        return {result: data.models.payload.map(item => item.name)}
+      }
+    },
+
+    {
+      label: '料号',
+      name: 'partNoNames',
+      type: 'selectLabelInput',
+      placeholder: '请选择料号',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: partNoGql,
+          variables: { name: value }
+        })
+        console.log(data)
+        return {result: data.partNos.payload.map(item => item.name)}
+      }
+    },
+
+    {
       label: '采购单号',
       name: 'billNo',
       type: 'input',
       placeholder: '请输入夹具采购单号',
       option: {}
     },
-
+    {
+      label: '物品状态',
+      name: 'status',
+      type: 'select',
+      placeholder: '请输入夹具状态',
+      option: {},
+      selectOption: [{content: '在库', value: '在库'}, {content: '线上', value: '线上'}, {content: '临时领出', value: '临时领出'}, {content: '报废', value: '报废'}, {content: '维修', value: '维修'}, ]
+    }
   ]
-
-
 
   export default {
     components: {
       searchPane,
+      multiplyDownload
     },
     data() {
       return {

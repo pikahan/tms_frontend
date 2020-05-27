@@ -13,9 +13,6 @@
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
 
-
-
-
   //TODO mock数据,之后替换
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code'},
