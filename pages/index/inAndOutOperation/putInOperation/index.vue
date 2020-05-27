@@ -26,6 +26,8 @@
 <script>
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
+  import defGql from '@/apollo/queries/allApparatusDefs.gql'
+
 
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code', sorter: true},
@@ -48,6 +50,20 @@
       type: 'input',
       placeholder: '请输入夹具编号',
       option: {}
+    },
+    {
+      label: '大类',
+      name: 'familyId',
+      type: 'selectInput',
+      placeholder: '请输入大类',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: defGql,
+          variables: { employeeId: value }
+        })
+        return {result: data.users.payload.map(item => item.employeeId)}
+      }
     },
     {
       label: '采购单号',

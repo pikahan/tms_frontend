@@ -1,13 +1,8 @@
-query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $modelId: Int){
-  partNos(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, modelId: $modelId) {
+query($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $name: String){
+  partNos(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, name: $name) {
     payload {
       id
       name
-      model {
-        id
-        name
-      }
-      modelId
     }
     totalCount
   }

@@ -168,10 +168,18 @@
             const result = d.result;
             const data = [];
             result.forEach(r => {
-              data.push({
-                value: r,
-                text: r,
-              });
+              if (typeof r.value === 'undefined') {
+                data.push({
+                  value: r,
+                  text: r,
+                });
+              } else {
+                data.push({
+                  value: r.value,
+                  text: r.text
+                })
+              }
+
             });
             callback(data);
           }

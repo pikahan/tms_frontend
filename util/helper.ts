@@ -111,8 +111,10 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
           mutation: mutation.createOne,
           variables: { input: option }
         })
+        console.log(data)
         Message.success({ content: '更新', key: 'key' });
       } catch (e) {
+
         Message.error({ content: '创建失败', key: 'key' });
       }
       // TODO 错误处理

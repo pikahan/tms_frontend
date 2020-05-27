@@ -1,7 +1,7 @@
 <template>
   <div>
     <searchPane :search-data="searchData" storeTarget="apparatusEntity/fetchData" />
-    <nuxt-link :to="`putInOperation/add?id=[${selectedRowKeys}]`" v-if="permissionMap.ClampingApparatusInformationMutation" >
+    <nuxt-link :to="`putOutOperation/add?id=[${selectedRowKeys}]`" v-if="permissionMap.ClampingApparatusInformationMutation" >
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }" :disabled="selectedRowKeys.length === 0">+ 出库</a-button>
     </nuxt-link>
     <a-table
@@ -56,14 +56,7 @@
       placeholder: '请输入夹具采购单号',
       option: {}
     },
-    {
-      label: '物品状态',
-      name: 'status',
-      type: 'select',
-      placeholder: '请输入夹具状态',
-      option: {},
-      selectOption: [{content: '在库', value: '在库'}, {content: '线上', value: '线上'}, {content: '临时领出', value: '临时领出'}, {content: '报废', value: '报废'}, {content: '维修', value: '维修'}, ]
-    }
+
   ]
 
 

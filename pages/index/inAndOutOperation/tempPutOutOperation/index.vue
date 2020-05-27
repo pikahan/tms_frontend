@@ -1,7 +1,7 @@
 <template>
   <div>
     <searchPane :search-data="searchData" storeTarget="apparatusEntity/fetchData" />
-    <nuxt-link :to="`putInOperation/add?id=[${selectedRowKeys}]`" v-if="permissionMap.ClampingApparatusInformationMutation" >
+    <nuxt-link :to="`tempPutOutOperation/add?id=[${selectedRowKeys}]`" v-if="permissionMap.ClampingApparatusInformationMutation" >
       <a-button type="primary" :style="{ margin: '0px 0px 10px' }" :disabled="selectedRowKeys.length === 0">+ 出库</a-button>
     </nuxt-link>
     <a-table

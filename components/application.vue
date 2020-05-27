@@ -21,7 +21,7 @@
           v-if="current === steps.length - 1"
           status="success"
           title="成功!"
-          subTitle="编号: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+          subTitle="编号: 2017182818828182881"
         >
           <template v-slot:extra>
             <slot name="ok">
@@ -42,12 +42,12 @@
                 >
                   提交
                 </a-button>
-                <a-button v-if="current>0" style="margin-left: 8px" @click="prev">
+                <a-button v-if="current>0" style="margin-left: 18px" @click="prev">
                   上一步
                 </a-button>
                 <nuxt-link :to="goBackUrl">
                   <a-button v-if="current === steps.length - 1" style="margin-left: 8px">
-                    返回
+                    返 回
                   </a-button>
                 </nuxt-link>
               </a-col>

@@ -21,7 +21,8 @@
     name: 'hanSearch',
     props: {
       searchDatum: Object,
-      value: String
+      value: String,
+      advancedSearch: Function
     },
     data() {
       return {
@@ -35,6 +36,9 @@
       },
       handleChange(value, fn) {
         this.hanValue = value
+        if (typeof this.advancedSearch !== 'undefined') {
+          this.advancedSearch(value)
+        }
         fetch(value, fn, this,  data => {this.data = data; this.$emit('change', this.hanValue) })
       }
     },

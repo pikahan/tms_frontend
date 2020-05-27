@@ -3,3 +3,4 @@ mutation ($input: ApparatusDefCreateInput!) {
     success
   }
 }
+

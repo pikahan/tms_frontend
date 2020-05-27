@@ -1,5 +1,5 @@
-query ($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String){
-  families(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType) {
+query ($pageIndex: Int, $pageSize: Int, $orderBy: String, $orderByType: String, $name: String){
+  families(pageIndex: $pageIndex, pageSize: $pageSize, orderBy: $orderBy, orderByType: $orderByType, name: $name) {
     payload {
       id
       name

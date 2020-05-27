@@ -1,5 +1,5 @@
 <template>
-  <application :formData="formData" :form="form" :rules="rules" goBackUrl="/inAndOutOperation/putInOperation" :handleSubmit="handleSubmit">
+  <application :formData="formData" :form="form" :rules="rules" goBackUrl="/inAndOutOperation/putOutOperation" :handleSubmit="handleSubmit">
     <template v-slot:first>
       <a-form-model-item  label="经手人" prop="recordPerson" >
         <a-input
@@ -34,7 +34,7 @@
 <script>
   import application from '@/components/application'
   import { mapState } from 'vuex'
-  import wareHoseGql from '@/apollo/mutations/ioRecord/inWareHose.gql'
+  import wareHoseGql from '@/apollo/mutations/ioRecord/tempInWareHose.gql'
 
   export default {
     components: {

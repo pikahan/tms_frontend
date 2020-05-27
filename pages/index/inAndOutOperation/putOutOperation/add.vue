@@ -34,7 +34,7 @@
 <script>
   import application from '@/components/application'
   import { mapState } from 'vuex'
-  import outWareHose from '@/apollo/mutations/ioRecord/outWareHose.gql'
+  import wareHoseGql from '@/apollo/mutations/ioRecord/inWareHose.gql'
 
   export default {
     components: {
@@ -86,7 +86,7 @@
 
 
         let { data } = await this.$apolloProvider.defaultClient.mutate({
-          mutation: outWareHose,
+          mutation: wareHoseGql,
           variables: { input: arg }
         })
 
