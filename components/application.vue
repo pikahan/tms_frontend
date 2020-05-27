@@ -103,7 +103,7 @@
             console.log('current ++ by handleSubmit')
           } else {
             console.log('error submit!!');
-            return false;
+            return false
           }
         });
       },

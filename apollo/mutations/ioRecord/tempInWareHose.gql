@@ -1,0 +1,5 @@
+mutation ($input: [TempInOutInput]!) {
+  tempInWareHouse (input: $input) {
+    success
+  }
+}

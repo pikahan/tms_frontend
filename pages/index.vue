@@ -153,7 +153,7 @@
         tempPutOutOperation: "临时出库\tdatabase"
       }
     },
-
+    application: '申请信息\tprofile',
     repair: "报修\ttool"
   };
 

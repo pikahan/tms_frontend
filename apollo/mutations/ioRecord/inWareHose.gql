@@ -1,0 +1,5 @@
+mutation ($input: [InOutWareInput]!) {
+  inWareHouse(input: $input) {
+    success
+  }
+}

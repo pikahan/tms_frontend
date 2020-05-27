@@ -1,64 +1,72 @@
 <template>
-    <div>
-      <searchPane :search-data="searchData" storeTarget="ioRecord/fetchData" />
-      <nuxt-link to="tempPutOutOperation/submit">
-        <a-button type="primary" :style="{ margin: '0px 0px 10px' }">+ 提交出库记录</a-button>
-      </nuxt-link>
-      <a-table :columns="columns" :dataSource="processedIoRecordData" :scroll="{ x: 1300 }" rowKey='id' @change="handleTableChange">
-      </a-table>
-    </div>
+  <div>
+    <searchPane :search-data="searchData" storeTarget="apparatusEntity/fetchData" />
+    <nuxt-link :to="`putInOperation/add?id=[${selectedRowKeys}]`" v-if="permissionMap.ClampingApparatusInformationMutation" >
+      <a-button type="primary" :style="{ margin: '0px 0px 10px' }" :disabled="selectedRowKeys.length === 0">+ 出库</a-button>
+    </nuxt-link>
+    <a-table
+      :columns="columns"
+      :dataSource="apparatusEntityData"
+      rowKey="id"
+      @change="handleTableChange"
+      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+    >
+        <span slot="action" slot-scope="text, data" >
+          <nuxt-link :to="`/apparatusData/${data.id}`">
+            查看详情
+          </nuxt-link>
+          <nuxt-link :to="`/apparatusData/update/${data.id}`"  v-if="permissionMap.ClampingApparatusInformationMutation">
+            修改
+          </nuxt-link>
+        </span>
+    </a-table>
+  </div>
 </template>
 
 <script>
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
 
-
-
-
-  //TODO mock数据,之后替换
   const columns = [
-    { title: '编号', dataIndex: 'code', key: 'code'},
-    { title: '名字', dataIndex: 'apparatusDefName', key: 'apparatusDefName' },
-    { title: '出库经手人', dataIndex: 'outHandlingPerson', key: 'outHandlingPerson', sorter: true },
-    { title: '出库记录人', dataIndex: 'outRecordPerson', key: 'outRecordPerson', sorter: true },
-    { title: '领用地点', dataIndex: 'position', key: 'position', sorter: true},
-    { title: '状态', dataIndex: 'status', key: 'status' },
-    { title: '备注', dataIndex: 'remark', key: 'remark' },
+    { title: '编号', dataIndex: 'code', key: 'code', sorter: true},
+    { title: '名字', dataIndex: 'name', key: 'name'},
+    { title: '库位', dataIndex: 'location', key: 'location', sorter: true},
+    { title: '状态', dataIndex: 'status', key: 'status', sorter: true },
+    {
+      title: '操作',
+      key: 'operation',
+      fixed: 'right',
+      width: '130px',
+      scopedSlots: { customRender: 'action' },
+    },
   ];
 
   const searchData = [
     {
-      label: '出库经手人',
-      name: 'outHandlingPerson',
+      label: '物品编号',
+      name: 'code',
       type: 'input',
-      placeholder: '请输入出库经手人',
+      placeholder: '请输入夹具编号',
       option: {}
     },
     {
-      label: '出库时间',
-      name: 'outTimeFrom\toutTimeTo',
-      type: 'range',
-      placeholder: ['起始时间', '结束时间'],
-      option: {}
-    },
-    {
-      label: '处理人',
-      name: 'acceptor',
+      label: '采购单号',
+      name: 'billNo',
       type: 'input',
-      placeholder: '请输入处理人',
+      placeholder: '请输入夹具采购单号',
       option: {}
     },
     {
-      label: '处理时间',
-      name: 'acceptorTimeFrom\tacceptorTimeTo',
-      type: 'range',
-      placeholder: ['起始时间', '结束时间'],
-      option: {}
-    },
+      label: '物品状态',
+      name: 'status',
+      type: 'select',
+      placeholder: '请输入夹具状态',
+      option: {},
+      selectOption: [{content: '在库', value: '在库'}, {content: '线上', value: '线上'}, {content: '临时领出', value: '临时领出'}, {content: '报废', value: '报废'}, {content: '维修', value: '维修'}, ]
+    }
   ]
 
-  // selectOption value content
+
 
   export default {
     components: {
@@ -68,22 +76,28 @@
       return {
         searchData,
         columns,
+        selectedRowKeys: [],
+        selectedRowRows: [],
       }
     },
     async fetch() {
-      await this.$store.dispatch(`tempIoRecord/fetchData`)
+      await this.$store.dispatch(`apparatusEntity/fetchData`, { variables: { status: '在库' } })
     },
     computed: {
-      ...mapGetters('tempIoRecord', ['processedIoRecordData']),
-      ...mapGetters('user', ['permissionMap']),
-
+      ...mapGetters('apparatusEntity', {
+        apparatusEntityData: 'processedApparatusEntityData'
+      }),
+      ...mapGetters('user', ['permissionMap'])
     },
     methods: {
+      handleSearchData(data) {
+        this.$store.dispatch('apparatusEntity/fetchData', { variables: data })
+      },
       handleTableChange(pagination, filters, sorter) {
         const pager = { ...this.pagination };
         pager.current = pagination.current;
         this.pagination = pager;
-        this.$store.dispatch('tempIoRecord/fetchData', {variables: {
+        this.$store.dispatch('apparatusEntity/fetchData', { variables: {
             pageSize: pagination.pageSize,
             pageIndex: pagination.current,
             orderBy: sorter.field,
@@ -99,6 +113,11 @@
           ...filters,
         });
 
+      },
+      onSelectChange(selectedRowKeys, selectedRowRows) {
+        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectedRowRows = selectedRowRows
       },
     }
   }

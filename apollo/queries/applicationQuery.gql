@@ -1,0 +1,33 @@
+query ($proposer: String!) {
+  scrapRecords(proposer: $proposer) {
+    payload {
+      id
+      applicationTime
+      middleProcessor
+      middleProcessTime
+      finalProcessor
+      finalProcessTime
+      status
+      apparatusEntity {
+        def {
+          name
+        }
+      }
+    }
+  }
+
+  repairRecords(proposer: $proposer) {
+    payload {
+      id
+      applicationTime
+      acceptor
+      acceptorTime
+      status
+      apparatusEntity {
+        def {
+          name
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import {UserCreateQuery,UserUpdateQuery} from '../store/user'
+import {UserCreateQuery, UserUpdateQuery} from '../store/user'
 import {FamilyCreateQuery} from '../store/family'
 import {ModelCreateQuery} from '../store/model'
 import {PartNoCreateQuery} from '../store/partNo'
@@ -88,7 +88,7 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
         })
         const allDataName = dataName.endsWith('y') ? dataName.substr(0, dataName.length-1) + 'ies' : dataName + 's';
         commit('setData', data[allDataName].payload)
-        console.log('featch data')
+        console.log('fetch data')
         console.log(data)
       } catch (e) {
         console.error(e)
