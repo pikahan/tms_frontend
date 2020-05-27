@@ -216,7 +216,7 @@
               {
                 title: "点检提醒",
                 router: `/apparatusData/2?target=home`,
-                description: `名字testname, 序列号3的夹具离点检日期还有2天`,
+                description: `以下工夹具离点检日期临近, 请及时处理`,
                 iconName: "bell",
                 download: 'test' // TODO download
 
