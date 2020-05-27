@@ -26,9 +26,6 @@
           <nuxt-link :to="`/apparatusData/${data.id}`">
             查看详情
           </nuxt-link>
-          <nuxt-link :to="`/apparatusData/update/${data.id}`"  v-if="permissionMap.ClampingApparatusInformationMutation">
-            修改
-          </nuxt-link>
         </span>
     </a-table>
   </div>
