@@ -5,6 +5,8 @@
       :wrapperCol="formItemLayout.wrapperCol"
 
       label="工夹具定位模式">
+
+
       <a-radio-group
         @change="changeMode"
         v-decorator="[
@@ -28,7 +30,14 @@
     <a-form-item
       :labelCol="formItemLayout.labelCol"
       :wrapperCol="formItemLayout.wrapperCol"
-      label="定位接口">
+      >
+
+        <span slot="label">
+        定位接口
+        <a-tooltip title="接口用json定义, 需要传入id(厂区), factory(区域) 字符串类型, region(线别), line(工站), 全部为字符串类型">
+          <a-icon type="question-circle-o" />
+        </a-tooltip>
+        </span>
       <a-input
         :disabled="disabled"
         v-decorator="[
@@ -38,7 +47,6 @@
               },
             ]"
       >
-
       </a-input>
     </a-form-item>
     <a-form-item

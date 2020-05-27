@@ -38,20 +38,18 @@
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
   import multiplyDownload from '@/components/multiplyDownload'
-
+  import   modelGql from '@/apollo/queries/allModels.gql'
+  import   familyGql from '@/apollo/queries/allFamilies.gql'
+  import   partNoGql from '@/apollo/queries/allPartNos.gql'
 
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code', sorter: true},
     { title: '名字', dataIndex: 'name', key: 'name'},
     { title: '库位', dataIndex: 'location', key: 'location', sorter: true},
+    { title: '大类', dataIndex: 'familyName', key: 'familyName'},
+    { title: '模组', dataIndex: 'models', key: 'models' },
+    { title: '料号', dataIndex: 'partNos', key: 'partNos' },
     { title: '状态', dataIndex: 'status', key: 'status', sorter: true },
-    {
-      title: '操作',
-      key: 'operation',
-      fixed: 'right',
-      width: '130px',
-      scopedSlots: { customRender: 'action' },
-    },
   ];
 
   const searchData = [

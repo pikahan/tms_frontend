@@ -43,9 +43,9 @@ export default storeTemp('apparatusEntity', { allData: allApparatusEntities }, {
       const ret = <Array<ProcessedApparatusEntityData>>[]
       state.data.forEach((apparatusData, i) => {
         const { def, ...data } = apparatusData
-        // const { family } = def
+        const { family } = def
         ret.push({
-            // familyName: family.name,
+            familyName: family.name,
             ...def,
             ...data,
         })
