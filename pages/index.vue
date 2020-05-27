@@ -117,8 +117,8 @@
               <a-list-item-meta v-else >
                 <nuxt-link :to="item.router" slot="title">{{ item.title }}</nuxt-link>
                 <a-icon slot="avatar" :type="item.iconName" :style="{ fontSize: '40px'}" />
-                <div    slot="description">
-                  {{item.description}}<a><a-icon type="file"></a-icon></a>
+                <div slot="description">
+                  {{item.description}}<a @click="downloadExcel([], '数据.xlsx')" style="margin-left: 5px"><a-icon type="file"></a-icon></a>
                 </div>
               </a-list-item-meta>
             </a-list-item>
@@ -137,6 +137,7 @@
   import welcome from "@/components/welcome";
   import ASubMenu from "ant-design-vue/es/menu/SubMenu";
   import Pagination from 'ant-design-vue/es/vc-pagination/Pagination'
+  import { downloadExcel } from '@/util/excel'
 
   const visitorRouter = {
     home: "主页\thome",
@@ -216,14 +217,16 @@
                 title: "点检提醒",
                 router: `/apparatusData/2?target=home`,
                 description: `名字testname, 序列号3的夹具离点检日期还有2天`,
-                iconName: "bell"
+                iconName: "bell",
+                download: 'test' // TODO download
+
               }
             )
 
             ret.push({
-              title: "即将报废的工夹具预测",
+              title: "工夹具报废预警",
               router: `/apparatusData/2?target=home`,
-              description: `有以下工夹具需要被点检, 详情请下载附件`,
+              description: `以下工夹具即将在24小时内报废, 请及时处理`,
               iconName: "dashboard",
               download: 'test' // TODO download
             })
@@ -332,7 +335,8 @@
 
         let { checkReminds } = data;
         this.processedCheckRemindData = checkReminds.payload;
-      }
+      },
+      downloadExcel
     },
     created() {
       const store = new MyStorage();

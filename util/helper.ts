@@ -166,17 +166,10 @@ export const storeTemp = <T extends StateData>(dataName: string, query: GQLQuery
       let client = (this as any).app.apolloProvider.defaultClient
 
       try {
-        console.log('update args')
-        console.log(typeof option.data !== 'undefined' ? {id, ...option.data } : option)
         let { data } = await client.mutate({
           mutation: mutation.updateOne,
           variables: { input: typeof option.data !== 'undefined' ? {id, ...option.data } : option}
         })
-        console.log('update ok')
-        console.log('the variables start')
-
-        console.log({ input: typeof option.data !== 'undefined' ? {id, ...option.data } : option})
-        console.log('the variables end')
 
       } catch (e) {
         console.log(e, 'update error')
