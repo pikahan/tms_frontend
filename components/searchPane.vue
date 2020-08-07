@@ -2,7 +2,7 @@
   <div id="components-form-demo-advanced-search">
     <a-form class="ant-advanced-search-form" :form="form" @submit="handleSearch" >
         <div>
-          <a-row :gutter="2">
+          <a-row >
             <a-col
               v-for="(searchDatum, i) in searchData"
               :key="searchDatum.name"
@@ -108,7 +108,7 @@
       },
       option: {
         type: Object,
-        default: {}
+        default: () => ({})
       },
       handleData: {
         type: Function,
@@ -142,7 +142,6 @@
               ret[dataNames[0]] = startTime
               ret[dataNames[1]] = endTime
             } else if (typeof value !== 'undefined') {
-
               if (key === 'modelNames' || key === 'partNoNames') {
                 console.log(value)
                 value = value.map(item => item.key)

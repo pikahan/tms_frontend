@@ -401,7 +401,19 @@ function processHelper(data, optionList) {
   justify-content: space-around;
   position: relative;
   > .chart_item {
-    width: 30%;
+      width: 30%;
+
+
+  }
+}
+
+.chart_item {
+
+
+  canvas {
+    /*width: 800px!important;*/
+    /*height: 800px!important;*/
+
   }
 }
 

@@ -56,9 +56,9 @@
         <a-button type="primary" html-type="submit" class="login-form-button">
           登录
         </a-button>
-        <a-button html-type="submit" class="login-form-button">
-          <nuxt-link to="/initial">创建新的WorkCell</nuxt-link>
-        </a-button>
+        <!--<a-button html-type="submit" class="login-form-button">-->
+          <!--<nuxt-link to="/initial">创建新的WorkCell</nuxt-link>-->
+        <!--</a-button>-->
       </a-form-item>
     </a-form>
   </div>
@@ -125,7 +125,7 @@
     left: 50%;
     transform: translateX(-50%);
     padding: 20px 40px 0;
-    margin-top: 40px;
+    margin-top: 120px;
     border-radius: 10px;
     background: white;
   }
@@ -139,7 +139,7 @@
   }
 
   .login-form {
-    max-width: 400px;
+    max-width: 600px;
   }
 
   .login-form-visitor {

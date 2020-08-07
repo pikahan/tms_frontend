@@ -116,7 +116,7 @@
           console.log([...this.excelTitle, ...this.updateData], '模板.xlsx')
           downloadExcel([...this.excelTitle, ...this.updateData], '模板.xlsx')
         } else {
-          downloadExcel(this.excelTitle, '模板.xlsx')
+          downloadExcel(this.excelTitle, '错误信息.xlsx')
         }
       }
     },

@@ -153,6 +153,7 @@
         tempPutInOperation: "临时入库\thdd",
         tempPutOutOperation: "临时出库\tdatabase",
         inAndOutData: "进出库记录查询\tsearch",
+        tempInAndOutData: "临时记录查询\tsearch",
       }
     },
     application: '申请信息\tprofile',
@@ -162,12 +163,11 @@
   const op2Router = {
     purchase: "采购入库\tshop",
     scrapRecord: "报废管理\tinbox",
-    apparatusDef: "夹具定义\ttable",
     trainProcessTrace: '训练进度\tbox-plot'
   };
 
   const supervisorRouter = {
-    apparatusTypeManagement: "类别管理\tfork"
+    apparatusDef: "夹具类别\ttable",
   };
 
   const adminRouter = {
@@ -194,8 +194,37 @@
         "processedScrapRecords"
       ]),
       ...mapGetters("user", ["permissionMap"]),
+
+
+
       listInfo() {
         let ret = [];
+
+        const fakeData = () => {
+          ret.push(
+            {
+              title: "点检提醒",
+              router: `/apparatusData/2?target=home`,
+              description: `以下工夹具离点检日期临近, 请及时处理`,
+              iconName: "bell",
+              download: 'test' // TODO download
+
+            }
+          )
+
+          ret.push({
+            title: "工夹具报废预警",
+            router: `/apparatusData/2?target=home`,
+            description: `以下工夹具即将在24小时内报废, 请及时处理`,
+            iconName: "dashboard",
+            download: 'test' // TODO download
+          })
+        }
+
+        if (this.processedRepairRecords.length === 0) {} else {
+
+          fakeData()
+        }
         if (1) {
           // TODO 有维修处理权限
           this.processedRepairRecords.forEach(record => {
@@ -211,30 +240,8 @@
               });
             }
           });
-          const fakeData = () => {
-            ret.push(
-              {
-                title: "点检提醒",
-                router: `/apparatusData/2?target=home`,
-                description: `以下工夹具离点检日期临近, 请及时处理`,
-                iconName: "bell",
-                download: 'test' // TODO download
 
-              }
-            )
 
-            ret.push({
-              title: "工夹具报废预警",
-              router: `/apparatusData/2?target=home`,
-              description: `以下工夹具即将在24小时内报废, 请及时处理`,
-              iconName: "dashboard",
-              download: 'test' // TODO download
-            })
-          }
-          if (this.processedRepairRecords.length === 0) {} else {
-
-            fakeData()
-          }
 
         }
 
@@ -256,16 +263,7 @@
         }
 
 
-        // const fakeData = () => {
-        //   ret.push([
-        //     {
-        //       title: "点检提醒",
-        //       router: `/apparatusData/2?target=home`,
-        //       description: `名字${name}, 序列号${seqId}的夹具离点检日期还有2天`,
-        //       iconName: "time"
-        //     }
-        //   ])
-        // }
+
 
         if (1) {
           // TODO 点检提醒

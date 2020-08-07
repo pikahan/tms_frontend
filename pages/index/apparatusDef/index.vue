@@ -20,7 +20,6 @@
 <script>
   import searchPane from '@/components/searchPane'
   import { mapGetters, mapState } from 'vuex'
-  import { searchData } from '@/util/testData' //TODO 接口完成之后删除
   import { arrayBufferToBase64 } from '@/util/helper'
 
   const columns = [
@@ -42,6 +41,78 @@
       scopedSlots: { customRender: 'action' },
     },
   ];
+
+
+  const searchData = [
+    {
+      label: '物品编号',
+      name: 'code',
+      type: 'input',
+      placeholder: '请输入夹具编号',
+      option: {},
+    },
+    {
+      label: '物品名称',
+      name: 'name',
+      type: 'input',
+      placeholder: '请输入物品名称',
+      option: {}
+    },
+    {
+      label: '大类',
+      name: 'familyId',
+      type: 'selectInput',
+      placeholder: '请输入大类',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: familyGql,
+          variables: { name: value }
+        })
+        console.log(data)
+
+        return {
+          result: data.families.payload.map(item => {
+              return { value: item.id, text: item.name }
+            }
+          )}
+      }
+    },
+    {
+      label: '模组',
+      name: 'modelNames',
+      type: 'selectLabelInput',
+      placeholder: '请选择模组',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: modelGql,
+          variables: { name: value }
+        })
+        console.log(data)
+
+        return {result: data.models.payload.map(item => item.name)}
+      }
+    },
+
+    {
+      label: '料号',
+      name: 'partNoNames',
+      type: 'selectLabelInput',
+      placeholder: '请选择料号',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: partNoGql,
+          variables: { name: value }
+        })
+        console.log(data)
+        return {result: data.partNos.payload.map(item => item.name)}
+      }
+    }
+  ]
+
+
 
 
   export default {

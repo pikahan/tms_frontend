@@ -20,11 +20,16 @@
 <script>
   import searchPane from '@/components/searchPane'
   import { mapGetters } from 'vuex'
-
+  import   modelGql from '@/apollo/queries/allModels.gql'
+  import   familyGql from '@/apollo/queries/allFamilies.gql'
+  import   partNoGql from '@/apollo/queries/allPartNos.gql'
   const columns = [
     { title: '编号', dataIndex: 'code', key: 'code', sorter: true},
     { title: '名字', dataIndex: 'name', key: 'name'},
     { title: '库位', dataIndex: 'location', key: 'location', sorter: true},
+    { title: '大类', dataIndex: 'familyName', key: 'familyName'},
+    { title: '模组', dataIndex: 'models', key: 'models' },
+    { title: '料号', dataIndex: 'partNos', key: 'partNos' },
     { title: '状态', dataIndex: 'status', key: 'status', sorter: true },
     {
       title: '操作',
@@ -35,7 +40,7 @@
     },
   ];
 
-   const searchData = [
+  const searchData = [
     {
       label: '物品编号',
       name: 'code',
@@ -44,20 +49,73 @@
       option: {}
     },
     {
+      label: '大类',
+      name: 'familyId',
+      type: 'selectInput',
+      placeholder: '请输入大类',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: familyGql,
+          variables: { name: value }
+        })
+        console.log(data)
+
+        return {
+          result: data.families.payload.map(item => {
+              return { value: item.id, text: item.name }
+            }
+          )}
+      }
+    },
+    {
+      label: '模组',
+      name: 'modelNames',
+      type: 'selectLabelInput',
+      placeholder: '请选择模组',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: modelGql,
+          variables: { name: value }
+        })
+        console.log(data)
+
+        return {result: data.models.payload.map(item => item.name)}
+      }
+    },
+
+    {
+      label: '料号',
+      name: 'partNoNames',
+      type: 'selectLabelInput',
+      placeholder: '请选择料号',
+      option: {},
+      handleSearch: async function (value) {
+        let { data } = await this.$apolloProvider.defaultClient.query({
+          query: partNoGql,
+          variables: { name: value }
+        })
+        console.log(data)
+        return {result: data.partNos.payload.map(item => item.name)}
+      }
+    },
+
+    {
       label: '采购单号',
       name: 'billNo',
       type: 'input',
       placeholder: '请输入夹具采购单号',
       option: {}
     },
-     {
-       label: '物品状态',
-       name: 'status',
-       type: 'select',
-       placeholder: '请输入夹具状态',
-       option: {},
-       selectOption: [{content: '在库', value: '在库'}, {content: '线上', value: '线上'}, {content: '临时领出', value: '临时领出'}, {content: '报废', value: '报废'}, {content: '维修', value: '维修'}, ]
-     }
+    {
+      label: '物品状态',
+      name: 'status',
+      type: 'select',
+      placeholder: '请输入夹具状态',
+      option: {},
+      selectOption: [{content: '在库', value: '在库'}, {content: '线上', value: '线上'}, {content: '临时领出', value: '临时领出'}, {content: '报废', value: '报废'}, {content: '维修', value: '维修'}, ]
+    }
   ]
 
 

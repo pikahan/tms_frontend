@@ -141,7 +141,7 @@
   import familyGQL from '@/apollo/queries/allFamilies.gql'
   import modelGQL from '@/apollo/queries/allModels.gql'
   import partNoGQL from '@/apollo/queries/allPartNos.gql'
-
+  import { downloadExcel } from '@/util/excel'
 
 
 
@@ -222,6 +222,7 @@
           partNos: typeof partNoData.name  === 'undefined' ? null : partNoData.name
         }
       },
+      downloadExcel,
       async handleSubmit(data, next) {
         console.log(data)
 
@@ -233,6 +234,7 @@
         let code = await this.$store.dispatch('apparatusDef/createData', {...data, recOn: (new Date).toISOString(), recBy: this.$store.state.user.userInfo.employeeId, models, partNos})
         console.log(code)
         next()
+        downloadExcel([], '表单.xlsx')
       },
       async fetchModels(value) {
         console.log('fetchModels', value);
