@@ -13,20 +13,20 @@ Vue、Vuex、Vue Router、WebSocket、Vue Apollo(GraphQL)、TypeScript、WebPack
 ## 页面展示
 
 ### 移动端页面
-![移动端页面](./mobile.jpg)
+![移动端页面](./presentation/mobile.jpg)
 
 ### Excel模板下载与上传
-![Excel模板下载与上传](./model1.jpg)
+![Excel模板下载与上传](./presentation/model1.jpg)
 
 ### 批量删除
-![批量删除](./mul_del.jpg)
+![批量删除](./presentation/mul_del.jpg)
 
 ### 信息展示
-![信息展示](./pic2.jpg)
-![信息展示](./pic1.jpg)
+![信息展示](./presentation/pic2.jpg)
+![信息展示](./presentation/pic1.jpg)
 
 ### WebSocket实时显示训练数据
-![WebSocket实时显示训练数据](./websocket.jpg)
+![WebSocket实时显示训练数据](./presentation/websocket.jpg)
 
 
 ## 运行方式
